@@ -16,6 +16,10 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
+import codeOrchestra.lcs.actions.NewLiveCodingConfigurationAction;
+import codeOrchestra.lcs.actions.OpenLiveCodingConfigurationAction;
+import codeOrchestra.lcs.actions.SaveAllAction;
+
 /**
  * An action bar advisor is responsible for creating, adding, and disposing of the
  * actions added to a workbench window. Each window will be populated with
@@ -28,8 +32,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     // when fillActionBars is called with FILL_PROXY.
     private IWorkbenchAction exitAction;
     private IWorkbenchAction aboutAction;
-    private IWorkbenchAction newWindowAction;
-    private OpenViewAction openViewAction;
+    private NewLiveCodingConfigurationAction newViewAction;
+    private OpenLiveCodingConfigurationAction openViewAction;
+    private SaveAllAction saveAllAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -49,10 +54,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         aboutAction = ActionFactory.ABOUT.create(window);
         register(aboutAction);
         
-        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
-        register(newWindowAction);
+        newViewAction = new NewLiveCodingConfigurationAction(window, "Create New Live Configuration", LiveConfigurationView.ID);
+        register(newViewAction);
         
-        openViewAction = new OpenViewAction(window, "Create Another Live Configuration", LiveConfigurationView.ID);
+        saveAllAction = new SaveAllAction(window, "Sace all Live Configurations", LiveConfigurationView.ID);
+        register(saveAllAction);
+        
+        openViewAction = new OpenLiveCodingConfigurationAction(window, "Open Existing Live Configuration", LiveConfigurationView.ID);
         register(openViewAction);
     }
     
@@ -66,10 +74,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menuBar.add(helpMenu);
         
         // File
-        fileMenu.add(newWindowAction);
+        fileMenu.add(newViewAction);
         fileMenu.add(new Separator());
         fileMenu.add(openViewAction);
         fileMenu.add(new Separator());
+        fileMenu.add(saveAllAction);
+        fileMenu.add(new Separator());        
         fileMenu.add(exitAction);
         
         // Help
@@ -79,7 +89,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));   
+        toolbar.add(newViewAction);
         toolbar.add(openViewAction);
+        toolbar.add(saveAllAction);        
         toolbar.add(exitAction);
     }
 }

@@ -9,7 +9,8 @@ package codeOrchestra.lcs;
  */
 public interface ICommandIds {
 
+    public static final String CMD_NEW = "LCS.new";
     public static final String CMD_OPEN = "LCS.open";
-    public static final String CMD_OPEN_MESSAGE = "LCS.openMessage";
+	public static final String CMD_SAVE_ALL = "LCS.saveAll";
     
 }
