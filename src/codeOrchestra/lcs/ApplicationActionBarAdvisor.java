@@ -52,7 +52,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
         register(newWindowAction);
         
-        openViewAction = new OpenViewAction(window, "Create Another Live Configuration", View.ID);
+        openViewAction = new OpenViewAction(window, "Create Another Live Configuration", LiveConfigurationView.ID);
         register(openViewAction);
     }
     

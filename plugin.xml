@@ -25,7 +25,7 @@
             name="Live Configuration"
             allowMultiple="true"
             icon="icons/liveResults.png"
-            class="codeOrchestra.lcs.View"
+            class="codeOrchestra.lcs.LiveConfigurationView"
             id="LCS.view">
       </view>
    </extension>

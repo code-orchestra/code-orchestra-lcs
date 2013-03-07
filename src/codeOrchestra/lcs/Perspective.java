@@ -16,8 +16,6 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);	
 
 		IFolderLayout folder = layout.createFolder("messages", IPageLayout.TOP, 0.5f, editorArea);
-		folder.addPlaceholder(View.ID + ":*");
-		folder.addView(View.ID);
-		
+		folder.addPlaceholder(LiveConfigurationView.ID + ":*");
 	}
 }
