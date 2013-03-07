@@ -1,7 +1,10 @@
 package codeOrchestra.lcs.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import codeOrchestra.lcs.ICommandIds;
@@ -19,10 +22,22 @@ public class SaveAllAction extends Action {
 		setId(ICommandIds.CMD_SAVE_ALL);
 		setActionDefinitionId(ICommandIds.CMD_SAVE_ALL);
 		setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/save.gif"));
+		
+		setEnabled(false);
+		
+		window.addPerspectiveListener(new IPerspectiveListener() {			
+			@Override
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
+				setEnabled(shouldBeEnabled());
+			}
+			
+			@Override
+			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			}
+		});
 	}
 	
-	@Override
-	public boolean isEnabled() {
+	public boolean shouldBeEnabled() {
 		if (window == null) {
 			return false;
 		}
