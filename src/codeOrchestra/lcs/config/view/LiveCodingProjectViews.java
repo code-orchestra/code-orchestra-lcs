@@ -31,7 +31,8 @@ public final class LiveCodingProjectViews {
   public static void openProjectViews(IWorkbenchWindow window, LCSProject project) throws PartInitException {
     boolean activated = false;
     for (String viewId : lcpViewIDs) {
-      window.getActivePage().showView(viewId, project.getPath(), activated ? IWorkbenchPage.VIEW_ACTIVATE : IWorkbenchPage.VIEW_CREATE);
+      window.getActivePage().showView(viewId, project.getPath(), !activated ? IWorkbenchPage.VIEW_ACTIVATE : IWorkbenchPage.VIEW_CREATE);
+      activated = true;
     }
     
     ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestra Live Coding Server - " + project.getName() + " - " + project.getPath());
