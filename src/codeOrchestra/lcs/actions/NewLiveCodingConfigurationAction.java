@@ -23,52 +23,51 @@ import codeOrchestra.lcs.config.view.LiveConfigViewStack;
  */
 public class NewLiveCodingConfigurationAction extends Action {
 
-	private final IWorkbenchWindow window;
-	private final String viewId;
+  private final IWorkbenchWindow window;
+  private final String viewId;
 
-	public NewLiveCodingConfigurationAction(IWorkbenchWindow window, String label, String viewId) {
-		this.window = window;
-		this.viewId = viewId;
-		setText(label);
-		// The id is used to refer to the action in a menu or toolbar
-		setId(ICommandIds.CMD_NEW);
-		// Associate the action with a pre-defined command, to allow key
-		// bindings.
-		setActionDefinitionId(ICommandIds.CMD_NEW);
-		setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/new.gif"));
-	}
+  public NewLiveCodingConfigurationAction(IWorkbenchWindow window, String label, String viewId) {
+    this.window = window;
+    this.viewId = viewId;
+    setText(label);
+    // The id is used to refer to the action in a menu or toolbar
+    setId(ICommandIds.CMD_NEW);
+    // Associate the action with a pre-defined command, to allow key
+    // bindings.
+    setActionDefinitionId(ICommandIds.CMD_NEW);
+    setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/new.gif"));
+  }
 
-	public void run() {
-		if (window != null) {
-			try {
-				// Configuration name
-				String configurationName = null;
-				InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "New Live Run Configuration", "Enter a configuration name", "", new NameInputValidator("Configuration"));
-				if (dlg.open() == Window.OK) {
-					configurationName = dlg.getValue();
-					LiveConfigViewStack.lastName = configurationName;
-				} else {
-					return;
-				}
+  public void run() {
+    if (window != null) {
+      try {
+        // Configuration name
+        String configurationName = null;
+        InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "New Live Run Configuration", "Enter a configuration name", "", new NameInputValidator("Configuration"));
+        if (dlg.open() == Window.OK) {
+          configurationName = dlg.getValue();
+          LiveConfigViewStack.lastName = configurationName;
+        } else {
+          return;
+        }
 
-				// Configuration path
-				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		        FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-		        dialog.setFilterExtensions(new String[] {"*.lcc"});
-		        dialog.setFilterNames(new String[] {"Live Coding Configuration"});
-		        String fileSelected = dialog.open();
-		
-		        if (fileSelected != null) {
-		          LiveConfigViewStack.lastPath = fileSelected;
-		        } else {
-		        	return;
-		        }
+        // Configuration path
+        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+        dialog.setFilterExtensions(new String[] { "*.lcc" });
+        dialog.setFilterNames(new String[] { "Live Coding Configuration" });
+        String fileSelected = dialog.open();
 
-				window.getActivePage().showView(viewId, fileSelected, IWorkbenchPage.VIEW_ACTIVATE);
-			} catch (PartInitException e) {
-				MessageDialog.openError(window.getShell(), "Error",
-						"Error opening view:" + e.getMessage());
-			}
-		}
-	}
+        if (fileSelected != null) {
+          LiveConfigViewStack.lastPath = fileSelected;
+        } else {
+          return;
+        }
+
+        window.getActivePage().showView(viewId, fileSelected, IWorkbenchPage.VIEW_ACTIVATE);
+      } catch (PartInitException e) {
+        MessageDialog.openError(window.getShell(), "Error", "Error opening view:" + e.getMessage());
+      }
+    }
+  }
 }

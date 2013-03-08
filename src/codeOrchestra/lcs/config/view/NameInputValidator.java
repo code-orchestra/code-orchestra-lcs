@@ -2,6 +2,9 @@ package codeOrchestra.lcs.config.view;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class NameInputValidator implements IInputValidator {
 
 	private String entityName;

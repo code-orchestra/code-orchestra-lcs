@@ -1,10 +1,11 @@
 package codeOrchestra.lcs.config.view;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -15,7 +16,8 @@ import codeOrchestra.lcs.project.LCSProject;
  */
 public final class LiveCodingProjectViews {
 
-  private static Set<String> lcpViewIDs = new HashSet<String>() {{
+  @SuppressWarnings("serial")
+  private static Set<String> lcpViewIDs = new LinkedHashSet<String>() {{
     add("LCS.sourcesView");
     add("LCS.liveCodingView");
     add("LCS.compilerView");
@@ -25,11 +27,13 @@ public final class LiveCodingProjectViews {
     return lcpViewIDs.contains(viewReference.getId());
   }
   
-  public static void openViews(LCSProject project) throws PartInitException {
-    
+  public static void openProjectViews(IWorkbenchWindow window, LCSProject project) throws PartInitException {
+    for (String viewId : lcpViewIDs) {
+      window.getActivePage().showView(viewId, project.getPath(), IWorkbenchPage.VIEW_ACTIVATE);
+    }
   }
   
-  public static void closeAllViews() {
+  public static void closeProjectViews() {
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if (page != null) {
         IViewReference[] viewReferences = page.getViewReferences();

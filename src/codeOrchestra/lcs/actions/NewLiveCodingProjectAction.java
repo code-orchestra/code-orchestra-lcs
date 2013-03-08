@@ -51,10 +51,10 @@ public class NewLiveCodingProjectAction extends Action {
           return;
         }
         
-        LiveCodingProjectViews.closeAllViews();
+        LiveCodingProjectViews.closeProjectViews();
         
         LCSProject newProject = LCSProject.createNew(projectName, projectPath);
-        LiveCodingProjectViews.openViews(newProject);        
+        LiveCodingProjectViews.openProjectViews(window, newProject);        
       } catch (PartInitException e) {
         MessageDialog.openError(window.getShell(), "Error", "Error opening view:" + e.getMessage());
       }

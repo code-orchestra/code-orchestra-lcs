@@ -5,6 +5,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class PathEditorEx extends PathEditor {
 	
 	private boolean dirsOnly;

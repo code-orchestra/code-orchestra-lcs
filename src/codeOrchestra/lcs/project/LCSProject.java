@@ -6,6 +6,9 @@ import org.eclipse.jface.preference.PreferenceStore;
 
 import codeOrchestra.lcs.config.view.LiveConfigViewStack;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class LCSProject {
 
 	private static LCSProject currentProject;
@@ -14,8 +17,8 @@ public class LCSProject {
 		return currentProject;
 	}
 	
-	public static LCSProject createNew(String name, String file) {
-		currentProject = new LCSProject(file);
+	public static LCSProject createNew(String name, String path) {
+		currentProject = new LCSProject(path);
 		currentProject.name = name;
 		currentProject.save();
 		
@@ -28,6 +31,7 @@ public class LCSProject {
 	}
 	
 	private String name;
+	private String path;
 	
 	private PreferenceStore preferenceStore; 
 	
@@ -36,7 +40,9 @@ public class LCSProject {
 	private LiveCodingSettings liveCodingSettings;	
 	
 	private LCSProject(String descriptorFile) {
-		preferenceStore = new PreferenceStore(LiveConfigViewStack.lastPath);
+		this.path = descriptorFile;
+	  
+	  preferenceStore = new PreferenceStore(LiveConfigViewStack.lastPath);
 		try {
 			preferenceStore.load();
 		} catch (IOException e) {
@@ -64,7 +70,11 @@ public class LCSProject {
 		return name;
 	}
 
-	public void save() {
+	public String getPath() {
+    return path;
+  }
+
+  public void save() {
 		try {
 			preferenceStore.save();
 		} catch (IOException e) {
