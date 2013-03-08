@@ -1,7 +1,9 @@
 package codeOrchestra.lcs.views;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.part.ViewPart;
 
+import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.ProjectSettingsPart;
 
 /**
@@ -10,5 +12,9 @@ import codeOrchestra.lcs.project.ProjectSettingsPart;
 public abstract class LiveCodingProjectPartView<P extends ProjectSettingsPart> extends ViewPart {
   
   protected abstract void savePart();  
+  
+  protected IPreferenceStore getPreferenceStore() {
+    return LCSProject.getCurrentProject().getPreferenceStore();
+  }
 
 }

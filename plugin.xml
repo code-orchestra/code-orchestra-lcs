@@ -45,6 +45,12 @@
             name="Compiler Settings"
             restorable="true">
       </view>
+      <view
+            class="codeOrchestra.lcs.views.MessagesView"
+            id="LCS.messages"
+            name="Messages"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

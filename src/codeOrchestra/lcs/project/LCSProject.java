@@ -71,6 +71,10 @@ public class LCSProject {
 	public String getPath() {
     return path;
   }
+	
+  public PreferenceStore getPreferenceStore() {
+    return preferenceStore;
+  }
 
   public void save() {
 		try {

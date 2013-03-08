@@ -23,105 +23,98 @@ import codeOrchestra.lcs.config.view.PathEditorEx;
  */
 public class LiveConfigurationView extends ViewPart {
 
-	public static final String ID = "LCS.view";
+  public static final String ID = "LCS.view";
 
-	private PreferenceStore preferenceStore;
+  private PreferenceStore preferenceStore;
 
-	private PathEditor sourcePathsEditor;
-	private PathEditor libraryPathsEditor;
-	private StringFieldEditor mainClassEditor;
-	private DirectoryFieldEditor flexSDKPathEditor;
+  private PathEditor sourcePathsEditor;
+  private PathEditor libraryPathsEditor;
+  private StringFieldEditor mainClassEditor;
+  private DirectoryFieldEditor flexSDKPathEditor;
 
-	@Override
-	public void init(IViewSite site) throws PartInitException {
-		super.init(site);
+  @Override
+  public void init(IViewSite site) throws PartInitException {
+    super.init(site);
 
-		assert LiveConfigViewStack.lastPath != null;
+    assert LiveConfigViewStack.lastPath != null;
 
-		File configurationFile = new File(LiveConfigViewStack.lastPath);
-		boolean newConfiguration = !configurationFile.exists();
-		if (newConfiguration) {
-			try {
-				configurationFile.createNewFile();
-			} catch (IOException e) {
-				throw new RuntimeException("Can't create configuration file: " + configurationFile.getPath(), e);
-			}
-		}
+    File configurationFile = new File(LiveConfigViewStack.lastPath);
+    boolean newConfiguration = !configurationFile.exists();
+    if (newConfiguration) {
+      try {
+        configurationFile.createNewFile();
+      } catch (IOException e) {
+        throw new RuntimeException("Can't create configuration file: " + configurationFile.getPath(), e);
+      }
+    }
 
-		preferenceStore = new PreferenceStore(LiveConfigViewStack.lastPath);
-		try {
-			preferenceStore.load();
-		} catch (IOException e) {
-			throw new RuntimeException("Error loading live coding configuration", e);
-		}
-		
-		if (newConfiguration) {
-			setPartName(LiveConfigViewStack.lastName);
-			preferenceStore.setValue("name", LiveConfigViewStack.lastName);
-		} else {
-			setPartName(preferenceStore.getString("name"));
-		}
-	}
+    preferenceStore = new PreferenceStore(LiveConfigViewStack.lastPath);
+    try {
+      preferenceStore.load();
+    } catch (IOException e) {
+      throw new RuntimeException("Error loading live coding configuration", e);
+    }
 
-	public void createPartControl(Composite parent) {
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		layout.marginHeight = 5;
-		layout.marginWidth = 10;
-		parent.setLayout(layout);
+    if (newConfiguration) {
+      setPartName(LiveConfigViewStack.lastName);
+      preferenceStore.setValue("name", LiveConfigViewStack.lastName);
+    } else {
+      setPartName(preferenceStore.getString("name"));
+    }
+  }
 
-		Composite banner = new Composite(parent, SWT.NONE);
-		GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		banner.setLayoutData(layoutData);
+  public void createPartControl(Composite parent) {
+    GridLayout layout = new GridLayout();
+    layout.numColumns = 1;
+    layout.marginHeight = 5;
+    layout.marginWidth = 10;
+    parent.setLayout(layout);
 
-		// Controls
+    Composite banner = new Composite(parent, SWT.NONE);
+    GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+    banner.setLayoutData(layoutData);
 
-		Composite pathsComposite = new Composite(banner, SWT.NONE);
-		pathsComposite.setLayout(new GridLayout());
-		pathsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true,
-				false));
+    // Controls
 
-		Composite flexPathComposite = new Composite(pathsComposite, SWT.NONE);
-		flexPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true,
-				false));
-		flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath",
-				"Flex SDK Path:", flexPathComposite);
-		flexSDKPathEditor.setPreferenceStore(preferenceStore);
-		flexSDKPathEditor.load();
+    Composite pathsComposite = new Composite(banner, SWT.NONE);
+    pathsComposite.setLayout(new GridLayout());
+    pathsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
-		Composite mainClassComposite = new Composite(pathsComposite, SWT.NONE);
-		mainClassComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true,
-				false));
-		mainClassEditor = new StringFieldEditor("mainClass", "Main class:",
-				mainClassComposite);
-		mainClassEditor.setPreferenceStore(preferenceStore);
-		mainClassEditor.load();
+    Composite flexPathComposite = new Composite(pathsComposite, SWT.NONE);
+    flexPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+    flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath", "Flex SDK Path:", flexPathComposite);
+    flexSDKPathEditor.setPreferenceStore(preferenceStore);
+    flexSDKPathEditor.load();
 
-		sourcePathsEditor = new PathEditorEx("sourcePaths", "Source Paths:",
-				"Choose a Source Path", banner, true);
-		sourcePathsEditor.setPreferenceStore(preferenceStore);
-		sourcePathsEditor.load();
+    Composite mainClassComposite = new Composite(pathsComposite, SWT.NONE);
+    mainClassComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+    mainClassEditor = new StringFieldEditor("mainClass", "Main class:", mainClassComposite);
+    mainClassEditor.setPreferenceStore(preferenceStore);
+    mainClassEditor.load();
 
-		libraryPathsEditor = new PathEditorEx("libraryPaths", "Library Paths:",
-				"Choose a Library Path", banner, false);
-		libraryPathsEditor.setPreferenceStore(preferenceStore);
-		libraryPathsEditor.load();
-	}
-	
-	public void setFocus() {
-		sourcePathsEditor.setFocus();
-	}
+    sourcePathsEditor = new PathEditorEx("sourcePaths", "Source Paths:", "Choose a Source Path", banner, true);
+    sourcePathsEditor.setPreferenceStore(preferenceStore);
+    sourcePathsEditor.load();
 
-	public void save() {
-		sourcePathsEditor.store();
-		libraryPathsEditor.store();
-		mainClassEditor.store();
-		flexSDKPathEditor.store();
+    libraryPathsEditor = new PathEditorEx("libraryPaths", "Library Paths:", "Choose a Library Path", banner, false);
+    libraryPathsEditor.setPreferenceStore(preferenceStore);
+    libraryPathsEditor.load();
+  }
 
-		try {
-			preferenceStore.save();
-		} catch (IOException e) {
-			throw new RuntimeException("Can't save the preferences", e);
-		}
-	}
+  public void setFocus() {
+    sourcePathsEditor.setFocus();
+  }
+
+  public void save() {
+    sourcePathsEditor.store();
+    libraryPathsEditor.store();
+    mainClassEditor.store();
+    flexSDKPathEditor.store();
+
+    try {
+      preferenceStore.save();
+    } catch (IOException e) {
+      throw new RuntimeException("Can't save the preferences", e);
+    }
+  }
 }

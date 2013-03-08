@@ -64,10 +64,9 @@ public class NewLiveCodingProjectAction extends Action {
         File projectFile = new File(projectPath);
         if (projectFile.exists()) {
           projectFile.delete();
-        } else {
-          projectFile.createNewFile();
         }
-        
+        projectFile.createNewFile();
+
         LiveCodingProjectViews.closeProjectViews();
         
         LCSProject newProject = LCSProject.createNew(projectName, projectPath);

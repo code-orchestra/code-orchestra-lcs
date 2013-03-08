@@ -11,8 +11,13 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
+    public static ApplicationWorkbenchWindowAdvisor sharedInstance;
+  
+    private IWorkbenchWindowConfigurer configurer;
+    
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
+        sharedInstance = this;
     }
 
     public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -20,10 +25,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     public void preWindowOpen() {
-        IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
+        configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(800, 600));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
+    }
+    
+    public void setTitle(String title) {
+      configurer.setTitle(title);
     }
     
 }
