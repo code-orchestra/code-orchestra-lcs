@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import org.eclipse.jface.preference.PreferenceStore;
 
-import codeOrchestra.lcs.config.view.LiveConfigViewStack;
-
 /**
  * @author Alexander Eliseyev
  */
@@ -42,7 +40,7 @@ public class LCSProject {
 	private LCSProject(String descriptorFile) {
 		this.path = descriptorFile;
 	  
-	  preferenceStore = new PreferenceStore(LiveConfigViewStack.lastPath);
+	  preferenceStore = new PreferenceStore(descriptorFile);
 		try {
 			preferenceStore.load();
 		} catch (IOException e) {

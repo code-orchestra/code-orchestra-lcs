@@ -17,6 +17,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 import codeOrchestra.lcs.actions.NewLiveCodingConfigurationAction;
+import codeOrchestra.lcs.actions.NewLiveCodingProjectAction;
 import codeOrchestra.lcs.actions.OpenLiveCodingConfigurationAction;
 import codeOrchestra.lcs.actions.SaveAllAction;
 
@@ -30,9 +31,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     // when fillActionBars is called with FILL_PROXY.
     private IWorkbenchAction exitAction;
     private IWorkbenchAction aboutAction;
-    private NewLiveCodingConfigurationAction newViewAction;
     private OpenLiveCodingConfigurationAction openViewAction;
     private SaveAllAction saveAllAction;
+    
+    private NewLiveCodingProjectAction newProjectAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -51,9 +53,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         aboutAction = ActionFactory.ABOUT.create(window);
         register(aboutAction);
-        
-        newViewAction = new NewLiveCodingConfigurationAction(window, "Create New Live Configuration", LiveConfigurationView.ID);
-        register(newViewAction);
+
+        newProjectAction = new NewLiveCodingProjectAction(window);
+        register(newProjectAction);
         
         saveAllAction = new SaveAllAction(window, "Sace all Live Configurations", LiveConfigurationView.ID);
         register(saveAllAction);
@@ -72,7 +74,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menuBar.add(helpMenu);
         
         // File
-        fileMenu.add(newViewAction);
+        fileMenu.add(newProjectAction);
         fileMenu.add(new Separator());
         fileMenu.add(openViewAction);
         fileMenu.add(new Separator());
@@ -87,7 +89,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));   
-        toolbar.add(newViewAction);
+        toolbar.add(newProjectAction);
         toolbar.add(openViewAction);
         toolbar.add(saveAllAction);        
         toolbar.add(exitAction);

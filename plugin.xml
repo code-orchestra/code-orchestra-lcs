@@ -22,11 +22,28 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            name="Live Configuration"
             allowMultiple="true"
+            class="codeOrchestra.lcs.views.SourceSettingsView"
+            icon="icons/paths.png"
+            id="LCS.sourcesView"
+            name="Project Paths"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="true"
+            class="codeOrchestra.lcs.views.LiveCodingSettingsView"
             icon="icons/liveResults.png"
-            class="codeOrchestra.lcs.LiveConfigurationView"
-            id="LCS.view">
+            id="LCS.liveCodingView"
+            name="Live Settings"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="true"
+            class="codeOrchestra.lcs.views.CompilerSettingsView"
+            icon="icons/compiler.png"
+            id="LCS.compilerView"
+            name="Compiler Settings"
+            restorable="true">
       </view>
    </extension>
    <extension
@@ -42,15 +59,15 @@
             id="LCS.open">
       </command>
       <command
-            categoryId="LCS.category"
-            description="Creates a Live Coding Configuration"
-            id="LCS.new"
-            name="Creates a new Live Coding Configuration">
-      </command>
-      <command
             description="Saves all Live Coding Configurations"
             id="LCS.saveAll"
             name="Saves all Live Coding Configurations">
+      </command>
+      <command
+            categoryId="LCS.category"
+            description="Creates a new Live Coding Project"
+            id="LCS.newProject"
+            name="Creates a new Live Coding Project">
       </command>
    </extension>
    <extension

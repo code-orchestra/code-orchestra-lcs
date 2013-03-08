@@ -13,10 +13,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import codeOrchestra.lcs.Activator;
 import codeOrchestra.lcs.ICommandIds;
-import codeOrchestra.lcs.config.view.NameInputValidator;
 import codeOrchestra.lcs.config.view.LiveConfigViewStack;
+import codeOrchestra.lcs.config.view.NameInputValidator;
 
 /**
  * @author Alexander Eliseyev

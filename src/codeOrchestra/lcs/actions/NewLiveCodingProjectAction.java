@@ -1,5 +1,7 @@
 package codeOrchestra.lcs.actions;
 
+import java.io.File;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -9,9 +11,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.config.view.NameInputValidator;
 import codeOrchestra.lcs.project.LCSProject;
@@ -25,6 +27,14 @@ public class NewLiveCodingProjectAction extends Action {
 
   public NewLiveCodingProjectAction(IWorkbenchWindow window) {
     this.window = window;
+    
+    setText("New Project");
+    // The id is used to refer to the action in a menu or toolbar
+    setId(ICommandIds.CMD_NEW_PROJECT);
+    // Associate the action with a pre-defined command, to allow key
+    // bindings.
+    setActionDefinitionId(ICommandIds.CMD_NEW_PROJECT);
+    setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/new.gif"));
   }
 
   @Override
@@ -51,12 +61,20 @@ public class NewLiveCodingProjectAction extends Action {
           return;
         }
         
+        File projectFile = new File(projectPath);
+        if (projectFile.exists()) {
+          projectFile.delete();
+        } else {
+          projectFile.createNewFile();
+        }
+        
         LiveCodingProjectViews.closeProjectViews();
         
         LCSProject newProject = LCSProject.createNew(projectName, projectPath);
         LiveCodingProjectViews.openProjectViews(window, newProject);        
-      } catch (PartInitException e) {
+      } catch (Throwable e) {
         MessageDialog.openError(window.getShell(), "Error", "Error opening view:" + e.getMessage());
+        e.printStackTrace();
       }
     }
   }
