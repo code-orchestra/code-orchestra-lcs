@@ -34,11 +34,11 @@ public final class LiveCodingProjectViews {
       window.getActivePage().showView(viewId, project.getPath(), activated ? IWorkbenchPage.VIEW_ACTIVATE : IWorkbenchPage.VIEW_CREATE);
     }
     
-    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestrs Live Coding Server - " + project.getName() + " - " + project.getPath());
+    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestra Live Coding Server - " + project.getName() + " - " + project.getPath());
   }
   
   public static void closeProjectViews() {
-    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestrs Live Coding Server");
+    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestra Live Coding Server");
     
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if (page != null) {
