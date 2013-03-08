@@ -1,11 +1,7 @@
 package codeOrchestra.lcs;
 
 /**
- * Interface defining the application's command IDs.
- * Key bindings can be defined for specific commands.
- * To associate an action with a command, use IAction.setActionDefinitionId(commandId).
- *
- * @see org.eclipse.jface.action.IAction#setActionDefinitionId(String)
+ * @author Alexander Eliseyev
  */
 public interface ICommandIds {
 

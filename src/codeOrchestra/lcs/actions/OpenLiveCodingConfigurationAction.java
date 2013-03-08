@@ -13,6 +13,9 @@ import org.eclipse.ui.PlatformUI;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveConfigViewStack;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class OpenLiveCodingConfigurationAction extends Action {
 
 	private final IWorkbenchWindow window;

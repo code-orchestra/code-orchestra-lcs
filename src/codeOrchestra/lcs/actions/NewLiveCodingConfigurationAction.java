@@ -15,9 +15,12 @@ import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.lcs.Activator;
 import codeOrchestra.lcs.ICommandIds;
-import codeOrchestra.lcs.config.view.ConfigurationNameInputValidator;
+import codeOrchestra.lcs.config.view.NameInputValidator;
 import codeOrchestra.lcs.config.view.LiveConfigViewStack;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class NewLiveCodingConfigurationAction extends Action {
 
 	private final IWorkbenchWindow window;
@@ -40,7 +43,7 @@ public class NewLiveCodingConfigurationAction extends Action {
 			try {
 				// Configuration name
 				String configurationName = null;
-				InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "New Live Run Configuration", "Enter a configuration name", "", new ConfigurationNameInputValidator());
+				InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "New Live Run Configuration", "Enter a configuration name", "", new NameInputValidator("Configuration"));
 				if (dlg.open() == Window.OK) {
 					configurationName = dlg.getValue();
 					LiveConfigViewStack.lastName = configurationName;

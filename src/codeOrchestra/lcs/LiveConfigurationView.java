@@ -18,6 +18,9 @@ import org.eclipse.ui.part.ViewPart;
 import codeOrchestra.lcs.config.view.LiveConfigViewStack;
 import codeOrchestra.lcs.config.view.PathEditorEx;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class LiveConfigurationView extends ViewPart {
 
 	public static final String ID = "LCS.view";

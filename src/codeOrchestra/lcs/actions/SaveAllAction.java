@@ -10,6 +10,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.LiveConfigurationView;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class SaveAllAction extends Action {
 	
 	private final IWorkbenchWindow window;

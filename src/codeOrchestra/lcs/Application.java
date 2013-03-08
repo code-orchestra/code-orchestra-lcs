@@ -7,7 +7,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * This class controls all aspects of the application's execution
+ * @author Alexander Eliseyev
  */
 public class Application implements IApplication {
 

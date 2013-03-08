@@ -5,8 +5,7 @@ import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 /**
- * This workbench advisor creates the window advisor, and specifies
- * the perspective id for the initial window.
+ * @author Alexander Eliseyev
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
