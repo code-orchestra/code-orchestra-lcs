@@ -14,6 +14,8 @@ import codeOrchestra.lcs.views.SourceSettingsView;
  */
 public class Perspective implements IPerspectiveFactory {
 
+  private String name;
+  
 	/**
 	 * The ID of the perspective as specified in the extension.
 	 */
@@ -32,4 +34,11 @@ public class Perspective implements IPerspectiveFactory {
 		messagesFolder.addPlaceholder(MessagesView.ID + ":*");
 		messagesFolder.addView(MessagesView.ID);
 	}
+
+  public String getName() {
+    return name;
+  }
+	
+	
+	
 }
