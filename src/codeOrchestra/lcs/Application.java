@@ -6,18 +6,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
+import codeOrchestra.actionscript.logging.transport.LoggerServerSocketThread;
+
 /**
  * @author Alexander Eliseyev
  */
 public class Application implements IApplication {
 
+  private LoggerServerSocketThread serverSocketThread = new LoggerServerSocketThread();
+  
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
 	public Object start(IApplicationContext context) {
 		Display display = PlatformUI.createDisplay();
 		try {
-			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
+		  // TODO: handle errors
+		  serverSocketThread.openSocket();		  
+		  
+		  int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
 			if (returnCode == PlatformUI.RETURN_RESTART) {
 				return IApplication.EXIT_RESTART;
 			}
@@ -33,6 +40,10 @@ public class Application implements IApplication {
 	public void stop() {
 		if (!PlatformUI.isWorkbenchRunning())
 			return;
+		
+    // TODO: handle errors
+		serverSocketThread.closeSocket();
+		
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		final Display display = workbench.getDisplay();
 		display.syncExec(new Runnable() {
