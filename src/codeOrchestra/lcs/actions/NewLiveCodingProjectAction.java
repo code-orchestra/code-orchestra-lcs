@@ -53,6 +53,7 @@ public class NewLiveCodingProjectAction extends Action {
         // Project path
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+        dialog.setFileName(projectName);
         dialog.setFilterExtensions(new String[] { "*.lcp" });
         dialog.setFilterNames(new String[] { "Live Coding Project" });
         String projectPath = dialog.open();
