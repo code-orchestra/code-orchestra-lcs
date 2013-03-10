@@ -1,6 +1,5 @@
 package codeOrchestra.lcs.logging;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,21 +55,10 @@ public final class Logger {
         continue;
       }
       
-      messageView.addMessage(level, getCreationTimeString(timestamp) + " : [" + name + "] " +  message);
+      messageView.addMessage(name, level, message, timestamp);
     }
   }
 
-  public String getCreationTimeString(long timestamp) {
-    Date date = new Date(timestamp);
-    return expand("" + date.getHours(), 2) + ":" +
-      expand("" + date.getMinutes(), 2) + ":" + expand("" + date.getSeconds(), 2);
-  }
-  
-  private String expand(String s, int n) {
-    for (int i = 0; i < n - s.length(); i++) {
-      s = "0" + s;
-    }
-    return s;
-  }
+ 
   
 }

@@ -1,6 +1,14 @@
 package codeOrchestra.lcs.views;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -21,6 +29,12 @@ public class MessagesView extends ViewPart {
 
   private Table table;
   private String scopeName;
+  
+  private Button sourceButton;
+  private Button infoButton;
+  private Button warningButton;
+
+  private Map<Message, TableItem> messages = new LinkedHashMap<Message, TableItem>();
 
   @Override
   public void init(IViewSite site) throws PartInitException {
@@ -50,17 +64,46 @@ public class MessagesView extends ViewPart {
     buttonsLayout.verticalSpacing = 0;
     buttonsComposite.setLayout(buttonsLayout);
 
-    Button warningButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
+    warningButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
     warningButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+    warningButton.setSelection(true);
     warningButton.setImage(Level.WARN.getImage());
+    warningButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        refresh();
+      }
+    });
 
-    Button infoButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
+    infoButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
     infoButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+    infoButton.setSelection(true);
     infoButton.setImage(Level.INFO.getImage());
+    infoButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        refresh();
+      }
+    });
 
-    Button sourceButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
+    sourceButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
     sourceButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
     sourceButton.setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/messages/source.png").createImage());
+    sourceButton.setSelection(true);
+    sourceButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        for (TableItem tableItem : table.getItems()) {
+          for (Entry<Message, TableItem> entry : messages.entrySet()) {
+            if (entry.getValue() == tableItem) {
+              Message message = entry.getKey();
+              tableItem.setText(message.getMessageText(sourceButton.getSelection()));               
+              break;
+            }
+          }
+        }
+      }
+    });
 
     // Table
     table = new Table(parent, SWT.BORDER);
@@ -68,12 +111,28 @@ public class MessagesView extends ViewPart {
     table.setLayoutData(tableLayoutData);
   }
 
-  public void addMessage(final Level level, final String message) {
+  private void refresh() {
+    table.clearAll();
+    table.setItemCount(0);
+    
+    List<Message> messagesList = new ArrayList<Message>(messages.keySet());
+    
+    for (Message message : messagesList) {
+      if ((message.getLevel() == Level.INFO && !infoButton.getSelection()) || (message.getLevel() == Level.WARN && !warningButton.getSelection())) {
+        continue;
+      }
+
+      TableItem tableItem = message.createTableItem(table, sourceButton.getSelection());      
+      messages.put(message, tableItem);
+    }
+  }
+  
+  public void addMessage(final String source, final Level level, final String message, final long timestamp) {
     Display.getDefault().asyncExec(new Runnable() {
       public void run() {
-        TableItem item = new TableItem(table, SWT.NONE);
-        item.setText(message);
-        item.setImage(level.getImage());
+        Message newMessage = new Message(source, level, message, timestamp);
+        TableItem tableItem = newMessage.createTableItem(table, sourceButton.getSelection());
+        messages.put(newMessage, tableItem);
       }
     });
   }

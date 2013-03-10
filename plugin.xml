@@ -46,6 +46,7 @@
             restorable="true">
       </view>
       <view
+            allowMultiple="true"
             class="codeOrchestra.lcs.views.MessagesView"
             id="LCS.messages"
             name="Messages"

@@ -1,6 +1,7 @@
 package codeOrchestra.actionscript.logging.scope;
 
 import codeOrchestra.actionscript.logging.model.MessageScope;
+import codeOrchestra.lcs.messages.MessagesManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ public final class MessageScopeRegistry {
       if (scope == null) {
         scope = new MessageScope(scopeId, scopeName);
         scopeMap.put(scopeId, scope);
+        MessagesManager.getInstance().addTab(scopeName);        
       } else {
         scope.setName(scopeName);
       }
