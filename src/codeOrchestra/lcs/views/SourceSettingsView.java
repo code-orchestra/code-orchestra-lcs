@@ -1,7 +1,7 @@
 package codeOrchestra.lcs.views;
 
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.PathEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,13 +19,13 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
 
   private PathEditor sourcePathsEditor;
   private PathEditor libraryPathsEditor;
-  private StringFieldEditor mainClassEditor;
+  private DirectoryFieldEditor flexSDKPathEditor;
   
   @Override
   public void savePart() {
     sourcePathsEditor.store();
     libraryPathsEditor.store();
-    mainClassEditor.store();    
+    flexSDKPathEditor.store();    
   }
 
   @Override
@@ -46,12 +46,12 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     pathsComposite.setLayout(new GridLayout());
     pathsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
-    Composite mainClassComposite = new Composite(pathsComposite, SWT.NONE);
-    mainClassComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-    mainClassEditor = new StringFieldEditor("mainClass", "Main class:", mainClassComposite);
-    mainClassEditor.setPreferenceStore(getPreferenceStore());
-    mainClassEditor.load();
-
+    Composite flexPathComposite = new Composite(pathsComposite, SWT.NONE);
+    flexPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+    flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath", "Flex SDK Path:", flexPathComposite);
+    flexSDKPathEditor.setPreferenceStore(getPreferenceStore());
+    flexSDKPathEditor.load();
+  
     sourcePathsEditor = new PathEditorEx("sourcePaths", "Source Paths:", "Choose a Source Path", banner, true);
     sourcePathsEditor.setPreferenceStore(getPreferenceStore());
     sourcePathsEditor.load();
@@ -63,7 +63,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
 
   @Override
   public void setFocus() {
-    mainClassEditor.setFocus();    
+    flexSDKPathEditor.setFocus();    
   }
 
 }

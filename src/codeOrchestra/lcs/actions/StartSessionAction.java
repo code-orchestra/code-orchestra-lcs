@@ -13,4 +13,9 @@ public class StartSessionAction extends Action {
     setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/run.png"));
   }
   
+  @Override
+  public void run() {
+    // TODO: implement
+  }
+  
 }
