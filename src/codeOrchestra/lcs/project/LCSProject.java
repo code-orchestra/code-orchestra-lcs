@@ -47,6 +47,8 @@ public class LCSProject {
 			throw new RuntimeException("Error loading live coding configuration", e);
 		}
 		
+		this.name = preferenceStore.getString("name");
+		
 		compilerSettings = new CompilerSettings(preferenceStore);
 		sourceSettings = new SourceSettings(preferenceStore);
 		liveCodingSettings = new LiveCodingSettings(preferenceStore);
@@ -78,7 +80,8 @@ public class LCSProject {
 
   public void save() {
 		try {
-			preferenceStore.save();
+		  preferenceStore.setValue("name", name);
+		  preferenceStore.save();
 		} catch (IOException e) {
 			throw new RuntimeException("Can't save the project " + name, e);
 		}

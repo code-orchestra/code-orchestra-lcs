@@ -21,11 +21,11 @@ import codeOrchestra.lcs.project.LCSProject;
 /**
  * @author Alexander Eliseyev
  */
-public class NewLiveCodingProjectAction extends Action {
+public class NewProjectAction extends Action {
 
   private IWorkbenchWindow window;
 
-  public NewLiveCodingProjectAction(IWorkbenchWindow window) {
+  public NewProjectAction(IWorkbenchWindow window) {
     this.window = window;
     
     setText("New Project");

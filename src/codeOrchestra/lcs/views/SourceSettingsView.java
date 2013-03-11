@@ -22,7 +22,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
   private StringFieldEditor mainClassEditor;
   
   @Override
-  protected void savePart() {
+  public void savePart() {
     sourcePathsEditor.store();
     libraryPathsEditor.store();
     mainClassEditor.store();    

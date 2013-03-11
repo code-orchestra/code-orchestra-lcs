@@ -12,7 +12,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   public static final String ID = "LCS.compilerView";
   
   @Override
-  protected void savePart() {
+  public void savePart() {
     // TODO Auto-generated method stub
     
   }

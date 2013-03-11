@@ -60,15 +60,15 @@
             id="LCS.category">
       </category>
       <command
-            name="Open Live Coding Configuration"
-            description="Opens a Live Coding Configuration"
+            name="Open Live Coding Project"
+            description="Opens a Live Coding Project"
             categoryId="LCS.category"
             id="LCS.open">
       </command>
       <command
-            description="Saves all Live Coding Configurations"
-            id="LCS.saveAll"
-            name="Saves all Live Coding Configurations">
+            description="Saves current Live Coding Project"
+            id="LCS.save"
+            name="Saves current Live Coding Project">
       </command>
       <command
             categoryId="LCS.category"

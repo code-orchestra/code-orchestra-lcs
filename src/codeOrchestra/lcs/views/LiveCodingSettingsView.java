@@ -12,7 +12,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   public static final String ID = "LCS.liveCodingView";
   
   @Override
-  protected void savePart() {
+  public void savePart() {
     // TODO Auto-generated method stub
     
   }

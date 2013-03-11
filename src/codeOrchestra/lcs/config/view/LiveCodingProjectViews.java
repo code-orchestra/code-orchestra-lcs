@@ -3,6 +3,7 @@ package codeOrchestra.lcs.config.view;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -11,6 +12,7 @@ import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.lcs.ApplicationWorkbenchWindowAdvisor;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.views.LiveCodingProjectPartView;
 
 /**
  * @author Alexander Eliseyev
@@ -26,6 +28,22 @@ public final class LiveCodingProjectViews {
   
   public static boolean isLiveCodingView(IViewReference viewReference) {
     return lcpViewIDs.contains(viewReference.getId());
+  }
+  
+  public static void saveProjectViewsState(IWorkbenchWindow window, LCSProject project) {
+    IViewReference[] viewReferences = window.getActivePage().getViewReferences();
+    for (String viewId : lcpViewIDs) {      
+      for (int i = 0; i < viewReferences.length; i++) {
+        if (viewReferences[i].getId().equals(viewId)) {
+          IViewPart view = viewReferences[i].getView(false);
+          if (view != null && view instanceof LiveCodingProjectPartView) {
+            @SuppressWarnings("rawtypes")
+            LiveCodingProjectPartView liveCodingProjectPartView = (LiveCodingProjectPartView) view;
+            liveCodingProjectPartView.savePart();
+          }
+        }
+      }
+    }
   }
   
   public static void openProjectViews(IWorkbenchWindow window, LCSProject project) throws PartInitException {

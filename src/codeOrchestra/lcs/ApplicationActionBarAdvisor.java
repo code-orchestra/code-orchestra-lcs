@@ -16,10 +16,9 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
-import codeOrchestra.lcs.actions.NewLiveCodingConfigurationAction;
-import codeOrchestra.lcs.actions.NewLiveCodingProjectAction;
-import codeOrchestra.lcs.actions.OpenLiveCodingConfigurationAction;
-import codeOrchestra.lcs.actions.SaveAllAction;
+import codeOrchestra.lcs.actions.NewProjectAction;
+import codeOrchestra.lcs.actions.OpenProjectAction;
+import codeOrchestra.lcs.actions.SaveProjectAction;
 
 /**
  * @author Alexander Eliseyev
@@ -31,10 +30,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     // when fillActionBars is called with FILL_PROXY.
     private IWorkbenchAction exitAction;
     private IWorkbenchAction aboutAction;
-    private OpenLiveCodingConfigurationAction openViewAction;
-    private SaveAllAction saveAllAction;
+    private OpenProjectAction openProjectAction;
+    private SaveProjectAction saveProjectAction;
     
-    private NewLiveCodingProjectAction newProjectAction;
+    private NewProjectAction newProjectAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -54,14 +53,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         aboutAction = ActionFactory.ABOUT.create(window);
         register(aboutAction);
 
-        newProjectAction = new NewLiveCodingProjectAction(window);
+        newProjectAction = new NewProjectAction(window);
         register(newProjectAction);
         
-        saveAllAction = new SaveAllAction(window, "Sace all Live Configurations", LiveConfigurationView.ID);
-        register(saveAllAction);
+        saveProjectAction = new SaveProjectAction(window, "Save Project");
+        register(saveProjectAction);
         
-        openViewAction = new OpenLiveCodingConfigurationAction(window, "Open Existing Live Configuration", LiveConfigurationView.ID);
-        register(openViewAction);
+        openProjectAction = new OpenProjectAction(window, "Open Project");
+        register(openProjectAction);
     }
     
     protected void fillMenuBar(IMenuManager menuBar) {
@@ -76,9 +75,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // File
         fileMenu.add(newProjectAction);
         fileMenu.add(new Separator());
-        fileMenu.add(openViewAction);
+        fileMenu.add(openProjectAction);
         fileMenu.add(new Separator());
-        fileMenu.add(saveAllAction);
+        fileMenu.add(saveProjectAction);
         fileMenu.add(new Separator());        
         fileMenu.add(exitAction);
         
@@ -90,8 +89,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "main"));   
         toolbar.add(newProjectAction);
-        toolbar.add(openViewAction);
-        toolbar.add(saveAllAction);        
+        toolbar.add(openProjectAction);
+        toolbar.add(saveProjectAction);        
         toolbar.add(exitAction);
     }
 }

@@ -11,7 +11,7 @@ import codeOrchestra.lcs.project.ProjectSettingsPart;
  */
 public abstract class LiveCodingProjectPartView<P extends ProjectSettingsPart> extends ViewPart {
   
-  protected abstract void savePart();  
+  public abstract void savePart();  
   
   protected IPreferenceStore getPreferenceStore() {
     return LCSProject.getCurrentProject().getPreferenceStore();
