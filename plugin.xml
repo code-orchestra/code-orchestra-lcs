@@ -76,6 +76,12 @@
             id="LCS.newProject"
             name="Creates a new Live Coding Project">
       </command>
+      <command
+            categoryId="LCS.category"
+            description="Start Live Coding Session"
+            id="LCS.sessionStart"
+            name="Start Live Coding Session">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">

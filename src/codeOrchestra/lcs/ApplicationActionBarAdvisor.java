@@ -19,6 +19,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
+import codeOrchestra.lcs.actions.StartSessionAction;
 
 /**
  * @author Alexander Eliseyev
@@ -30,10 +31,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     // when fillActionBars is called with FILL_PROXY.
     private IWorkbenchAction exitAction;
     private IWorkbenchAction aboutAction;
-    private OpenProjectAction openProjectAction;
-    private SaveProjectAction saveProjectAction;
     
+    private OpenProjectAction openProjectAction;
+    private SaveProjectAction saveProjectAction;    
     private NewProjectAction newProjectAction;
+    
+    private StartSessionAction startSessionAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -61,6 +64,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         openProjectAction = new OpenProjectAction(window, "Open Project");
         register(openProjectAction);
+        
+        startSessionAction = new StartSessionAction();
+        register(startSessionAction);
     }
     
     protected void fillMenuBar(IMenuManager menuBar) {
@@ -86,11 +92,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
     
     protected void fillCoolBar(ICoolBarManager coolBar) {
-        IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
-        coolBar.add(new ToolBarContributionItem(toolbar, "main"));   
-        toolbar.add(newProjectAction);
-        toolbar.add(openProjectAction);
-        toolbar.add(saveProjectAction);        
-        toolbar.add(exitAction);
+        IToolBarManager projectToolBar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);          
+        projectToolBar.add(newProjectAction);
+        projectToolBar.add(openProjectAction);
+        projectToolBar.add(saveProjectAction);        
+        projectToolBar.add(exitAction);
+        coolBar.add(new ToolBarContributionItem(projectToolBar, "project"));
+                
+        IToolBarManager runToolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
+        runToolbar.add(startSessionAction);
+        coolBar.add(new ToolBarContributionItem(runToolbar, "run"));
     }
 }
