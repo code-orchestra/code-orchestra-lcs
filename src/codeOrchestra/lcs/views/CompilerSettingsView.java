@@ -1,6 +1,9 @@
 package codeOrchestra.lcs.views;
 
+import java.awt.Color;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -10,6 +13,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -39,11 +44,13 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   
   private Composite customCompilerConfigEditorComposite;
 
-  private Text playerVersion1;
-  private Text playerVersion2;
-  private Text playerVersion3;
+  private Composite targetPlayerComposite;
 
-    @Override
+  private ComboFieldEditor targetPlayerEditor;
+
+  private Label targetPlayerErrorLabel;
+
+  @Override
   public void createPartControl(Composite parent) {
     GridLayout layout = new GridLayout();
     layout.numColumns = 1;
@@ -125,26 +132,43 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     
     // Target player composite
     // This control has to be saved/restored manually, w/o preferences store
-    Composite targetPlayerComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
+    targetPlayerComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     targetPlayerComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-    GridLayout targetPlayerCompositeLayout = new GridLayout(6, false);
-    targetPlayerComposite.setLayout(targetPlayerCompositeLayout);
-    Label targetPlayerLabel = new Label(targetPlayerComposite, SWT.NONE);
-    targetPlayerLabel.setText("Target player version:");
-    playerVersion1 = new Text(targetPlayerComposite, SWT.LEFT);
-    Label dotLabel1 = new Label(targetPlayerComposite, SWT.NONE);
-    dotLabel1.setText(".");
-    playerVersion2 = new Text(targetPlayerComposite, SWT.LEFT);
-    Label dotLabel2 = new Label(targetPlayerComposite, SWT.NONE);
-    dotLabel2.setText(".");
-    playerVersion3 = new Text(targetPlayerComposite, SWT.LEFT);
-    
-    // 
+    targetPlayerComposite.setLayout(new GridLayout(2, false));        
+    createTargetPlayerEditor();
     
     reset();
     updateUI();
   }
 
+  private void createTargetPlayerEditor() {
+    if (targetPlayerComposite.getChildren().length > 0) {
+      for (Control control : targetPlayerComposite.getChildren()) {
+        control.dispose();
+      }      
+    }
+    
+    String[][] entryNamesAndValues = new String[0][2]; // default one
+    
+//    entryNamesAndValues[0][0] = "10.0.0";
+//    entryNamesAndValues[0][1] = "10.0.0";
+//    
+//    entryNamesAndValues[1][0] = "10.1.0";
+//    entryNamesAndValues[1][1] = "10.1.0";
+    
+    Composite targetPlayerEditorSubComposite = new Composite(targetPlayerComposite, SWT.NONE);
+    targetPlayerEditorSubComposite.setLayout(new GridLayout());
+    targetPlayerEditor = new ComboFieldEditor("targetPlayerVersion", "Target player version:", entryNamesAndValues, targetPlayerEditorSubComposite);
+    targetPlayerEditor.setPreferenceStore(getPreferenceStore());    
+    
+    targetPlayerErrorLabel = new Label(targetPlayerComposite, SWT.WRAP);
+    targetPlayerErrorLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+    targetPlayerErrorLabel.setText("Incorrect Flex SDK path specified"); // TODO: delete
+
+    
+    targetPlayerComposite.layout(true);
+  }
+  
   private void reset() {
     mainClassEditor.load();
     customCompilerConfigEditor.load();
@@ -153,6 +177,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customCompilerConfigEditor.load();
     outputFileNameEditor.load();
     outputPathEditor.load();
+    targetPlayerEditor.load();
     
     // TODO: load target player
   }
@@ -167,6 +192,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customCompilerConfigEditor.store();
     outputFileNameEditor.store();
     outputPathEditor.store();
+    targetPlayerEditor.store();
     
     
     // TODO: store target player
