@@ -1,6 +1,5 @@
 package codeOrchestra.lcs.views;
 
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.PathEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -19,13 +18,11 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
 
   private PathEditor sourcePathsEditor;
   private PathEditor libraryPathsEditor;
-  private DirectoryFieldEditor flexSDKPathEditor;
   
   @Override
   public void savePart() {
     sourcePathsEditor.store();
-    libraryPathsEditor.store();
-    flexSDKPathEditor.store();    
+    libraryPathsEditor.store();    
   }
 
   @Override
@@ -40,18 +37,6 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
     banner.setLayoutData(layoutData);
 
-    // Controls
-
-    Composite pathsComposite = new Composite(banner, SWT.NONE);
-    pathsComposite.setLayout(new GridLayout());
-    pathsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-
-    Composite flexPathComposite = new Composite(pathsComposite, SWT.NONE);
-    flexPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-    flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath", "Flex SDK Path:", flexPathComposite);
-    flexSDKPathEditor.setPreferenceStore(getPreferenceStore());
-    flexSDKPathEditor.load();
-  
     sourcePathsEditor = new PathEditorEx("sourcePaths", "Source Paths:", "Choose a Source Path", banner, true);
     sourcePathsEditor.setPreferenceStore(getPreferenceStore());
     sourcePathsEditor.load();
@@ -62,8 +47,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
   }
 
   @Override
-  public void setFocus() {
-    flexSDKPathEditor.setFocus();    
+  public void setFocus() {    
   }
 
 }

@@ -32,16 +32,15 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private BooleanFieldEditor defaultSDKBooleanEditor;
   private BooleanFieldEditor customSDKBooleanEditor;
   private StringFieldEditor outputFileNameEditor;
-  private DirectoryFieldEditor outputPathEditor;;
+  private DirectoryFieldEditor outputPathEditor;
+  private DirectoryFieldEditor flexSDKPathEditor;
   
   // Containers
   
   private Composite customCompilerConfigEditorComposite;
 
   private Text playerVersion1;
-
   private Text playerVersion2;
-
   private Text playerVersion3;
 
     @Override
@@ -52,6 +51,16 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     layout.marginWidth = 10;
     parent.setLayout(layout);
 
+    Composite pathsComposite = new Composite(parent, SWT.NONE);
+    pathsComposite.setLayout(new GridLayout());
+    pathsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+
+    Composite flexPathComposite = new Composite(pathsComposite, SWT.NONE);
+    flexPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+    flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath", "Flex SDK Path:", flexPathComposite);
+    flexSDKPathEditor.setPreferenceStore(getPreferenceStore());
+    flexSDKPathEditor.load();
+    
     // Config file settings
     
     Composite configurationFileComposite = new Composite(parent, SWT.NONE);
@@ -150,6 +159,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   
   @Override
   public void savePart() {
+    flexSDKPathEditor.store();    
     mainClassEditor.store();
     customCompilerConfigEditor.store();
     defaultSDKBooleanEditor.store();
@@ -157,6 +167,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customCompilerConfigEditor.store();
     outputFileNameEditor.store();
     outputPathEditor.store();
+    
     
     // TODO: store target player
   }
