@@ -1,15 +1,30 @@
 package codeOrchestra.lcs.flex;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
  */
 public class FlexSDKUtils {
 
+  private static final String REGULAR_LIBS_RELATIVE_PATH = "frameworks" + File.separator + "libs";
+  private static final String PLAYERLIBS_RELATIVE_PATH = REGULAR_LIBS_RELATIVE_PATH + File.separator + "player";
+  
+  private static final String DEFAULT_PLAYER_VERSION = "10.2.0";
+  
   private Map<FlexSDKLibWrapper, String> libPathCache = new HashMap<FlexSDKLibWrapper, String>();
+  
+  private String playerDirName;
   
   public void checkIsValidFlexSDKPath(String flexSDKPath) throws FlexSDKNotPresentException {
     for (FlexSDKLib flexSDKLib : FlexSDKLib.values()) {
@@ -118,7 +133,7 @@ public class FlexSDKUtils {
           String dirName = playerPath.getName();
           if (dirName.contains(".")) {
             int power = 3;
-            String[] dirNameSplitted = StringUtils.split(dirName, '.');
+            String[] dirNameSplitted = dirName.split("\\.");
             int versionInt = 0;
 
             for (int i = 0; i < dirNameSplitted.length; i++) {
@@ -143,7 +158,7 @@ public class FlexSDKUtils {
       if (playerDirName != null) {
         String[] version = new String[] { "10", "0", "0" };
 
-        String[] dirNameSplitted = StringUtils.split(playerDirName, '.');
+        String[] dirNameSplitted = playerDirName.split("\\.");
         if (dirNameSplitted != null && dirNameSplitted.length > 0) {
           for (int i = 0; i < dirNameSplitted.length; i++) {
             if (i < version.length) {
@@ -154,7 +169,7 @@ public class FlexSDKUtils {
           }
         }
 
-        return StringUtil.join(version, ".");
+        return StringUtils.join(version, ".");
       }
     } catch (Throwable t) {
       // do nothing
@@ -196,4 +211,11 @@ public class FlexSDKUtils {
     }
   }
 
+  private void cacheLibPath(FlexSDKLibWrapper libKey, String libPath) {
+    if (libPath == null) {
+      return;
+    }
+    libPathCache.put(libKey, libPath);
+  }
+  
 }
