@@ -32,7 +32,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
 
   public static final String ID = "LCS.compilerView";
 
-  // Controls
+  // Editors
 
   private StringFieldEditor mainClassEditor;
   private FileFieldEditor customCompilerConfigEditor;
@@ -41,15 +41,20 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private StringFieldEditor outputFileNameEditor;
   private DirectoryFieldEditor outputPathEditor;
   private DirectoryFieldEditor flexSDKPathEditor;
-
+  private ComboFieldEditor targetPlayerEditor;
+  private BooleanFieldEditor useFrameworkAsRSLEditor;
+  private BooleanFieldEditor nonDefaultLocaleEditor;
+  private StringFieldEditor localeOptionsEditor;
+  private StringFieldEditor compilerOptionsEditor;
+  
   // Containers
 
   private Composite customCompilerConfigEditorComposite;
-
   private Composite targetPlayerComposite;
+  private Composite localeOptionsEditorComposite;
 
-  private ComboFieldEditor targetPlayerEditor;
-
+  // Validation controls
+  
   private Label targetPlayerErrorLabel;
 
   @Override
@@ -143,7 +148,40 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     targetPlayerComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     targetPlayerComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
     targetPlayerComposite.setLayout(new GridLayout(2, false));
+  
+    Composite useFrameworkAsRSLEditorComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
+    GridData useFrameworkAsRSLEditorCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+    useFrameworkAsRSLEditorCompositeGridData.horizontalIndent = 10;
+    useFrameworkAsRSLEditorComposite.setLayoutData(useFrameworkAsRSLEditorCompositeGridData);    
+    useFrameworkAsRSLEditor = new BooleanFieldEditor("useFrameworkAsRSL", "Use Framework as Runtime Shared Library (RSL)", useFrameworkAsRSLEditorComposite);
+    useFrameworkAsRSLEditor.setPreferenceStore(getPreferenceStore());
+    useFrameworkAsRSLEditorComposite.setLayout(new GridLayout());
 
+    Composite nonDefaultLocaleComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);    
+    GridData nonDefaultLocaleCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);    
+    nonDefaultLocaleCompositeGridData.horizontalIndent = 10;
+    nonDefaultLocaleComposite.setLayoutData(nonDefaultLocaleCompositeGridData);          
+    nonDefaultLocaleEditor = new BooleanFieldEditor("nonDefaultLocale", "Non-default locale settings:", nonDefaultLocaleComposite);
+    nonDefaultLocaleEditor.setPreferenceStore(getPreferenceStore());
+    nonDefaultLocaleEditor.setPropertyChangeListener(new IPropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent event) {
+        updateUI();
+      }
+    });
+    localeOptionsEditorComposite = new Composite(nonDefaultLocaleComposite, SWT.NONE);
+    localeOptionsEditorComposite.setLayout(new GridLayout());
+    localeOptionsEditorComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+    localeOptionsEditor = new StringFieldEditor("localeOptions", "", localeOptionsEditorComposite);
+    localeOptionsEditor.setPreferenceStore(getPreferenceStore());
+    nonDefaultLocaleComposite.setLayout(new GridLayout(nonDefaultLocaleEditor.getNumberOfControls() + 1, false));
+    
+    Composite compilerOptionsEditorComposite = new Composite(parent, SWT.NONE);
+    compilerOptionsEditorComposite.setLayout(new GridLayout());
+    compilerOptionsEditorComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+    compilerOptionsEditor = new StringFieldEditor("compilerOptions", "Additional compiler options:", compilerOptionsEditorComposite);
+    compilerOptionsEditor.setPreferenceStore(getPreferenceStore());
+    
     reset();
     createTargetPlayerEditor(true);
     updateUI();
@@ -201,8 +239,10 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customCompilerConfigEditor.load();
     outputFileNameEditor.load();
     outputPathEditor.load();
-
-    // TODO: load target player
+    useFrameworkAsRSLEditor.load();
+    nonDefaultLocaleEditor.load();
+    localeOptionsEditor.load();
+    compilerOptionsEditor.load();
   }
 
   @Override
@@ -216,12 +256,15 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     outputFileNameEditor.store();
     outputPathEditor.store();
     targetPlayerEditor.store();
-
-    // TODO: store target player
+    useFrameworkAsRSLEditor.store();
+    nonDefaultLocaleEditor.store();
+    localeOptionsEditor.store();
+    compilerOptionsEditor.store();
   }
 
   private void updateUI() {
     customCompilerConfigEditor.setEnabled(customSDKBooleanEditor.getBooleanValue(), customCompilerConfigEditorComposite);
+    localeOptionsEditor.setEnabled(nonDefaultLocaleEditor.getBooleanValue(), localeOptionsEditorComposite);
   }
 
   @Override
