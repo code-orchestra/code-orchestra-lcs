@@ -18,41 +18,40 @@ import codeOrchestra.lcs.project.LCSProject;
  */
 public class OpenProjectAction extends Action {
 
-	private final IWorkbenchWindow window;
+  private final IWorkbenchWindow window;
 
-	public OpenProjectAction(IWorkbenchWindow window, String label) {
-		this.window = window;
-		setText(label);
-		setId(ICommandIds.CMD_OPEN);
-		setActionDefinitionId(ICommandIds.CMD_OPEN);
-		setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/open.gif"));
-	}
+  public OpenProjectAction(IWorkbenchWindow window, String label) {
+    this.window = window;
+    setText(label);
+    setId(ICommandIds.CMD_OPEN);
+    setActionDefinitionId(ICommandIds.CMD_OPEN);
+    setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/open.gif"));
+  }
 
-	@Override
-	public void run() {
-		if (window != null) {
-			try {
-				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+  @Override
+  public void run() {
+    if (window != null) {
+      try {
+        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-				dialog.setFilterExtensions(new String[] {"*.lcp"});
-		        dialog.setFilterNames(new String[] {"Live Coding Project"});
-				String fileSelected = dialog.open();
+        FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+        dialog.setFilterExtensions(new String[] { "*.lcp" });
+        dialog.setFilterNames(new String[] { "Live Coding Project" });
+        String fileSelected = dialog.open();
 
-				if (fileSelected == null) {
-				  return;
-				}
-				
-				// Close previous project
-				LiveCodingProjectViews.closeProjectViews();
-        
-				LCSProject newProject = LCSProject.loadFrom(fileSelected);
+        if (fileSelected == null) {
+          return;
+        }
+
+        // Close previous project
+        LiveCodingProjectViews.closeProjectViews();
+
+        LCSProject newProject = LCSProject.loadFrom(fileSelected);
         LiveCodingProjectViews.openProjectViews(window, newProject);
-			} catch (PartInitException e) {
-				MessageDialog.openError(window.getShell(), "Error",
-						"Error opening view:" + e.getMessage());
-			}
-		}
-	}
+      } catch (PartInitException e) {
+        MessageDialog.openError(window.getShell(), "Error", "Error opening view:" + e.getMessage());
+      }
+    }
+  }
 
 }

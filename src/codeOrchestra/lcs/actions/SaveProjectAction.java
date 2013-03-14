@@ -2,9 +2,9 @@ package codeOrchestra.lcs.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PerspectiveAdapter;
 
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
@@ -26,14 +26,10 @@ public class SaveProjectAction extends Action {
 		
 		setEnabled(false);
 		
-		window.addPerspectiveListener(new IPerspectiveListener() {			
+		window.addPerspectiveListener(new PerspectiveAdapter() {			
 			@Override
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
 				setEnabled(LCSProject.getCurrentProject() != null);
-			}
-			
-			@Override
-			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
 			}
 		});
 	}

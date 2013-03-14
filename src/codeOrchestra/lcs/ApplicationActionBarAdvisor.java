@@ -65,7 +65,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openProjectAction = new OpenProjectAction(window, "Open Project");
         register(openProjectAction);
         
-        startSessionAction = new StartSessionAction();
+        startSessionAction = new StartSessionAction(window);
         register(startSessionAction);
     }
     
