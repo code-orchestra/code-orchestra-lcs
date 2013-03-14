@@ -26,6 +26,7 @@ public class Message {
     return level;
   }
 
+  @SuppressWarnings("deprecation")
   public String getCreationTimeString(long timestamp) {
     Date date = new Date(timestamp);
     return expand("" + date.getHours(), 2) + ":" +

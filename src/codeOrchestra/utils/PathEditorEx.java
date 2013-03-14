@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.config.view;
+package codeOrchestra.utils;
 
 import org.eclipse.jface.preference.PathEditor;
 import org.eclipse.swt.SWT;

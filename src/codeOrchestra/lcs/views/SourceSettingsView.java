@@ -6,8 +6,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import codeOrchestra.lcs.config.view.PathEditorEx;
 import codeOrchestra.lcs.project.SourceSettings;
+import codeOrchestra.utils.PathEditorEx;
 
 /**
  * @author Alexander Eliseyev

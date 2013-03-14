@@ -52,6 +52,9 @@ public class LCSProject {
 		compilerSettings = new CompilerSettings(preferenceStore);
 		sourceSettings = new SourceSettings(preferenceStore);
 		liveCodingSettings = new LiveCodingSettings(preferenceStore);
+		
+		// TODO: delete
+		sourceSettings.getSourcePaths();
 	}
 
 	public CompilerSettings getCompilerSettings() {

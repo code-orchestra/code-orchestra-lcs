@@ -15,8 +15,8 @@ import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
-import codeOrchestra.lcs.config.view.NameInputValidator;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.utils.NameInputValidator;
 
 /**
  * @author Alexander Eliseyev
