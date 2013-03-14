@@ -26,6 +26,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 
   private DirectoryFieldEditorEx flashPlayerPathEditor;
   private RadioGroupFieldEditor liveMethodsGroupEditor;
+  private BooleanFieldEditor startSessionPausedEditor;
   private BooleanFieldEditor makeGettersSettersLiveEditor;
   private StringFieldEditor maxLoopIterationsEditor;
   
@@ -88,6 +89,16 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     liveMethodsGroupEditor = new RadioGroupFieldEditor("liveMethods", "", 1, liveMethodOptions, liveMethodsComposite);
     liveMethodsGroupEditor.setPreferenceStore(getPreferenceStore());
     
+    Label startSessionPausedLabel = new Label(liveSettingsGroup, SWT.NONE);
+    startSessionPausedLabel.setText("Start Session Paused:");
+    startSessionPausedLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+    Composite startSessionPausedComposite = new Composite(liveSettingsGroup, SWT.NONE);
+    GridData startSessionPausedCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+    startSessionPausedCompositeGridData.horizontalIndent = 8;
+    startSessionPausedComposite.setLayoutData(startSessionPausedCompositeGridData);    
+    startSessionPausedEditor = new BooleanFieldEditor("startSessionPaused", "", startSessionPausedComposite);
+    startSessionPausedEditor.setPreferenceStore(getPreferenceStore());
+    
     Label makeGettersSettersLiveLabel = new Label(liveSettingsGroup, SWT.NONE);
     makeGettersSettersLiveLabel.setText("Make Getters/Setters Live:");
     makeGettersSettersLiveLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
@@ -121,6 +132,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     
     flashPlayerPathEditor.load();
     liveMethodsGroupEditor.load();
+    startSessionPausedEditor.load();
     makeGettersSettersLiveEditor.load();
     maxLoopIterationsEditor.load();
     
@@ -135,6 +147,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     
     flashPlayerPathEditor.store();
     liveMethodsGroupEditor.store();
+    startSessionPausedEditor.store();
     makeGettersSettersLiveEditor.store();
     maxLoopIterationsEditor.store();
   }
