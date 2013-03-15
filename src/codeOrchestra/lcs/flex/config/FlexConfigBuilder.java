@@ -4,6 +4,7 @@ import java.io.File;
 
 import codeOrchestra.lcs.LCSException;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.run.LiveCodingAnnotation;
 
 /**
  * @author Alexander Eliseyev
@@ -76,7 +77,9 @@ public class FlexConfigBuilder {
     }
     
     // Custom metadata
-    // TODO: should probably just hard-code the live-coding annotations
+    for (LiveCodingAnnotation lca : LiveCodingAnnotation.values()) {
+      flexConfig.addCustomMetadata(lca.name());      
+    }
     
     return flexConfig;
   }
