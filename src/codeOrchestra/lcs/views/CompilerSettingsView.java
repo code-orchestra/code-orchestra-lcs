@@ -22,8 +22,10 @@ import org.eclipse.swt.widgets.Label;
 import codeOrchestra.lcs.flex.FlexSDKManager;
 import codeOrchestra.lcs.flex.FlexSDKNotPresentException;
 import codeOrchestra.lcs.project.CompilerSettings;
+import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.SWTUtil;
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -34,7 +36,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
 
   // Editors
 
-  private StringFieldEditor mainClassEditor;
+  private FileFieldEditor mainClassEditor;
   private FileFieldEditor customCompilerConfigEditor;
   private BooleanFieldEditor defaultSDKBooleanEditor;
   private BooleanFieldEditor customSDKBooleanEditor;
@@ -122,7 +124,8 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     GridData mainClassCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
     mainClassCompositeGridData.horizontalIndent = 10;
     mainClassComposite.setLayoutData(mainClassCompositeGridData);
-    mainClassEditor = new StringFieldEditor("mainClass", "Main class:", mainClassComposite);
+    mainClassEditor = new FileFieldEditor("mainClass", "Main class:", mainClassComposite);
+    mainClassEditor.setFileExtensions(new String[] { "*.as" });
     mainClassEditor.setPreferenceStore(getPreferenceStore());
 
     // Compiler output group
@@ -237,8 +240,17 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     defaultSDKBooleanEditor.load();
     customSDKBooleanEditor.load();
     customCompilerConfigEditor.load();
+    
     outputFileNameEditor.load();
+    if (StringUtils.isEmpty(outputFileNameEditor.getStringValue())) {
+      outputFileNameEditor.setStringValue(LCSProject.getCurrentProject().getName() + ".swf");
+    }
+    
     outputPathEditor.load();
+    if (StringUtils.isEmpty(outputPathEditor.getStringValue())) {
+      outputPathEditor.setStringValue(LCSProject.getCurrentProject().getOutputDir().getAbsolutePath());
+    }
+    
     useFrameworkAsRSLEditor.load();
     nonDefaultLocaleEditor.load();
     localeOptionsEditor.load();

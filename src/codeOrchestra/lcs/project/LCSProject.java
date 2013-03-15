@@ -1,5 +1,6 @@
 package codeOrchestra.lcs.project;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jface.preference.PreferenceStore;
@@ -53,11 +54,25 @@ public class LCSProject {
 		sourceSettings = new SourceSettings(preferenceStore);
 		liveCodingSettings = new LiveCodingSettings(preferenceStore);
 		
-		// TODO: delete
-		sourceSettings.getSourcePaths();
+		initPaths();
 	}
+	
+	private void initPaths() {    
+    File outputDir = getOutputDir();
+    if (!outputDir.exists()) {
+      outputDir.mkdir();
+    }
+  }
 
-	public CompilerSettings getCompilerSettings() {
+  public File getOutputDir() {
+    return new File(getBaseDir(), "lcs_output");
+  }
+
+  public File getBaseDir() {
+    return new File(path).getParentFile();
+  }
+
+  public CompilerSettings getCompilerSettings() {
 		return compilerSettings;
 	}
 
