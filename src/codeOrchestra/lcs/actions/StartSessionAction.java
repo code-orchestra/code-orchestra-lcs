@@ -37,7 +37,7 @@ public class StartSessionAction extends Action {
   @Override
   public void run() {
     // 1 - Generate Flex config
-    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(LCSProject.getCurrentProject(), false);
+    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(LCSProject.getCurrentProject(), false, false);
     FlexConfig flexConfig;
     try {      
       flexConfig = flexConfigBuilder.build();

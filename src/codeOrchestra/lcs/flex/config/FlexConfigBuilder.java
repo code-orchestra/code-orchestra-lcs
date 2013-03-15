@@ -1,22 +1,29 @@
 package codeOrchestra.lcs.flex.config;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.List;
 
 import codeOrchestra.lcs.LCSException;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveCodingAnnotation;
+import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.NameUtil;
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
  */
 public class FlexConfigBuilder {
   
-  private LCSProject project;
+  private final LCSProject project;  
   private final boolean incrementalCompilation;
+  private final boolean isSWC;
 
-  public FlexConfigBuilder(LCSProject project, boolean incrementalCompilation) {
+  public FlexConfigBuilder(LCSProject project, boolean incrementalCompilation, boolean isSWC) {
     this.project = project;
     this.incrementalCompilation = incrementalCompilation;
+    this.isSWC = isSWC;
   }
   
   public FlexConfig build() throws LCSException {
@@ -55,7 +62,7 @@ public class FlexConfigBuilder {
     }
     
     // Main class
-    if (!incrementalCompilation) {
+    if (!isSWC) {
       flexConfig.addFileSpecPathElement(project.getCompilerSettings().getMainClass());
     }
     
@@ -64,8 +71,30 @@ public class FlexConfigBuilder {
     
 
     // Include classes (SWC)
-    if (incrementalCompilation) {
-      // TODO: figure this out!
+    if (isSWC) {
+      for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
+        File sourceDir = new File(sourcePath);
+        if (!sourceDir.exists() || !sourceDir.isDirectory()) {
+          continue;
+        }
+        
+        List<File> sourceFiles = FileUtils.listFileRecursively(sourceDir, new FileFilter() {
+          @Override
+          public boolean accept(File file) {
+            String filenameLowerCase = file.getName().toLowerCase();
+            return filenameLowerCase.endsWith(".as") || filenameLowerCase.endsWith(".mxml");
+          }
+        });
+        
+        for (File sourceFile : sourceFiles) {
+          String relativePath = FileUtils.getRelativePath(sourceFile.getPath(), sourceDir.getPath(), File.separator);
+          
+          if (!StringUtils.isEmpty(relativePath)) {
+            String fqName = NameUtil.namespaceFromPath(relativePath);
+            flexConfig.addClass(fqName);            
+          }
+        }
+      }
     }
     
     // RSL

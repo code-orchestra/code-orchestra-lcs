@@ -1,7 +1,16 @@
 package codeOrchestra.utils;
 
+import java.io.File;
+
+/**
+ * @author Alexander Eliseyev
+ */
 public final class NameUtil {
 
+  public static String namespaceFromPath(String path) {
+    return path.replace('/', '.').replace(File.separatorChar, '.');
+  }
+  
   public static String shortNameFromLongName(String fqName) {
     if (fqName == null) return fqName;
     int offset = fqName.lastIndexOf('.');
