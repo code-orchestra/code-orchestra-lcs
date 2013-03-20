@@ -1,9 +1,12 @@
 package codeOrchestra.lcs.sources;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import codeOrchestra.utils.FileUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -13,7 +16,11 @@ public class SourcesState {
 	public static SourcesState capture(List<File> dirs) {
 		SourcesState sourcesState = new SourcesState();
 		
-		// TODO: implement
+		for (File dir : dirs) {
+			for (File sourceFile : FileUtils.listFileRecursively(dir, FileUtils.FILES_ONLY_FILTER)) {
+				sourcesState.addFile(sourceFile);
+			}
+		}
 		
 		return sourcesState;
 	}
@@ -23,9 +30,25 @@ public class SourcesState {
 	private SourcesState() {		
 	}
 
+	public void addFile(File file) {
+		state.put(file.getPath(), file.lastModified());
+	}
+	
 	public List<File> getChangedFiles(SourcesState oldState) {
-		// TODO: implement
-		return null;
+		List<File> changedFiles = new ArrayList<File>();
+		
+		for (String newStatePath : state.keySet()) {
+			long newTimestamp = state.get(newStatePath);
+			
+			if (oldState.state.containsKey(newStatePath)) {
+				long oldTimestamp = oldState.state.get(newStatePath);
+				if (newTimestamp != oldTimestamp) {
+					changedFiles.add(new File(newStatePath));
+				}
+			}
+		}
+		
+		return changedFiles;
 	}
 	
 	@Override
@@ -51,8 +74,6 @@ public class SourcesState {
 		} else if (!state.equals(other.state))
 			return false;
 		return true;
-	}
-	
-	
+	}	
 	
 }

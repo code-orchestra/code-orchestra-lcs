@@ -10,20 +10,24 @@ public class SourcesTracker {
 	
 	private List<File> sourceDirs;
 
-	private SourcesState lastState;
+	private SourcesState state;
 	
 	public SourcesTracker(List<File> sourceDirs) {
 		this.sourceDirs = sourceDirs;
-		this.lastState = capture();
+		
+		capture();
 	}
 
-	private SourcesState capture() {
-		return SourcesState.capture(sourceDirs);
+	private void capture() {
+		this.state = SourcesState.capture(sourceDirs);
 	}
 	
 	public List<File> getChangedFiles() {
-		SourcesState newState = capture();
-		return newState.getChangedFiles(lastState);
+		SourcesState oldState = state;
+		
+		capture();
+		
+		return state.getChangedFiles(oldState);
 	}
 	
 }

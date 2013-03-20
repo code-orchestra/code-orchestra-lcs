@@ -26,6 +26,7 @@ public class LiveCodingManager {
 	@Override
 	public void sourceFileChanged(File sourceFile) {
 		// TODO: implement
+		System.out.println("File changed: " + sourceFile);
 	}
   }; 
   

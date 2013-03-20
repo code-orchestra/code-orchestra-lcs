@@ -11,6 +11,12 @@ import java.util.regex.Pattern;
  */
 public class FileUtils {
   
+  public static final FileFilter FILES_ONLY_FILTER = new FileFilter() {
+	  public boolean accept(File file) {
+	      return file.isFile();
+	  } 
+  };
+	
   public static final FileFilter DIRECTORY_FILTER = new FileFilter() {
     public boolean accept(File file) {
       return file.isDirectory();
