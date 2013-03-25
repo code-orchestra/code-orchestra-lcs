@@ -15,19 +15,24 @@
  */
 package com.intellij.execution.process;
 
-import codeOrchestra.lcs.logging.Logger;
-
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
-import com.intellij.util.Consumer;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import codeOrchestra.lcs.logging.Logger;
+
+import com.intellij.util.Consumer;
 
 public class OSProcessHandler extends ProcessHandler {
   
@@ -56,12 +61,6 @@ public class OSProcessHandler extends ProcessHandler {
    * @param task a task to run
    */
   protected Future<?> executeOnPooledThread(Runnable task) {
-    final Application application = ApplicationManager.getApplication();
-
-    if (application != null) {
-      return application.executeOnPooledThread(task);
-    }
-
     return ExecutorServiceHolder.ourThreadExecutorsService.submit(task);
   }
 
