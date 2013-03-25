@@ -1,5 +1,7 @@
 package codeOrchestra.lcs.logging;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,22 @@ public final class Logger {
     log(message, scopeIds, timestamp, Level.ERROR);
   }
   
+  public void error(String message) {
+    log(message, Collections.EMPTY_LIST, System.currentTimeMillis(), Level.ERROR);
+  }
+  
+  public void error(Throwable t) {
+    log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.ERROR);
+  }
+  
+  public void info(Throwable t) {
+    log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.INFO);    
+  }
+  
+  public void debug(Throwable t) {
+    log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.DEBUG);    
+  }
+  
   private void log(String message, List<String> scopeIds, long timestamp, Level level) {
     for (String scopeId : scopeIds) {
       MessageScope scope = MessageScopeRegistry.getInstance().getScope(scopeId);
@@ -59,6 +77,10 @@ public final class Logger {
     }
   }
 
- 
+  public void assertTrue(boolean condition, String message) {
+    if (!condition) {
+      error(message);
+    }
+  }
   
 }
