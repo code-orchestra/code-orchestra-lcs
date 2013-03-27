@@ -34,13 +34,13 @@ public class Perspective implements IPerspectiveFactory {
 		liveCodingFolder.addPlaceholder(CompilerSettingsView.ID + ":*");
 
 		// Messages
-    IFolderLayout messagesFolder = layout.createFolder("messages", IPageLayout.LEFT, 0.50f, editorArea);
+    IFolderLayout messagesFolder = layout.createFolder("messages", IPageLayout.LEFT, 0.40f, editorArea);
 		messagesFolder.addPlaceholder(MessagesView.ID + ":*");
     MessagesManager.init(messagesFolder);
 		MessagesManager.getInstance().addTab("Main");
 		
 		// Console
-    IFolderLayout fcshFolder = layout.createFolder("fcsh", IPageLayout.RIGHT, 0.50f, editorArea);
+    IFolderLayout fcshFolder = layout.createFolder("fcsh", IPageLayout.RIGHT, 0.60f, editorArea);
     fcshFolder.addView(FCSHConsoleView.ID);
 	}
 

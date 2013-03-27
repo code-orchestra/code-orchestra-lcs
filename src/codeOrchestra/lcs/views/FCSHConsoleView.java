@@ -1,5 +1,6 @@
 package codeOrchestra.lcs.views;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -7,10 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 public class FCSHConsoleView extends ViewPart {
@@ -23,19 +21,6 @@ public class FCSHConsoleView extends ViewPart {
     return sharedInstance;
   }
  
-  public static void create() {
-    Display.getDefault().syncExec(new Runnable() {
-      public void run() {
-        IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
-        try {
-          workbenchWindows[0].getActivePage().showView(ID, "", IWorkbenchPage.VIEW_ACTIVATE);
-        } catch (Throwable e) {
-//          folder.addView(compositeViewId);
-        }          
-      }        
-    });
-  }
-  
   private Text consoleTextArea;
   
   @Override
@@ -54,13 +39,18 @@ public class FCSHConsoleView extends ViewPart {
     
     consoleTextArea = new Text(parent, SWT.MULTI);
     consoleTextArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-    consoleTextArea.setEditable(false);
+    consoleTextArea.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
   }
   
-  public void append(String text, String key) {
-    consoleTextArea.append(text);
-    consoleTextArea.append("\n");
-    consoleTextArea.setSelection(consoleTextArea.getText().length());
+  public void append(final String text, String key) {
+    Display.getDefault().asyncExec(new Runnable() {
+      public void run() {
+        consoleTextArea.append(text.trim());        
+        consoleTextArea.append("\n");        
+        consoleTextArea.setSelection(consoleTextArea.getText().length());
+        consoleTextArea.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT)); // weird hack
+      }
+    });
   }
 
   @Override

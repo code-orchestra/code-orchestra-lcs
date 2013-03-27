@@ -25,6 +25,12 @@ import java.util.Map;
  */
 public class FCSHManager {
 
+  private static FCSHManager instance = new FCSHManager();
+  
+  public static FCSHManager instance() {
+    return instance;
+  }
+  
   public static final Logger LOG = Logger.getLogger("fcsh");
 
   private static final int FCSH_INIT_CHECK_INTERVAL = 100;

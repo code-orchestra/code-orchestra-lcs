@@ -27,13 +27,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ProcessHandler extends UserDataHolderBase {
   
   private static final Logger LOG = Logger.getLogger("#com.intellij.execution.process.ProcessHandler");
   
-  private final List<ProcessListener> myListeners = new ArrayList<ProcessListener>();
+  private final List<ProcessListener> myListeners = new CopyOnWriteArrayList<ProcessListener>();
 
   private static final int STATE_INITIAL     = 0;
   private static final int STATE_RUNNING     = 1;

@@ -47,6 +47,9 @@ public class StringUtils {
   }
 
   public static String join(final List<String> strings, final String separator) {
+    if (strings == null) {
+      return "";
+    }
     return join(strings.toArray(new String[strings.size()]), separator);
   }
   
