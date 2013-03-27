@@ -22,6 +22,7 @@
    <plugins>
       <plugin id="code-orchestra-lcs"/>
       <plugin id="com.ibm.icu"/>
+      <plugin id="org.apache.ant"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.LCSException;
 import codeOrchestra.lcs.flex.config.FlexConfig;
 import codeOrchestra.lcs.flex.config.FlexConfigBuilder;
@@ -34,6 +36,13 @@ public class LiveCodingManager {
   };
 
   public void startSession(String sessionId, ClientSocketHandler clientSocketHandler) {
+    try {
+      FCSHManager.instance().clear();
+    } catch (FCSHException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    
     LCSProject currentProject = LCSProject.getCurrentProject();
     
     // Generate & save Flex config    

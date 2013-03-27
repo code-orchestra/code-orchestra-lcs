@@ -5,7 +5,7 @@ Bundle-SymbolicName: code-orchestra-lcs;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: codeOrchestra.lcs.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.apache.ant
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.apache.tools.ant.types
