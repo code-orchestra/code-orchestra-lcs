@@ -18,6 +18,7 @@ package com.intellij.execution.process;
 import codeOrchestra.lcs.logging.Logger;
 
 import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.util.concurrency.Semaphore;
 
 import java.io.OutputStream;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class ProcessHandler {
+public abstract class ProcessHandler extends UserDataHolderBase {
   
   private static final Logger LOG = Logger.getLogger("#com.intellij.execution.process.ProcessHandler");
   

@@ -53,8 +53,16 @@ public final class Logger {
     log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.ERROR);
   }
   
+  public void info(String message) {
+    log(message, Collections.EMPTY_LIST, System.currentTimeMillis(), Level.INFO);
+  }
+  
   public void info(Throwable t) {
     log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.INFO);    
+  }
+  
+  public void warning(String message) {
+    log(message, Collections.EMPTY_LIST, System.currentTimeMillis(), Level.WARN);
   }
   
   public void debug(Throwable t) {
@@ -82,5 +90,6 @@ public final class Logger {
       error(message);
     }
   }
-  
+
+    
 }

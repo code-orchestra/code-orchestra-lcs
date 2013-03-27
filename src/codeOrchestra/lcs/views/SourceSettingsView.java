@@ -55,7 +55,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     testButton.addSelectionListener(new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			LiveCodingManager.instance().startSession("test", null);
+		  LiveCodingManager.instance().startSession("test", null);
 		}
 	});
   }

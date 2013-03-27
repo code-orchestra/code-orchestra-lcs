@@ -1,7 +1,12 @@
 package codeOrchestra.utils;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -23,6 +28,17 @@ public class FileUtils {
     }
   };
 
+  public static void write(File file, String content) {
+    try {
+      Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+      out.write(content);
+      out.flush();
+      out.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
   public static List<File> listFileRecursively(File dir, FileFilter fileFilter) {
     assert dir.isDirectory();
     List<File> files = new ArrayList<File>();
