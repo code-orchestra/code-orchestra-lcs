@@ -72,6 +72,10 @@ public class LCSProject {
     return new File(path).getParentFile();
   }
 
+  public String getFlexConfigPath(LCSProject currentProject) {
+    return new File(currentProject.getBaseDir(), currentProject.getName() + "_flex_config.xml").getPath();
+  }
+  
   public CompilerSettings getCompilerSettings() {
 		return compilerSettings;
 	}

@@ -27,7 +27,7 @@ public class FlexConfigBuilder {
   }
   
   public FlexConfig build() throws LCSException {
-    FlexConfig flexConfig = new FlexConfig(!incrementalCompilation, false);
+    FlexConfig flexConfig = new FlexConfig(isSWC, false);
     
     // Sources
     for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
