@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.logging.model;
+package codeOrchestra.actionScript.logging.model;
 
 import codeOrchestra.lcs.logging.Level;
 import codeOrchestra.utils.NameUtil;

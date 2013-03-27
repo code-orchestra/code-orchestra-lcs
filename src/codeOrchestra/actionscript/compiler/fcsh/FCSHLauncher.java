@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.compiler.fcsh;
+package codeOrchestra.actionScript.compiler.fcsh;
 
 import com.intellij.openapi.util.SystemInfo;
 

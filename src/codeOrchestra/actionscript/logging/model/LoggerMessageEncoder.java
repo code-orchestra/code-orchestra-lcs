@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.logging.model;
+package codeOrchestra.actionScript.logging.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import codeOrchestra.actionscript.logging.model.LoggerMessage.Builder;
+import codeOrchestra.actionScript.logging.model.LoggerMessage.Builder;
 import codeOrchestra.lcs.logging.Level;
 import codeOrchestra.utils.StringUtils;
 import codeOrchestra.utils.XMLUtils;

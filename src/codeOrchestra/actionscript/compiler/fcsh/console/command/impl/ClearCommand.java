@@ -1,7 +1,7 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command.impl;
+package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
-import codeOrchestra.actionscript.compiler.fcsh.console.command.AbstractCommandCallback;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.CommandOutput;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.AbstractCommandCallback;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandOutput;
 
 /**
  * @author Alexander Eliseyev

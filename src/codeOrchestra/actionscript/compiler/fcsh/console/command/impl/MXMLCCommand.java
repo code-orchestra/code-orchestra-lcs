@@ -1,6 +1,6 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command.impl;
+package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
-import codeOrchestra.actionscript.compiler.fcsh.FCSHManager;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 
 import java.util.List;
 

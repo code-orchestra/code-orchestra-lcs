@@ -1,8 +1,8 @@
-package codeOrchestra.actionscript.modulemaker;
+package codeOrchestra.actionScript.modulemaker;
 
-import codeOrchestra.actionscript.modulemaker.messages.CompilerMessage;
-import codeOrchestra.actionscript.modulemaker.messages.CompilerMessagesWrapper;
-import codeOrchestra.actionscript.modulemaker.messages.MessageType;
+import codeOrchestra.actionScript.modulemaker.messages.CompilerMessage;
+import codeOrchestra.actionScript.modulemaker.messages.CompilerMessagesWrapper;
+import codeOrchestra.actionScript.modulemaker.messages.MessageType;
 
 import java.io.Serializable;
 import java.util.ArrayList;

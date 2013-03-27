@@ -1,6 +1,6 @@
-package codeOrchestra.actionscript.logging.scope;
+package codeOrchestra.actionScript.logging.scope;
 
-import codeOrchestra.actionscript.logging.model.MessageScope;
+import codeOrchestra.actionScript.logging.model.MessageScope;
 import codeOrchestra.lcs.messages.MessagesManager;
 
 import java.util.HashMap;

@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
-import codeOrchestra.actionscript.logging.transport.LoggerServerSocketThread;
+import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 
 /**
  * @author Alexander Eliseyev

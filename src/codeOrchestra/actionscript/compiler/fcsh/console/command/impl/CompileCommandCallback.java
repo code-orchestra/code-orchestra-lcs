@@ -1,8 +1,8 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command.impl;
+package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
-import codeOrchestra.actionscript.compiler.fcsh.FCSHException;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.CommandCallback;
-import codeOrchestra.actionscript.modulemaker.CompilationResult;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
+import codeOrchestra.actionScript.modulemaker.CompilationResult;
 
 /**
  * @author Alexander Eliseyev

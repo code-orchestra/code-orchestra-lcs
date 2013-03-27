@@ -1,14 +1,14 @@
-package codeOrchestra.actionscript.compiler.fcsh;
+package codeOrchestra.actionScript.compiler.fcsh;
 
-import codeOrchestra.actionscript.compiler.fcsh.console.command.CommandCallback;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.FCSHCommandRunnable;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.impl.COMPCCommand;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.impl.ClearCommand;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.impl.CompileTargetCommand;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.impl.MXMLCCommand;
-import codeOrchestra.actionscript.compiler.fcsh.target.CompilerTarget;
-import codeOrchestra.actionscript.modulemaker.CompilationResult;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandRunnable;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.COMPCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.MXMLCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
+import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
 

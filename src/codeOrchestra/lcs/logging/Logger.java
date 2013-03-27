@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import codeOrchestra.actionscript.logging.model.MessageScope;
-import codeOrchestra.actionscript.logging.scope.MessageScopeRegistry;
+import codeOrchestra.actionScript.logging.model.MessageScope;
+import codeOrchestra.actionScript.logging.scope.MessageScopeRegistry;
 import codeOrchestra.lcs.messages.MessagesManager;
 import codeOrchestra.lcs.views.MessagesView;
 

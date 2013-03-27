@@ -1,7 +1,7 @@
 package codeOrchestra.lcs.socket.command;
 
-import codeOrchestra.actionscript.logging.model.LoggerMessageEncoder;
-import codeOrchestra.actionscript.logging.transport.LoggerServerSocketThread;
+import codeOrchestra.actionScript.logging.model.LoggerMessageEncoder;
+import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 import codeOrchestra.lcs.socket.FlashClientSocketHandler;
 
 import java.net.Socket;

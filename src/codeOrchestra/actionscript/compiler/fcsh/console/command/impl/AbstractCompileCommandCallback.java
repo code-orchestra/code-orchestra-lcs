@@ -1,11 +1,11 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command.impl;
+package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
-import codeOrchestra.actionscript.compiler.fcsh.FCSHException;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.AbstractCommandCallback;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.CommandOutput;
-import codeOrchestra.actionscript.modulemaker.CompilationResult;
-import codeOrchestra.actionscript.modulemaker.messages.CompilerMessage;
-import codeOrchestra.actionscript.modulemaker.messages.CompilerMessagesWrapper;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.AbstractCommandCallback;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandOutput;
+import codeOrchestra.actionScript.modulemaker.CompilationResult;
+import codeOrchestra.actionScript.modulemaker.messages.CompilerMessage;
+import codeOrchestra.actionScript.modulemaker.messages.CompilerMessagesWrapper;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.utils.FileUtils;

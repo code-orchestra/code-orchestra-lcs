@@ -1,6 +1,6 @@
 package codeOrchestra.lcs.socket.command.impl;
 
-import codeOrchestra.actionscript.logging.model.LoggerMessage;
+import codeOrchestra.actionScript.logging.model.LoggerMessage;
 import codeOrchestra.lcs.socket.ClientSocketHandler;
 import codeOrchestra.lcs.socket.command.TraceCommand;
 

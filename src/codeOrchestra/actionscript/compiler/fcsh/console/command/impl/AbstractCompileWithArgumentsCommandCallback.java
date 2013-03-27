@@ -1,8 +1,8 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command.impl;
+package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
-import codeOrchestra.actionscript.compiler.fcsh.FCSHManager;
-import codeOrchestra.actionscript.compiler.fcsh.console.command.CommandOutput;
-import codeOrchestra.actionscript.modulemaker.CompilationResult;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandOutput;
+import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.utils.StringUtils;
 
 import java.util.ArrayList;

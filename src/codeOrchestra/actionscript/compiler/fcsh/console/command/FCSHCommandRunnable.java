@@ -1,6 +1,6 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command;
+package codeOrchestra.actionScript.compiler.fcsh.console.command;
 
-import codeOrchestra.actionscript.compiler.fcsh.FCSHManager;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.utils.ThreadUtils;

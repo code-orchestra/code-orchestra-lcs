@@ -5,7 +5,7 @@ import codeOrchestra.lcs.views.FCSHConsoleView;
 import codeOrchestra.utils.ExceptionUtils;
 import com.intellij.execution.process.*;
 
-import codeOrchestra.actionscript.compiler.fcsh.console.command.AbstractCommandCallback;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.AbstractCommandCallback;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

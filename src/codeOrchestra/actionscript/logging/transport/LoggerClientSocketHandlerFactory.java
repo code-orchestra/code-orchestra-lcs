@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.logging.transport;
+package codeOrchestra.actionScript.logging.transport;
 
 import codeOrchestra.lcs.socket.ClientSocketHandler;
 import codeOrchestra.lcs.socket.ClientSocketHandlerFactory;

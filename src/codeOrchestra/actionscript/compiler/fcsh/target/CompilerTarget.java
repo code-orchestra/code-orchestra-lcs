@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.compiler.fcsh.target;
+package codeOrchestra.actionScript.compiler.fcsh.target;
 
 /**
  * @author Alexander Eliseyev

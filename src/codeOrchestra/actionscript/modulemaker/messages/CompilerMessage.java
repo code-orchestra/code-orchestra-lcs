@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.modulemaker.messages;
+package codeOrchestra.actionScript.modulemaker.messages;
 
 import java.io.File;
 import java.io.FilenameFilter;

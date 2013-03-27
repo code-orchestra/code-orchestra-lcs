@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.compiler.fcsh.console.command;
+package codeOrchestra.actionScript.compiler.fcsh.console.command;
 
 import com.intellij.execution.process.ProcessOutputTypes;
 

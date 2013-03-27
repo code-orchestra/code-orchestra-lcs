@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.logging.model;
+package codeOrchestra.actionScript.logging.model;
 
 /**
  * @author Alexander Eliseyev

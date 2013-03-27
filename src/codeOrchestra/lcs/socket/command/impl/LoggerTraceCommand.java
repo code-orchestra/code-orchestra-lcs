@@ -1,9 +1,9 @@
 package codeOrchestra.lcs.socket.command.impl;
 
-import codeOrchestra.actionscript.logging.model.LoggerMessage;
-import codeOrchestra.actionscript.logging.model.LoggerMessageEncoder;
-import codeOrchestra.actionscript.logging.model.LoggerScopeWrapper;
-import codeOrchestra.actionscript.logging.scope.MessageScopeRegistry;
+import codeOrchestra.actionScript.logging.model.LoggerMessage;
+import codeOrchestra.actionScript.logging.model.LoggerMessageEncoder;
+import codeOrchestra.actionScript.logging.model.LoggerScopeWrapper;
+import codeOrchestra.actionScript.logging.scope.MessageScopeRegistry;
 import codeOrchestra.lcs.logging.Level;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.socket.ClientSocketHandler;

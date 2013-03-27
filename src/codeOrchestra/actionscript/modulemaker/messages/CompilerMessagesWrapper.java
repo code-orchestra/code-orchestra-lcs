@@ -1,4 +1,4 @@
-package codeOrchestra.actionscript.modulemaker.messages;
+package codeOrchestra.actionScript.modulemaker.messages;
 
 import java.util.List;
 
