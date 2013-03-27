@@ -1,15 +1,22 @@
 package codeOrchestra.utils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import jetbrains.mps.util.ReadUtil;
 
 /**
  * @author Alexander Eliseyev
@@ -28,6 +35,75 @@ public class FileUtils {
     }
   };
 
+  public static File getTempDir() {
+    return new File(System.getProperty("java.io.tmpdir"));
+  }
+  
+  public static void copyFileChecked(File f, File to, boolean checkEquals) throws IOException {
+    File target;
+    if (to.isDirectory()) {
+      target = new File(to, f.getName());
+    } else {
+      target = to;
+    }
+
+    if (!to.getParentFile().exists()) {
+      to.getParentFile().mkdirs();
+    }
+
+    if (checkEquals && target.exists()) {
+      String existingContents = FileUtils.read(target);
+      if (existingContents.equals(FileUtils.read(f))) {
+        return;
+      }
+    }
+
+    byte[] bytes = new byte[(int) f.length()];
+
+    OutputStream os = new FileOutputStream(target);
+    FileInputStream is = new FileInputStream(f);
+
+    ReadUtil.read(bytes, is);
+    os.write(bytes);
+
+    is.close();
+    os.close();
+  }
+  
+  public static String read(File file) {
+    try {
+      return read(new FileReader(file));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static String read(Reader reader) {
+    BufferedReader r = null;
+    try {
+      r = new BufferedReader(reader);
+
+      StringBuilder result = new StringBuilder();
+
+      String line = null;
+      while ((line = r.readLine()) != null) {
+        result.append(line).append("\n");
+      }
+
+      return result.toString();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      try {
+        if (r != null) {
+          r.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+  
   public static void write(File file, String content) {
     try {
       Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
