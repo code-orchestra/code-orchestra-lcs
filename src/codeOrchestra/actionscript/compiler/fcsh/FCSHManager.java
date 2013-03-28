@@ -45,6 +45,10 @@ public class FCSHManager {
     assureFCSHIsActive();
   }
 
+  public boolean isInIncrementalLivecodingMode() {
+    return livecodingMode;
+  }
+
   public void destroyProcess() {
     try {
       if (fcshProcessHandler != null && !fcshProcessHandler.isProcessTerminated()) {

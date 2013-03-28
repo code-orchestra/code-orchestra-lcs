@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.make;
 
 import java.io.File;
+import java.util.List;
 
 import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHFlexSDKRunner;
@@ -21,15 +22,22 @@ public class LCSMaker {
 
   private static final Logger LOG = Logger.getLogger(LCSMaker.class.getSimpleName());
   
-  private static boolean livecodingFCSH; // TODO: check usage
+  private static boolean sentLiveCodingCommand;
   
   private boolean isIncremental;
+
+  private List<File> changedFiles;
   
   public LCSMaker(boolean isIncremental) {
     this.isIncremental = isIncremental;
   }
 
-  public void make() throws MakeException {
+  public LCSMaker(List<File> changedFilesSnapshot) {
+    this(true);
+    this.changedFiles = changedFilesSnapshot;
+  }
+
+  public boolean make() throws MakeException {
     LCSProject currentProject = LCSProject.getCurrentProject();
     CompilerSettings compilerSettings = currentProject.getCompilerSettings();
     
@@ -49,14 +57,14 @@ public class LCSMaker {
     }
     
     // Start livecoding mode in fcsh
-    if (isIncremental && !livecodingFCSH) {
+    if (isIncremental && !sentLiveCodingCommand) {
       try {
         FCSHManager fcshManager = FCSHManager.instance();
         fcshManager.submitCommand(new LivecodingStartCommand());
       } catch (FCSHException e) {
         throw new MakeException("Unable to start livecoding mode in FCSH", e);
       }
-      livecodingFCSH = true;
+      sentLiveCodingCommand = true;
     }
     
     // Custom SDK config file
@@ -69,7 +77,9 @@ public class LCSMaker {
     
     // Base/incremental compilation first phase
     FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, isIncremental ? FSCHCompilerKind.COMPC : FSCHCompilerKind.MXMLC);
-    doCompile(flexSDKRunner);    
+    if (!doCompile(flexSDKRunner)) {
+      return false;
+    }
     
     // Base compilation second phase
     if (!isIncremental) {
@@ -89,11 +99,15 @@ public class LCSMaker {
       FCSHManager.instance().clearTargets();
 
       flexSDKRunner = getFlexSDKRunner(flexConfigFile, FSCHCompilerKind.COMPC);
-      doCompile(flexSDKRunner);
+      if (!doCompile(flexSDKRunner)) {
+        return false;
+      }
     }
+    
+    return true;
   }
 
-  private void doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
+  private boolean doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
     long compilationStart = System.currentTimeMillis();
     CompilationResult compilationResult = flexSDKRunner.run();
     long compilationTook = System.currentTimeMillis() - compilationStart;
@@ -106,10 +120,11 @@ public class LCSMaker {
         outputFile);
 
       LOG.error(errorMessage);
-    } else {
-      LOG.info("Compilation is completed successfully");
+      return false;
     }
     
+    LOG.info("Compilation is completed successfully");
+    return true;
     // TODO: log compilation time
   }
 
