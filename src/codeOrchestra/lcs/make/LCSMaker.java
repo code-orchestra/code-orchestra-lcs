@@ -23,9 +23,7 @@ public class LCSMaker {
   private static final Logger LOG = Logger.getLogger(LCSMaker.class.getSimpleName());
   
   private static boolean sentLiveCodingCommand;
-  
   private boolean isIncremental;
-
   private List<File> changedFiles;
   
   public LCSMaker(boolean isIncremental) {

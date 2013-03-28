@@ -37,7 +37,7 @@ public class FCSHConsoleView extends ViewPart {
     layout.marginWidth = 0;
     parent.setLayout(layout);
     
-    consoleTextArea = new Text(parent, SWT.MULTI);
+    consoleTextArea = new Text(parent, SWT.MULTI | SWT.V_SCROLL);
     consoleTextArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     consoleTextArea.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
   }

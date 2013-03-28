@@ -1,17 +1,14 @@
 package codeOrchestra.lcs.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 
 import codeOrchestra.lcs.ICommandIds;
-import codeOrchestra.lcs.LCSException;
-import codeOrchestra.lcs.flex.config.FlexConfig;
-import codeOrchestra.lcs.flex.config.FlexConfigBuilder;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.session.LiveCodingManager;
 
 public class StartSessionAction extends Action {
 
@@ -36,18 +33,13 @@ public class StartSessionAction extends Action {
   
   @Override
   public void run() {
-    // 1 - Generate Flex config
-    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(LCSProject.getCurrentProject(), false, false);
-    FlexConfig flexConfig;
-    try {      
-      flexConfig = flexConfigBuilder.build();
-    } catch (LCSException e) {
-      MessageDialog.openError(window.getShell(), "Error", "Error building Flex compiler config: " + e.getMessage());
-      return;
-    }    
-    
-    
-    // TODO: implement further
+    // 1 - Base compilation
+    boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();    
+        
+    // 2 - Start the compiled SWF
+    if (successfulBaseGeneration) {
+      // TODO: start the SWF
+    }
   }
   
 }

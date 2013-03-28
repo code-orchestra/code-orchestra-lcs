@@ -37,20 +37,21 @@ public class LiveCodingManager {
     }
   };
 
-  public void runBaseCompilation() {
+  public boolean runBaseCompilation() {
     try {
       compilationInProgress = true;
       assureLiveCodingModeIs(false);
 
       LCSMaker lcsMaker = new LCSMaker(false);
       try {
-        lcsMaker.make();
+        return lcsMaker.make();
       } catch (MakeException e) {
         // TODO: handle this nicely
       }
     } finally {
       compilationInProgress = false;
     }
+    return false;
   }
 
   public void runIncrementalCompilation() {

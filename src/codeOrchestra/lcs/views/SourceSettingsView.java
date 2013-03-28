@@ -2,15 +2,11 @@ package codeOrchestra.lcs.views;
 
 import org.eclipse.jface.preference.PathEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import codeOrchestra.lcs.project.SourceSettings;
-import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.utils.PathEditorEx;
 
 /**
@@ -47,17 +43,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
 
     libraryPathsEditor = new PathEditorEx("libraryPaths", "Library Paths:", "Choose a Library Path", banner, false);
     libraryPathsEditor.setPreferenceStore(getPreferenceStore());
-    libraryPathsEditor.load();
-    
-    // TODO: delete
-    Button testButton = new Button(banner, SWT.PUSH);
-    testButton.setText("Test base compilation");
-    testButton.addSelectionListener(new SelectionAdapter() {
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-		  LiveCodingManager.instance().runBaseCompilation();
-		}
-	});
+    libraryPathsEditor.load();   
   }
 
   @Override
