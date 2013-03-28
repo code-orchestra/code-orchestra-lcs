@@ -22,7 +22,7 @@ public class SourcesTracker {
 		this.state = SourcesState.capture(sourceDirs);
 	}
 	
-	public List<File> getChangedFiles() {
+	public List<SourceFile> getChangedFiles() {
 		SourcesState oldState = state;
 		
 		capture();

@@ -16,9 +16,9 @@ public class SourcesState {
 	public static SourcesState capture(List<File> dirs) {
 		SourcesState sourcesState = new SourcesState();
 		
-		for (File dir : dirs) {
-			for (File sourceFile : FileUtils.listFileRecursively(dir, FileUtils.FILES_ONLY_FILTER)) {
-				sourcesState.addFile(sourceFile);
+		for (File baseDir : dirs) {
+			for (File sourceFile : FileUtils.listFileRecursively(baseDir, FileUtils.FILES_ONLY_FILTER)) {
+				sourcesState.addFile(sourceFile, baseDir);
 			}
 		}
 		
@@ -26,16 +26,18 @@ public class SourcesState {
 	}
 	
 	private Map<String, Long> state = new HashMap<String, Long>();
+	private Map<String, SourceFile> pathToWrapper = new HashMap<String, SourceFile>();
 	
 	private SourcesState() {		
 	}
 
-	public void addFile(File file) {
+	public void addFile(File file, File baseDir) {
 		state.put(file.getPath(), file.lastModified());
+		pathToWrapper.put(file.getPath(), new SourceFile(file, baseDir.getPath()));
 	}
 	
-	public List<File> getChangedFiles(SourcesState oldState) {
-		List<File> changedFiles = new ArrayList<File>();
+	public List<SourceFile> getChangedFiles(SourcesState oldState) {
+		List<SourceFile> changedFiles = new ArrayList<SourceFile>();
 		
 		for (String newStatePath : state.keySet()) {
 			long newTimestamp = state.get(newStatePath);
@@ -43,7 +45,7 @@ public class SourcesState {
 			if (oldState.state.containsKey(newStatePath)) {
 				long oldTimestamp = oldState.state.get(newStatePath);
 				if (newTimestamp != oldTimestamp) {
-					changedFiles.add(new File(newStatePath));
+					changedFiles.add(pathToWrapper.get(newStatePath));
 				}
 			}
 		}

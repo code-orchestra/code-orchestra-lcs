@@ -8,6 +8,7 @@ import codeOrchestra.lcs.LCSException;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.SourceSettings;
 import codeOrchestra.lcs.run.LiveCodingAnnotation;
+import codeOrchestra.lcs.sources.SourceFile;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.NameUtil;
 import codeOrchestra.utils.StringUtils;
@@ -19,16 +20,16 @@ public class FlexConfigBuilder {
   
   private final LCSProject project;  
   private final boolean incrementalCompilation;
-  private final boolean isSWC;
+  private final List<SourceFile> changedFiles;
 
-  public FlexConfigBuilder(LCSProject project, boolean incrementalCompilation, boolean isSWC) {
+  public FlexConfigBuilder(LCSProject project, boolean incrementalCompilation, List<SourceFile> changedFiles) {
     this.project = project;
     this.incrementalCompilation = incrementalCompilation;
-    this.isSWC = isSWC;
+    this.changedFiles = changedFiles;
   }
   
   public FlexConfig build() throws LCSException {
-    FlexConfig flexConfig = new FlexConfig(isSWC, false);
+    FlexConfig flexConfig = new FlexConfig(incrementalCompilation, false);
     
     // Sources
     for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
@@ -63,7 +64,7 @@ public class FlexConfigBuilder {
     }
     
     // Main class
-    if (!isSWC) {
+    if (!incrementalCompilation) {
       flexConfig.addFileSpecPathElement(project.getCompilerSettings().getMainClass());
     }
     
@@ -72,8 +73,10 @@ public class FlexConfigBuilder {
     
 
     // Include classes (SWC)
-    if (isSWC) {
-      addLibraryClasses(flexConfig, project.getSourceSettings());
+    if (incrementalCompilation) {
+      for (SourceFile changedSourceFile : changedFiles) {
+        flexConfig.addClass(changedSourceFile.getFqName());
+      }
     }
     
     // RSL

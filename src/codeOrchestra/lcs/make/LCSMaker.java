@@ -17,6 +17,7 @@ import codeOrchestra.lcs.flex.config.FlexConfigBuilder;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.sources.SourceFile;
 
 public class LCSMaker {
 
@@ -24,13 +25,13 @@ public class LCSMaker {
   
   private static boolean sentLiveCodingCommand;
   private boolean isIncremental;
-  private List<File> changedFiles;
+  private List<SourceFile> changedFiles;
   
   public LCSMaker(boolean isIncremental) {
     this.isIncremental = isIncremental;
   }
 
-  public LCSMaker(List<File> changedFilesSnapshot) {
+  public LCSMaker(List<SourceFile> changedFilesSnapshot) {
     this(true);
     this.changedFiles = changedFilesSnapshot;
   }
@@ -40,7 +41,7 @@ public class LCSMaker {
     CompilerSettings compilerSettings = currentProject.getCompilerSettings();
     
     // Generate & save Flex config    
-    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(currentProject, false, false);
+    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(currentProject, isIncremental, changedFiles);
     FlexConfig flexConfig = null;
     File flexConfigFile = null;
     try {

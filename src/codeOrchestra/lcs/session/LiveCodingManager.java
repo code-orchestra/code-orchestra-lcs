@@ -10,6 +10,7 @@ import codeOrchestra.actionScript.modulemaker.MakeException;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.socket.ClientSocketHandler;
+import codeOrchestra.lcs.sources.SourceFile;
 import codeOrchestra.lcs.sources.SourcesTrackerCallback;
 import codeOrchestra.lcs.sources.SourcesTrackerThread;
 
@@ -26,13 +27,13 @@ public class LiveCodingManager {
 
   private SourcesTrackerThread sourceTrackerThread;
   private boolean compilationInProgress;
-  private List<File> changedFiles = new ArrayList<File>();
+  private List<SourceFile> changedFiles = new ArrayList<SourceFile>();
   
   private Object monitor = new Object();
 
   private SourcesTrackerCallback sourcesTrackerCallback = new SourcesTrackerCallback() {
     @Override
-    public void sourceFileChanged(File sourceFile) {
+    public void sourceFileChanged(SourceFile sourceFile) {
       reportChangedFile(sourceFile);
     }
   };
@@ -59,9 +60,9 @@ public class LiveCodingManager {
       compilationInProgress = true;
       assureLiveCodingModeIs(true);
 
-      List<File> changedFilesSnapshot;
+      List<SourceFile> changedFilesSnapshot;
       synchronized (monitor) {
-        changedFilesSnapshot = new ArrayList<File>(changedFiles);
+        changedFilesSnapshot = new ArrayList<SourceFile>(changedFiles);
         changedFiles.clear();
       }
       
@@ -78,7 +79,7 @@ public class LiveCodingManager {
     }
   }
 
-  private void reportChangedFile(File sourceFile) {
+  private void reportChangedFile(SourceFile sourceFile) {
     synchronized (monitor) {
       changedFiles.add(sourceFile);      
     }
