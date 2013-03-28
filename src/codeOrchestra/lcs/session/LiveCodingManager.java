@@ -4,11 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
-import codeOrchestra.lcs.LCSException;
-import codeOrchestra.lcs.flex.config.FlexConfig;
-import codeOrchestra.lcs.flex.config.FlexConfigBuilder;
+import codeOrchestra.actionScript.modulemaker.MakeException;
+import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.socket.ClientSocketHandler;
 import codeOrchestra.lcs.sources.SourcesTrackerCallback;
@@ -35,32 +32,22 @@ public class LiveCodingManager {
     }
   };
 
+  public void runBaseCompilation() {
+    LCSMaker lcsMaker = new LCSMaker(false);
+    try {
+      lcsMaker.make();
+    } catch (MakeException e) {
+      // TODO: handle this nicely
+    }
+
+  }
+  
   public void startSession(String sessionId, ClientSocketHandler clientSocketHandler) {
-    try {
-      FCSHManager.instance().clear();
-    } catch (FCSHException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    
-    LCSProject currentProject = LCSProject.getCurrentProject();
-    
-    // Generate & save Flex config    
-    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(currentProject, false, false);
-    FlexConfig flexConfig = null;
-    try {
-      flexConfig = flexConfigBuilder.build();
-    } catch (LCSException e) {
-      // TODO: handle this
-    }
-    try {
-      flexConfig.saveToFile(currentProject.getFlexConfigPath(currentProject));
-    } catch (LCSException e) {
-      // TODO: handle this
-    }
+    stopSession();
     
     // Start listening for source changes
     List<File> sourceDirs = new ArrayList<File>();
+    LCSProject currentProject = LCSProject.getCurrentProject();    
     for (String sourceDirPath : currentProject.getSourceSettings().getSourcePaths()) {
       File sourceDir = new File(sourceDirPath);
       if (sourceDir.exists() && sourceDir.isDirectory()) {

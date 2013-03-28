@@ -1,7 +1,6 @@
 package codeOrchestra.lcs.logging;
 
-import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,9 @@ import codeOrchestra.lcs.views.MessagesView;
  */
 public final class Logger {
 
+  private static final List<String> DEFAULT_SCOPES = new ArrayList<String>() {{
+    add("0");
+  }};
   private static Map<String, Logger> pool = new HashMap<String, Logger>();
 
   public synchronized static Logger getLogger(String name) {
@@ -46,27 +48,27 @@ public final class Logger {
   }
   
   public void error(String message) {
-    log(message, Collections.EMPTY_LIST, System.currentTimeMillis(), Level.ERROR);
+    log(message, DEFAULT_SCOPES, System.currentTimeMillis(), Level.ERROR);
   }
   
   public void error(Throwable t) {
-    log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.ERROR);
+    log(t.getMessage(), DEFAULT_SCOPES, System.currentTimeMillis(), Level.ERROR);
   }
   
   public void info(String message) {
-    log(message, Collections.EMPTY_LIST, System.currentTimeMillis(), Level.INFO);
+    log(message, DEFAULT_SCOPES, System.currentTimeMillis(), Level.INFO);
   }
   
   public void info(Throwable t) {
-    log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.INFO);    
+    log(t.getMessage(), DEFAULT_SCOPES, System.currentTimeMillis(), Level.INFO);    
   }
   
   public void warning(String message) {
-    log(message, Collections.EMPTY_LIST, System.currentTimeMillis(), Level.WARN);
+    log(message, DEFAULT_SCOPES, System.currentTimeMillis(), Level.WARN);
   }
   
   public void debug(Throwable t) {
-    log(t.getMessage(), Collections.EMPTY_LIST, System.currentTimeMillis(), Level.DEBUG);    
+    log(t.getMessage(), DEFAULT_SCOPES, System.currentTimeMillis(), Level.DEBUG);    
   }
   
   private void log(String message, List<String> scopeIds, long timestamp, Level level) {

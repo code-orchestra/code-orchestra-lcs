@@ -6,6 +6,7 @@ import java.util.List;
 
 import codeOrchestra.lcs.LCSException;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.project.SourceSettings;
 import codeOrchestra.lcs.run.LiveCodingAnnotation;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.NameUtil;
@@ -72,29 +73,7 @@ public class FlexConfigBuilder {
 
     // Include classes (SWC)
     if (isSWC) {
-      for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
-        File sourceDir = new File(sourcePath);
-        if (!sourceDir.exists() || !sourceDir.isDirectory()) {
-          continue;
-        }
-        
-        List<File> sourceFiles = FileUtils.listFileRecursively(sourceDir, new FileFilter() {
-          @Override
-          public boolean accept(File file) {
-            String filenameLowerCase = file.getName().toLowerCase();
-            return filenameLowerCase.endsWith(".as") || filenameLowerCase.endsWith(".mxml");
-          }
-        });
-        
-        for (File sourceFile : sourceFiles) {
-          String relativePath = FileUtils.getRelativePath(sourceFile.getPath(), sourceDir.getPath(), File.separator);
-          
-          if (!StringUtils.isEmpty(relativePath)) {
-            String fqName = NameUtil.namespaceFromPath(relativePath);
-            flexConfig.addClass(fqName);            
-          }
-        }
-      }
+      addLibraryClasses(flexConfig, project.getSourceSettings());
     }
     
     // RSL
@@ -111,6 +90,32 @@ public class FlexConfigBuilder {
     }
     
     return flexConfig;
+  }
+
+  public static void addLibraryClasses(FlexConfig flexConfig, SourceSettings sourceSettings) {
+    for (String sourcePath : sourceSettings.getSourcePaths()) {
+      File sourceDir = new File(sourcePath);
+      if (!sourceDir.exists() || !sourceDir.isDirectory()) {
+        continue;
+      }
+      
+      List<File> sourceFiles = FileUtils.listFileRecursively(sourceDir, new FileFilter() {
+        @Override
+        public boolean accept(File file) {
+          String filenameLowerCase = file.getName().toLowerCase();
+          return filenameLowerCase.endsWith(".as") || filenameLowerCase.endsWith(".mxml");
+        }
+      });
+      
+      for (File sourceFile : sourceFiles) {
+        String relativePath = FileUtils.getRelativePath(sourceFile.getPath(), sourceDir.getPath(), File.separator);
+        
+        if (!StringUtils.isEmpty(relativePath)) {
+          String fqName = NameUtil.namespaceFromPath(relativePath);
+          flexConfig.addClass(fqName);            
+        }
+      }
+    }
   }
 
   private String getLinkReportFilePath() {

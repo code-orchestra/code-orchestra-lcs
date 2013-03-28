@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import codeOrchestra.lcs.LCSException;
+import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.utils.StringUtils;
 import codeOrchestra.utils.XMLUtils;
 
@@ -410,5 +411,6 @@ public class FlexConfig {
       return result;
     }
   }
+
 
 }

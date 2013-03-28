@@ -51,11 +51,11 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     
     // TODO: delete
     Button testButton = new Button(banner, SWT.PUSH);
-    testButton.setText("Test start session");
+    testButton.setText("Test base compilation");
     testButton.addSelectionListener(new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-		  LiveCodingManager.instance().startSession("test", null);
+		  LiveCodingManager.instance().runBaseCompilation();
 		}
 	});
   }
