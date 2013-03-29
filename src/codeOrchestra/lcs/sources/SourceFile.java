@@ -10,14 +10,24 @@ public class SourceFile {
 
   private File file;
   private String fqName;
+  private String relativePath;
   
   public SourceFile(File file, String sourceDir) {
-    String relativePath = FileUtils.getRelativePath(file.getPath(), sourceDir, File.separator);
+    this.file = file;
+    this.relativePath = FileUtils.getRelativePath(file.getPath(), sourceDir, File.separator);
     if (!StringUtils.isEmpty(relativePath)) {
       this.fqName = NameUtil.namespaceFromPath(relativePath);
     } else {
       throw new IllegalArgumentException(file.getPath());
     }
+  }
+  
+  public File getFile() {
+    return file;
+  }
+  
+  public String getRelativePath() {
+    return relativePath;
   }
   
   public String getFqName() {

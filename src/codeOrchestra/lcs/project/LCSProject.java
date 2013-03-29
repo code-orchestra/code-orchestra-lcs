@@ -64,6 +64,14 @@ public class LCSProject {
     }
   }
 
+	public File getOrCreateIncrementalSourcesDir() {
+	  File incrementalSourcesDir = new File(getBaseDir(), "incremental");
+	  if (!incrementalSourcesDir.exists()) {
+	    incrementalSourcesDir.mkdir();
+	  }
+	  return incrementalSourcesDir;
+	}
+	
   public File getOutputDir() {
     return new File(getBaseDir(), "lcs_output");
   }

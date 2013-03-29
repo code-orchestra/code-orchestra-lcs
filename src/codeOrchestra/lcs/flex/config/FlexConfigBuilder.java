@@ -2,6 +2,7 @@ package codeOrchestra.lcs.flex.config;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.List;
 
 import codeOrchestra.lcs.LCSException;
@@ -57,7 +58,16 @@ public class FlexConfigBuilder {
       flexConfig.setIncremental(true);
       
       // Changed source files must be copied to a separate folder and added to the config
-      // TODO: implement!
+      File incrementalSourcesDir = project.getOrCreateIncrementalSourcesDir();
+      FileUtils.clear(incrementalSourcesDir);
+      for (SourceFile sourceFile : changedFiles) {
+        try {
+          FileUtils.copyFileChecked(sourceFile.getFile(), new File(incrementalSourcesDir, sourceFile.getRelativePath()), false);
+        } catch (IOException e) {
+          throw new LCSException("Can't copy changed source file to 'incremental' dir", e);
+        }
+      }
+      flexConfig.addSourcePath(incrementalSourcesDir.getPath());
     }
 
     // Link report file generation
