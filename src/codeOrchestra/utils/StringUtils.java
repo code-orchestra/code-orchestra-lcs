@@ -18,7 +18,27 @@ public class StringUtils {
       return combine(s, t);
     }
   }
-  
+
+  public static int lastIndexOf(String str, String searchChar) {
+    if (isEmpty(str)) {
+      return -1;
+    }
+    return str.lastIndexOf(searchChar);
+  }
+
+  public static int countMatches(String str, String sub) {
+    if (isEmpty(str) || isEmpty(sub)) {
+      return 0;
+    }
+    int count = 0;
+    int idx = 0;
+    while ((idx = str.indexOf(sub, idx)) != -1) {
+      count++;
+      idx += sub.length();
+    }
+    return count;
+  }
+
   public static String foldLeft(Iterable<String> seq, String seed, ILeftCombinator combinator) {
     String s = seed;
     for (Iterator<String> it = seq.iterator(); it.hasNext();) {
@@ -26,10 +46,11 @@ public class StringUtils {
     }
     return s;
   }
-  
+
   /**
-   * Equivalent to testee.startsWith(firstPrefix + secondPrefix) but avoids creating an object for concatenation.
-   *
+   * Equivalent to testee.startsWith(firstPrefix + secondPrefix) but avoids
+   * creating an object for concatenation.
+   * 
    * @param testee
    * @param firstPrefix
    * @param secondPrefix
@@ -38,10 +59,11 @@ public class StringUtils {
   public static boolean startsWithConcatenationOf(String testee, String firstPrefix, String secondPrefix) {
     int l1 = firstPrefix.length();
     int l2 = secondPrefix.length();
-    if (testee.length() < l1 + l2) return false;
+    if (testee.length() < l1 + l2)
+      return false;
     return testee.startsWith(firstPrefix) && testee.regionMatches(l1, secondPrefix, 0, l2);
   }
-  
+
   public static boolean isEmpty(String command) {
     return command == null || command.trim().isEmpty();
   }
@@ -52,7 +74,7 @@ public class StringUtils {
     }
     return join(strings.toArray(new String[strings.size()]), separator);
   }
-  
+
   public static String join(final String[] strings, final String separator) {
     return join(strings, 0, strings.length, separator);
   }
@@ -60,7 +82,8 @@ public class StringUtils {
   public static String join(final String[] strings, int startIndex, int endIndex, final String separator) {
     final StringBuilder result = new StringBuilder();
     for (int i = startIndex; i < endIndex; i++) {
-      if (i > startIndex) result.append(separator);
+      if (i > startIndex)
+        result.append(separator);
       result.append(strings[i]);
     }
     return result.toString();
@@ -69,5 +92,5 @@ public class StringUtils {
   public static boolean isNotEmpty(String str) {
     return str != null && str.trim().length() > 0;
   }
-  
+
 }
