@@ -1,10 +1,11 @@
 package codeOrchestra.lcs.flex;
 
+import codeOrchestra.utils.PathUtils;
+
 public class FlexSDKSettings {
 
   public static String getDefaultFlexSDKPath() {
-    // TODO: implement
-    return "/Users/buildserver/git/code-orchestra-core/flex_sdk";
+    return PathUtils.getFlexSDKPath();
   }
 
 }

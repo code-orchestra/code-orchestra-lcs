@@ -13,6 +13,7 @@ import codeOrchestra.lcs.run.LiveCodingAnnotation;
 import codeOrchestra.lcs.sources.SourceFile;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.NameUtil;
+import codeOrchestra.utils.PathUtils;
 import codeOrchestra.utils.StringUtils;
 
 /**
@@ -36,9 +37,13 @@ public class FlexConfigBuilder {
 
     // Sources
     if (!incrementalCompilation) {
+      // Defined source paths
       for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
         flexConfig.addSourcePath(sourcePath);
       }
+      
+      // Provided libraries (language extensions) sources
+      flexConfig.addSourcePath(PathUtils.getActionScriptLibsSourcePath());
     }
 
     // Incremental settings

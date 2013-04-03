@@ -9,14 +9,23 @@ import org.eclipse.core.runtime.Platform;
  */
 public class PathUtils {
   
-  
   public static String getFlexSDKPath() {
+    File productDir = getApplicationBaseDir();    
+    return new File(productDir, "flex_sdk").getPath();
+  }
+  
+  public static String getActionScriptLibsSourcePath() {
+    File productDir = getApplicationBaseDir();    
+    return new File(productDir, "as_libs" + File.separator + "source").getPath();
+  }
+
+  public static File getApplicationBaseDir() {
     // Try the bundle path (deployed product)
     File dir = Platform.getProduct().getDefiningBundle().getDataFile("tmp").getParentFile();
     while ((dir = dir.getParentFile()) != null) {
       File possibleFlexSDKDir = new File(dir, "flex_sdk");
       if (possibleFlexSDKDir.exists()) {
-        return possibleFlexSDKDir.getPath();
+        return possibleFlexSDKDir;
       }
     }
     
@@ -35,9 +44,7 @@ public class PathUtils {
     if (parentMarksCount > 0) {
       relativePath = relativePath.substring(StringUtils.lastIndexOf(relativePath, "..") + 3);
     }
-    productDir = new File(productDir, relativePath);
-    
-    return new File(productDir, "flex_sdk").getPath();
+    return new File(productDir, relativePath);
   }
 
 }
