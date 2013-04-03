@@ -6,8 +6,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.process.ProcessHandler;
+
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.run.LiveLauncher;
 import codeOrchestra.lcs.session.LiveCodingManager;
 
 public class StartSessionAction extends Action {
@@ -38,7 +42,13 @@ public class StartSessionAction extends Action {
         
     // 2 - Start the compiled SWF
     if (successfulBaseGeneration) {
-      // TODO: start the SWF
+      try {
+        ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject());
+//        processHandler.s
+      } catch (ExecutionException e) {
+        // TODO: handle nicely
+        e.printStackTrace();
+      }
     }
   }
   

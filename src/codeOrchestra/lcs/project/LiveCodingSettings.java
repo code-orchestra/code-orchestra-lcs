@@ -20,6 +20,14 @@ public class LiveCodingSettings extends ProjectSettingsPart {
 	  return getPreferenceStore().getBoolean("flashPlayerLauncher") ? LauncherType.FLASH_PLAYER : LauncherType.DEFAULT;
 	}
 	
+	public String getFlashPlayerPath() {
+	  return getPreferenceStore().getString("flashPlayerPath");
+	}
+	
+	public String getWebAddress() {
+	  return getPreferenceStore().getString("webAddress");	  
+	}
+	
 	public LiveMethods getLiveMethods() {
 	  String liveMethodsStringValue = getPreferenceStore().getString("liveMethods");
 	  if (liveMethodsStringValue == null) {
@@ -27,6 +35,10 @@ public class LiveCodingSettings extends ProjectSettingsPart {
 	  }
 	  
 	  return LiveMethods.parseValue(liveMethodsStringValue);
+	}
+	
+	public boolean isWebAddressTarget() {
+	  return getPreferenceStore().getBoolean("webAddressTarget");
 	}
 	
 	public boolean startSessionPaused() {

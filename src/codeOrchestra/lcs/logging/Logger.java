@@ -71,6 +71,11 @@ public final class Logger {
     log(t.getMessage(), DEFAULT_SCOPES, System.currentTimeMillis(), Level.DEBUG);    
   }
   
+  
+  public void debug(String message) {
+    log(message, DEFAULT_SCOPES, System.currentTimeMillis(), Level.DEBUG);   
+  }
+  
   private void log(String message, List<String> scopeIds, long timestamp, Level level) {
     for (String scopeId : scopeIds) {
       MessageScope scope = MessageScopeRegistry.getInstance().getScope(scopeId);

@@ -25,6 +25,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   public static final String ID = "LCS.liveCodingView";
 
   private DirectoryFieldEditorEx flashPlayerPathEditor;
+  private StringFieldEditor webAddressEditor;
   private RadioGroupFieldEditor liveMethodsGroupEditor;
   private BooleanFieldEditor startSessionPausedEditor;
   private BooleanFieldEditor makeGettersSettersLiveEditor;
@@ -32,8 +33,12 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   
   private Button defaultLauncherButton;
   private Button flashPlayerLauncherButton;
+  
+  private Button defaultTargetButton;
+  private Button webAddressTargetButton;
 
   private Composite flashPlayerPathComposite;
+  private Composite webAddressComposite;
   
   @Override
   public void createPartControl(Composite parent) {
@@ -42,6 +47,32 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     layout.marginHeight = 5;
     layout.marginWidth = 10;
     parent.setLayout(layout);
+
+    Group targetSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+    targetSettingsGroup.setText("Target");
+    GridLayout targetSettingsLayout = new GridLayout(2, false);
+    targetSettingsLayout.marginHeight = 5;
+    targetSettingsLayout.marginWidth = 5;
+    targetSettingsGroup.setLayout(targetSettingsLayout);
+    targetSettingsGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+    
+    // These two radio buttons use custom load/store mechanism
+    defaultTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
+    defaultTargetButton.setText("Compiled SWF");
+    GridData defaultTargetButtonLayoutData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+    defaultTargetButtonLayoutData.horizontalSpan = 2;
+    defaultTargetButton.setLayoutData(defaultTargetButtonLayoutData);
+    defaultTargetButton.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent e) {
+        updateUI();
+      }      
+    });    
+    webAddressTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
+    webAddressTargetButton.setText("Web Address:");
+    webAddressComposite = new Composite(targetSettingsGroup, SWT.NONE);
+    webAddressComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+    webAddressEditor = new StringFieldEditor("webAddress", "", webAddressComposite);
+    webAddressEditor.setPreferenceStore(getPreferenceStore());
     
     Group launcherSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
     launcherSettingsGroup.setText("Launcher");
@@ -51,7 +82,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     launcherSettingsGroup.setLayout(launcherSettingsLayout);
     launcherSettingsGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 
-    // These two radiobuttons use custom load/store mechanism
+    // These two radio buttons use custom load/store mechanism
     defaultLauncherButton = new Button(launcherSettingsGroup, SWT.RADIO);
     defaultLauncherButton.setText("System default application");
     GridData defaultLauncherButtonLayoutData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
@@ -61,8 +92,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       public void widgetSelected(SelectionEvent e) {
         updateUI();
       }      
-    });
-    
+    });    
     flashPlayerLauncherButton = new Button(launcherSettingsGroup, SWT.RADIO);
     flashPlayerLauncherButton.setText("Flash Player");
     flashPlayerPathComposite = new Composite(launcherSettingsGroup, SWT.NONE);
@@ -130,6 +160,14 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       defaultLauncherButton.setSelection(true);
     }
     
+    boolean webAddressTarget = getPreferenceStore().getBoolean("webAddressTarget");
+    if (webAddressTarget) {
+      webAddressTargetButton.setSelection(true);
+    } else {
+      defaultTargetButton.setSelection(true);
+    }
+    
+    webAddressEditor.load();
     flashPlayerPathEditor.load();
     liveMethodsGroupEditor.load();
     startSessionPausedEditor.load();
@@ -144,7 +182,9 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   @Override
   public void savePart() {
     getPreferenceStore().setValue("flashPlayerLauncher", flashPlayerLauncherButton.getSelection());
+    getPreferenceStore().setValue("webAddressTarget", webAddressTargetButton.getSelection());
     
+    webAddressEditor.store();
     flashPlayerPathEditor.store();
     liveMethodsGroupEditor.store();
     startSessionPausedEditor.store();
@@ -153,7 +193,15 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   }
 
   private void updateUI() {
-    flashPlayerPathEditor.setEnabled(flashPlayerLauncherButton.getSelection(), flashPlayerPathComposite);
+    flashPlayerPathEditor.setEnabled(flashPlayerLauncherButton.getSelection() && !webAddressTargetButton.getSelection(), flashPlayerPathComposite);
+    flashPlayerLauncherButton.setEnabled(!webAddressTargetButton.getSelection());
+
+    webAddressEditor.setEnabled(webAddressTargetButton.getSelection(), webAddressComposite);
+    
+    if (webAddressTargetButton.getSelection() && flashPlayerLauncherButton.getSelection()) {
+      flashPlayerLauncherButton.setSelection(false);
+      defaultLauncherButton.setSelection(true);
+    }    
   }
   
   @Override
