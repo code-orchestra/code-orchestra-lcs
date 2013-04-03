@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.actionScript.modulemaker.MakeException;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
@@ -41,7 +39,6 @@ public class LiveCodingManager {
   public boolean runBaseCompilation() {
     try {
       compilationInProgress = true;
-      assureLiveCodingModeIs(false);
 
       LCSMaker lcsMaker = new LCSMaker(false);
       try {
@@ -58,7 +55,6 @@ public class LiveCodingManager {
   public void runIncrementalCompilation() {
     try {
       compilationInProgress = true;
-      assureLiveCodingModeIs(true);
 
       List<SourceFile> changedFilesSnapshot;
       synchronized (monitor) {
@@ -96,18 +92,6 @@ public class LiveCodingManager {
     
     if (!compilationInProgress) {
       runIncrementalCompilation();
-    }
-  }
-  
-  private void assureLiveCodingModeIs(boolean on) {
-    FCSHManager fcshManager = FCSHManager.instance();
-    if (fcshManager.isInIncrementalLivecodingMode()) {
-      fcshManager.setLivecodingMode(on);
-      try {
-        fcshManager.restart();
-      } catch (FCSHException e) {
-        // TODO: handle this nicely
-      }
     }
   }
 

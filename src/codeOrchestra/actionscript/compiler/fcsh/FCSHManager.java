@@ -38,15 +38,10 @@ public class FCSHManager {
 
   private FCSHProcessHandler fcshProcessHandler;
   private Map<List<String>, CompilerTarget> compilerTargets = Collections.synchronizedMap(new HashMap<List<String>, CompilerTarget>());
-  private boolean livecodingMode;
 
   public void restart() throws FCSHException {
     destroyProcess();
     assureFCSHIsActive();
-  }
-
-  public boolean isInIncrementalLivecodingMode() {
-    return livecodingMode;
   }
 
   public void destroyProcess() {
@@ -67,7 +62,7 @@ public class FCSHManager {
 
     clearTargets();
 
-    FCSHLauncher fcshLauncher = new FCSHLauncher(livecodingMode);
+    FCSHLauncher fcshLauncher = new FCSHLauncher();
     ProcessBuilder processBuilder = fcshLauncher.createProcessBuilder();
     Process fcshProcess;
     try {
@@ -170,9 +165,8 @@ public class FCSHManager {
   }
 
   public void clear() throws FCSHException {
-    if (livecodingMode) {
-      // FCSH in livecoding mode clears itself after every compilation
-//      clearTargets();
+    // FCSH in livecoding mode clears itself after every compilation
+    if (true) {
       return;
     }
 
@@ -188,7 +182,4 @@ public class FCSHManager {
     return fcshProcessHandler;
   }
 
-  public void setLivecodingMode(boolean livecodingMode) {
-    this.livecodingMode = livecodingMode;
-  }
 }

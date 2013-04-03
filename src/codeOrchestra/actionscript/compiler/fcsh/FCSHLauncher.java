@@ -1,23 +1,18 @@
 package codeOrchestra.actionScript.compiler.fcsh;
 
-import com.intellij.openapi.util.SystemInfo;
-
 import codeOrchestra.lcs.flex.FlexSDKSettings;
 import codeOrchestra.utils.process.JavaLauncher;
 
-import java.io.File;
+import com.intellij.openapi.util.SystemInfo;
 
 /**
  * @author Alexander Eliseyev
  */
 public class FCSHLauncher extends JavaLauncher {
 
-  public FCSHLauncher(boolean livecodingMode) {
+  public FCSHLauncher() {
     super(null);
     
-    // TODO: test
-    livecodingMode = true; 
-
     StringBuilder programParameters = new StringBuilder();
     String flexHome = FlexSDKSettings.getDefaultFlexSDKPath();
     
@@ -26,16 +21,8 @@ public class FCSHLauncher extends JavaLauncher {
     programParameters.append(" -Duser.country=US");
     programParameters.append(" -Djava.awt.headless=true");
     programParameters.append(" -jar ");
-    String fcshJarPath = null;
+    programParameters.append(protect(flexHome + "/liblc/fcsh.jar"));
     
-    if (livecodingMode) {
-      fcshJarPath = protect(flexHome + "/liblc/fcsh.jar");
-    }
-    
-    if (fcshJarPath == null || !(new File(fcshJarPath).exists())) {
-      fcshJarPath = protect(flexHome + "/lib/fcsh.jar");
-    }
-    programParameters.append(fcshJarPath);
     setProgramParameter(programParameters.toString());
 
     StringBuilder jvmParameters = new StringBuilder();
