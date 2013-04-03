@@ -14,6 +14,9 @@ public class FCSHLauncher extends JavaLauncher {
 
   public FCSHLauncher(boolean livecodingMode) {
     super(null);
+    
+    // TODO: test
+    livecodingMode = true; 
 
     StringBuilder programParameters = new StringBuilder();
     String flexHome = FlexSDKSettings.getDefaultFlexSDKPath();

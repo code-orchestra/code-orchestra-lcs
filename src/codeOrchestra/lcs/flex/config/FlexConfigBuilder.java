@@ -21,6 +21,9 @@ import codeOrchestra.utils.StringUtils;
  */
 public class FlexConfigBuilder {
 
+  private static final String DOT_MXML = ".mxml";
+  private static final String DOT_AS = ".as";
+  
   private final LCSProject project;
   private final boolean incrementalCompilation;
   private final List<SourceFile> changedFiles;
@@ -128,13 +131,19 @@ public class FlexConfigBuilder {
         @Override
         public boolean accept(File file) {
           String filenameLowerCase = file.getName().toLowerCase();
-          return filenameLowerCase.endsWith(".as") || filenameLowerCase.endsWith(".mxml");
+          return filenameLowerCase.endsWith(DOT_AS) || filenameLowerCase.endsWith(DOT_MXML);
         }
       });
 
       for (File sourceFile : sourceFiles) {
         String relativePath = FileUtils.getRelativePath(sourceFile.getPath(), sourceDir.getPath(), File.separator);
 
+        if (relativePath.toLowerCase().endsWith(DOT_AS)) {
+          relativePath = relativePath.substring(0, relativePath.length() - DOT_AS.length());
+        } else if (relativePath.toLowerCase().endsWith(DOT_MXML)) {
+          relativePath = relativePath.substring(0, relativePath.length() - DOT_MXML.length());
+        }
+        
         if (!StringUtils.isEmpty(relativePath)) {
           String fqName = NameUtil.namespaceFromPath(relativePath);
           flexConfig.addClass(fqName);

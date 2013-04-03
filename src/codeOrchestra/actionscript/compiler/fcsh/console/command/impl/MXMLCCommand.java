@@ -15,7 +15,7 @@ public class MXMLCCommand extends AbstractCompileWithArgumentsCommandCallback {
 
   @Override
   protected String getExecutableName() {
-    return "mxmlc";
+    return "lcmxmlc";
   }
 
 }

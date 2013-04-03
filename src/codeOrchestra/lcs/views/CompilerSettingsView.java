@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 
 import codeOrchestra.lcs.flex.FlexSDKManager;
 import codeOrchestra.lcs.flex.FlexSDKNotPresentException;
+import codeOrchestra.lcs.flex.FlexSDKSettings;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.utils.DirectoryFieldEditorEx;
@@ -48,7 +49,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private BooleanFieldEditor nonDefaultLocaleEditor;
   private StringFieldEditor localeOptionsEditor;
   private StringFieldEditor compilerOptionsEditor;
-  
+
   // Containers
 
   private Composite customCompilerConfigEditorComposite;
@@ -56,7 +57,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private Composite localeOptionsEditorComposite;
 
   // Validation controls
-  
+
   private Label targetPlayerErrorLabel;
 
   @Override
@@ -76,10 +77,13 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath", "Flex SDK Path:", flexPathComposite);
     flexSDKPathEditor.setPreferenceStore(getPreferenceStore());
     flexSDKPathEditor.load();
+    if (flexSDKPathEditor.getStringValue() == null) {
+      flexSDKPathEditor.setStringValue(FlexSDKSettings.getDefaultFlexSDKPath());
+    }
     flexSDKPathEditor.setPropertyChangeListener(new IPropertyChangeListener() {
       @Override
       public void propertyChange(PropertyChangeEvent event) {
-        createTargetPlayerEditor(false);        
+        createTargetPlayerEditor(false);
       }
     });
 
@@ -151,19 +155,19 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     targetPlayerComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     targetPlayerComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
     targetPlayerComposite.setLayout(new GridLayout(2, false));
-  
+
     Composite useFrameworkAsRSLEditorComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     GridData useFrameworkAsRSLEditorCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
     useFrameworkAsRSLEditorCompositeGridData.horizontalIndent = 10;
-    useFrameworkAsRSLEditorComposite.setLayoutData(useFrameworkAsRSLEditorCompositeGridData);    
+    useFrameworkAsRSLEditorComposite.setLayoutData(useFrameworkAsRSLEditorCompositeGridData);
     useFrameworkAsRSLEditor = new BooleanFieldEditor("useFrameworkAsRSL", "Use Framework as Runtime Shared Library (RSL)", useFrameworkAsRSLEditorComposite);
     useFrameworkAsRSLEditor.setPreferenceStore(getPreferenceStore());
     useFrameworkAsRSLEditorComposite.setLayout(new GridLayout());
 
-    Composite nonDefaultLocaleComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);    
-    GridData nonDefaultLocaleCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);    
+    Composite nonDefaultLocaleComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
+    GridData nonDefaultLocaleCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
     nonDefaultLocaleCompositeGridData.horizontalIndent = 10;
-    nonDefaultLocaleComposite.setLayoutData(nonDefaultLocaleCompositeGridData);          
+    nonDefaultLocaleComposite.setLayoutData(nonDefaultLocaleCompositeGridData);
     nonDefaultLocaleEditor = new BooleanFieldEditor("nonDefaultLocale", "Non-default locale settings:", nonDefaultLocaleComposite);
     nonDefaultLocaleEditor.setPreferenceStore(getPreferenceStore());
     nonDefaultLocaleEditor.setPropertyChangeListener(new IPropertyChangeListener() {
@@ -178,13 +182,13 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     localeOptionsEditor = new StringFieldEditor("localeOptions", "", localeOptionsEditorComposite);
     localeOptionsEditor.setPreferenceStore(getPreferenceStore());
     nonDefaultLocaleComposite.setLayout(new GridLayout(nonDefaultLocaleEditor.getNumberOfControls() + 1, false));
-    
+
     Composite compilerOptionsEditorComposite = new Composite(parent, SWT.NONE);
     compilerOptionsEditorComposite.setLayout(new GridLayout());
     compilerOptionsEditorComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
     compilerOptionsEditor = new StringFieldEditor("compilerOptions", "Additional compiler options:", compilerOptionsEditorComposite);
     compilerOptionsEditor.setPreferenceStore(getPreferenceStore());
-    
+
     reset();
     createTargetPlayerEditor(true);
     updateUI();
@@ -202,7 +206,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     try {
       List<String> playerVersions = FlexSDKManager.getInstance().getAvailablePlayerVersions(new File(flexSDKPathEditor.getStringValue()));
       entryNamesAndValues = new String[playerVersions.size()][2];
-      
+
       int i = 0;
       for (String playerVersion : playerVersions) {
         entryNamesAndValues[i][0] = playerVersion;
@@ -240,17 +244,17 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     defaultSDKBooleanEditor.load();
     customSDKBooleanEditor.load();
     customCompilerConfigEditor.load();
-    
+
     outputFileNameEditor.load();
     if (StringUtils.isEmpty(outputFileNameEditor.getStringValue())) {
       outputFileNameEditor.setStringValue(LCSProject.getCurrentProject().getName() + ".swf");
     }
-    
+
     outputPathEditor.load();
     if (StringUtils.isEmpty(outputPathEditor.getStringValue())) {
       outputPathEditor.setStringValue(LCSProject.getCurrentProject().getOutputDir().getAbsolutePath());
     }
-    
+
     useFrameworkAsRSLEditor.load();
     nonDefaultLocaleEditor.load();
     localeOptionsEditor.load();
