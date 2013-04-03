@@ -37,19 +37,22 @@ public class StartSessionAction extends Action {
   
   @Override
   public void run() {
-    // 1 - Base compilation
-    boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();    
-        
-    // 2 - Start the compiled SWF
-    if (successfulBaseGeneration) {
-      try {
-        ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject());
-//        processHandler.s
-      } catch (ExecutionException e) {
-        // TODO: handle nicely
-        e.printStackTrace();
-      }
-    }
+    new Thread() {
+      public void run() {
+        // 1 - Base compilation
+        boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();    
+            
+        // 2 - Start the compiled SWF
+        if (successfulBaseGeneration) {
+          try {
+            new LiveLauncher().launch(LCSProject.getCurrentProject());
+          } catch (ExecutionException e) {
+            // TODO: handle nicely
+            e.printStackTrace();
+          }
+        }
+      };
+    }.start();    
   }
   
 }

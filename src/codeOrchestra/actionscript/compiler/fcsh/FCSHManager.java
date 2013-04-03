@@ -3,10 +3,11 @@ package codeOrchestra.actionScript.compiler.fcsh;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandRunnable;
-import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.COMPCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
-import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.MXMLCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingIncrementalCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
@@ -117,7 +118,7 @@ public class FCSHManager {
     }
   }
 
-  public CompilationResult mxmlc(List<String> arguments) throws FCSHException {
+  public CompilationResult baseMXMLC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
@@ -127,7 +128,7 @@ public class FCSHManager {
       }
     }
 
-    MXMLCCommand mxmlcCommand = new MXMLCCommand(this, arguments);
+    LivecodingBaseMXMLCCommand mxmlcCommand = new LivecodingBaseMXMLCCommand(this, arguments);
     LOG.info("Compiling: " + mxmlcCommand.getCommand());
 
     submitCommand(mxmlcCommand);
@@ -146,7 +147,7 @@ public class FCSHManager {
     return compileCommand.getCompileResult();
   }
 
-  public CompilationResult compc(List<String> arguments) throws FCSHException {
+  public CompilationResult baseCOMPC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
@@ -156,7 +157,25 @@ public class FCSHManager {
       }
     }
 
-    COMPCCommand compcCommand = new COMPCCommand(this, arguments);
+    LivecodingBaseCOMPCCommand compcCommand = new LivecodingBaseCOMPCCommand(this, arguments);
+    LOG.info("Compiling: " + compcCommand.getCommand());
+
+    submitCommand(compcCommand);
+
+    return compcCommand.getCompileResult();
+  }
+  
+  public CompilationResult incrementalCOMPC(List<String> arguments) throws FCSHException {
+    assureFCSHIsActive();
+
+    synchronized (compilerTargets) {
+      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      if (compilerTarget != null) {
+        return compile(compilerTarget);
+      }
+    }
+
+    LivecodingIncrementalCOMPCCommand compcCommand = new LivecodingIncrementalCOMPCCommand(this, arguments);
     LOG.info("Compiling: " + compcCommand.getCommand());
 
     submitCommand(compcCommand);

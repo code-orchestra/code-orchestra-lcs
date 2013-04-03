@@ -7,15 +7,15 @@ import java.util.List;
 /**
  * @author Alexander Eliseyev
  */
-public class COMPCCommand extends AbstractCompileWithArgumentsCommandCallback {
+public class LivecodingBaseCOMPCCommand extends AbstractCompileWithArgumentsCommandCallback {
 
-  public COMPCCommand(FCSHManager fcshManager, List<String> arguments) {
+  public LivecodingBaseCOMPCCommand(FCSHManager fcshManager, List<String> arguments) {
     super(fcshManager, arguments);
   }
 
   @Override
   protected String getExecutableName() {
-    return "compc";
+    return "lccompc";
   }
 
 }

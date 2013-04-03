@@ -7,9 +7,9 @@ import java.util.List;
 /**
  * @author Alexander Eliseyev
  */
-public class MXMLCCommand extends AbstractCompileWithArgumentsCommandCallback {
+public class LivecodingBaseMXMLCCommand extends AbstractCompileWithArgumentsCommandCallback {
 
-  public MXMLCCommand(FCSHManager fcshManager, List<String> arguments) {
+  public LivecodingBaseMXMLCCommand(FCSHManager fcshManager, List<String> arguments) {
     super(fcshManager, arguments);
   }
 

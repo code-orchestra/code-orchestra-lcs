@@ -1,12 +1,11 @@
 package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
+import java.util.List;
+
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandOutput;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Alexander Eliseyev
