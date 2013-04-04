@@ -59,7 +59,7 @@ public abstract class AbstractCompileWithArgumentsCommandCallback extends Abstra
 
     // Register the compiler target if the compilation went ok
     if (compilationResult.isOk()) {
-      fcshManager.registerCompileTarget(arguments, targetId);
+      fcshManager.registerCompileTarget(getExecutableName(), arguments, targetId);
     }
 
     return compilationResult;

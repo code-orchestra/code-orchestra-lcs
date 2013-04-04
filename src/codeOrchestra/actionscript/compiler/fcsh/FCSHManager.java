@@ -8,6 +8,7 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearComman
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingIncrementalCOMPCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.target.CompilerCommand;
 import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
@@ -38,7 +39,7 @@ public class FCSHManager {
   public static final long FCSH_INIT_TIMEOUT = 3000;
 
   private FCSHProcessHandler fcshProcessHandler;
-  private Map<List<String>, CompilerTarget> compilerTargets = Collections.synchronizedMap(new HashMap<List<String>, CompilerTarget>());
+  private Map<CompilerCommand, CompilerTarget> compilerTargets = Collections.synchronizedMap(new HashMap<CompilerCommand, CompilerTarget>());
 
   public void restart() throws FCSHException {
     destroyProcess();
@@ -106,12 +107,13 @@ public class FCSHManager {
     }
   }
 
-  public CompilerTarget registerCompileTarget(List<String> arguments, int id) {
+  public CompilerTarget registerCompileTarget(String executableName, List<String> arguments, int id) {
     synchronized (compilerTargets) {
-      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      CompilerCommand compilerCommand = new CompilerCommand(arguments, executableName);
+      CompilerTarget compilerTarget = compilerTargets.get(compilerCommand);
       if (compilerTarget == null) {
         compilerTarget = new CompilerTarget(id);
-        compilerTargets.put(arguments, compilerTarget);
+        compilerTargets.put(compilerCommand, compilerTarget);
       }
 
       return compilerTarget;
@@ -122,7 +124,8 @@ public class FCSHManager {
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
-      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      CompilerCommand compilerCommand = new CompilerCommand(arguments, LivecodingBaseMXMLCCommand.EXECUTABLE_NAME);
+      CompilerTarget compilerTarget = compilerTargets.get(compilerCommand);
       if (compilerTarget != null) {
         return compile(compilerTarget);
       }
@@ -151,7 +154,8 @@ public class FCSHManager {
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
-      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      CompilerCommand compilerCommand = new CompilerCommand(arguments, LivecodingBaseCOMPCCommand.EXECUTABLE_NAME);
+      CompilerTarget compilerTarget = compilerTargets.get(compilerCommand);
       if (compilerTarget != null) {
         return compile(compilerTarget);
       }
@@ -169,7 +173,8 @@ public class FCSHManager {
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
-      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      CompilerCommand compilerCommand = new CompilerCommand(arguments, LivecodingIncrementalCOMPCCommand.EXECUTABLE_NAME);
+      CompilerTarget compilerTarget = compilerTargets.get(compilerCommand);
       if (compilerTarget != null) {
         return compile(compilerTarget);
       }

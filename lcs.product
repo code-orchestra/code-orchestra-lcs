@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="CodeOrchestra Live Coding Server" uid="code.orchestra.lcs.product" id="code-orchestra-lcs.product" application="code-orchestra-lcs.application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
+<product name="Code Orchestra Livecoding Tool" uid="code.orchestra.lcs.product" id="code-orchestra-lcs.product" application="code-orchestra-lcs.application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
       <image path="product_lg.gif"/>

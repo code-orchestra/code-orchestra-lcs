@@ -9,13 +9,15 @@ import java.util.List;
  */
 public class LivecodingBaseMXMLCCommand extends AbstractCompileWithArgumentsCommandCallback {
 
+  public static final String EXECUTABLE_NAME = "lcmxmlc";
+
   public LivecodingBaseMXMLCCommand(FCSHManager fcshManager, List<String> arguments) {
     super(fcshManager, arguments);
   }
 
   @Override
   protected String getExecutableName() {
-    return "lcmxmlc";
+    return EXECUTABLE_NAME;
   }
 
 }

@@ -8,15 +8,26 @@ import codeOrchestra.utils.StringUtils;
 
 public class SourceFile {
 
+  public static final String DOT_MXML = ".mxml";
+  public static final String DOT_AS = ".as";
+  
   private File file;
   private String fqName;
   private String relativePath;
   
   public SourceFile(File file, String sourceDir) {
     this.file = file;
-    this.relativePath = FileUtils.getRelativePath(file.getPath(), sourceDir, File.separator);
+    
+    relativePath = FileUtils.getRelativePath(file.getPath(), sourceDir, File.separator);    
+    
     if (!StringUtils.isEmpty(relativePath)) {
-      this.fqName = NameUtil.namespaceFromPath(relativePath);
+      if (relativePath.toLowerCase().endsWith(DOT_AS)) {
+        fqName = NameUtil.namespaceFromPath(relativePath.substring(0, relativePath.length() - DOT_AS.length()));
+      } else if (relativePath.toLowerCase().endsWith(DOT_MXML)) {
+        fqName = NameUtil.namespaceFromPath(relativePath.substring(0, relativePath.length() - DOT_MXML.length()));
+      } else {
+        fqName = NameUtil.namespaceFromPath(relativePath);        
+      }
     } else {
       throw new IllegalArgumentException(file.getPath());
     }

@@ -3,6 +3,7 @@ package codeOrchestra.lcs;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -20,6 +21,7 @@ import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
 import codeOrchestra.lcs.actions.StartSessionAction;
+import codeOrchestra.lcs.status.SessionStatusLineItem;
 
 /**
  * @author Alexander Eliseyev
@@ -103,4 +105,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         runToolbar.add(startSessionAction);
         coolBar.add(new ToolBarContributionItem(runToolbar, "run"));
     }
+    
+    
+    @Override
+    protected void fillStatusLine(IStatusLineManager statusLine) {
+      SessionStatusLineItem sessionStatusLineItem = new SessionStatusLineItem();
+      statusLine.add(sessionStatusLineItem);
+    }
+    
 }

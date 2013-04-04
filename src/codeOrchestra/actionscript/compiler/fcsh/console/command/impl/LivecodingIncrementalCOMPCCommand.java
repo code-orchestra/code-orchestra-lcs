@@ -9,13 +9,15 @@ import java.util.List;
  */
 public class LivecodingIncrementalCOMPCCommand extends AbstractCompileWithArgumentsCommandCallback {
 
+  public static final String EXECUTABLE_NAME = "lcicompc";
+
   public LivecodingIncrementalCOMPCCommand(FCSHManager fcshManager, List<String> arguments) {
     super(fcshManager, arguments);
   }
 
   @Override
   protected String getExecutableName() {
-    return "lcicompc";
+    return EXECUTABLE_NAME;
   }
 
 }

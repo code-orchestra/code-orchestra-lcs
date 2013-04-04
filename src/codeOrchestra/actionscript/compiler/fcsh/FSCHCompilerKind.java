@@ -4,6 +4,7 @@ package codeOrchestra.actionScript.compiler.fcsh;
  * @author Alexander Eliseyev
  */
 public enum FSCHCompilerKind {
-  MXMLC,
-  COMPC;
+  BASE_MXMLC,
+  BASE_COMPC,
+  INCREMENTAL_COMPC;
 }

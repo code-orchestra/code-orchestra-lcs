@@ -109,7 +109,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="code-orchestra-lcs.application"
-            name="CodeOrchestra Live Coding Server">
+            name="Code Orchestra Livecoding Tool">
          <property
                name="aboutText"
                value="RCP Mail template created by PDE">
@@ -124,7 +124,7 @@
          </property>
          <property
                name="appName"
-               value="CodeOrchestra Live Coding Server">
+               value="COLT">
          </property>
       </product>
    </extension>

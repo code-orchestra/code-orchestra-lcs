@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.make;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
@@ -18,6 +19,7 @@ import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.sources.SourceFile;
+import codeOrchestra.utils.PathUtils;
 
 public class LCSMaker {
 
@@ -75,7 +77,7 @@ public class LCSMaker {
     }
     
     // Base/incremental compilation first phase
-    FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, isIncremental ? FSCHCompilerKind.COMPC : FSCHCompilerKind.MXMLC);
+    FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC);
     if (!doCompile(flexSDKRunner)) {
       return false;
     }
@@ -86,7 +88,8 @@ public class LCSMaker {
       flexConfig.setLinkReportFilePath(null);
       flexConfig.setLibrary(true);   
       
-      FlexConfigBuilder.addLibraryClasses(flexConfig, currentProject.getSourceSettings());
+      FlexConfigBuilder.addLibraryClasses(flexConfig, currentProject.getSourceSettings().getSourcePaths());
+      FlexConfigBuilder.addLibraryClasses(flexConfig, Collections.singletonList(PathUtils.getActionScriptLibsSourcePath()));
       
       flexConfigFile.delete();
       try {
@@ -97,7 +100,7 @@ public class LCSMaker {
       
       FCSHManager.instance().clearTargets();
 
-      flexSDKRunner = getFlexSDKRunner(flexConfigFile, FSCHCompilerKind.COMPC);
+      flexSDKRunner = getFlexSDKRunner(flexConfigFile, FSCHCompilerKind.BASE_COMPC);
       if (!doCompile(flexSDKRunner)) {
         return false;
       }

@@ -10,6 +10,7 @@ import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.SourceSettings;
 import codeOrchestra.lcs.run.LiveCodingAnnotation;
+import codeOrchestra.lcs.sources.IgnoredSources;
 import codeOrchestra.lcs.sources.SourceFile;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.NameUtil;
@@ -20,9 +21,6 @@ import codeOrchestra.utils.StringUtils;
  * @author Alexander Eliseyev
  */
 public class FlexConfigBuilder {
-
-  private static final String DOT_MXML = ".mxml";
-  private static final String DOT_AS = ".as";
   
   private final LCSProject project;
   private final boolean incrementalCompilation;
@@ -120,8 +118,8 @@ public class FlexConfigBuilder {
     return flexConfig;
   }
 
-  public static void addLibraryClasses(FlexConfig flexConfig, SourceSettings sourceSettings) {
-    for (String sourcePath : sourceSettings.getSourcePaths()) {
+  public static void addLibraryClasses(FlexConfig flexConfig, List<String> sourcePaths) {
+    for (String sourcePath : sourcePaths) {
       File sourceDir = new File(sourcePath);
       if (!sourceDir.exists() || !sourceDir.isDirectory()) {
         continue;
@@ -131,22 +129,25 @@ public class FlexConfigBuilder {
         @Override
         public boolean accept(File file) {
           String filenameLowerCase = file.getName().toLowerCase();
-          return filenameLowerCase.endsWith(DOT_AS) || filenameLowerCase.endsWith(DOT_MXML);
+          return filenameLowerCase.endsWith(SourceFile.DOT_AS) || filenameLowerCase.endsWith(SourceFile.DOT_MXML);
         }
       });
 
       for (File sourceFile : sourceFiles) {
         String relativePath = FileUtils.getRelativePath(sourceFile.getPath(), sourceDir.getPath(), File.separator);
 
-        if (relativePath.toLowerCase().endsWith(DOT_AS)) {
-          relativePath = relativePath.substring(0, relativePath.length() - DOT_AS.length());
-        } else if (relativePath.toLowerCase().endsWith(DOT_MXML)) {
-          relativePath = relativePath.substring(0, relativePath.length() - DOT_MXML.length());
+        if (relativePath.toLowerCase().endsWith(SourceFile.DOT_AS)) {
+          relativePath = relativePath.substring(0, relativePath.length() - SourceFile.DOT_AS.length());
+        } else if (relativePath.toLowerCase().endsWith(SourceFile.DOT_MXML)) {
+          relativePath = relativePath.substring(0, relativePath.length() - SourceFile.DOT_MXML.length());
         }
         
         if (!StringUtils.isEmpty(relativePath)) {
           String fqName = NameUtil.namespaceFromPath(relativePath);
-          flexConfig.addClass(fqName);
+          
+          if (!IgnoredSources.isIgnoredTrait(fqName)) {
+            flexConfig.addClass(fqName);
+          }
         }
       }
     }
