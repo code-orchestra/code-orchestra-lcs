@@ -8,7 +8,6 @@ import java.util.List;
 import codeOrchestra.lcs.LCSException;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
-import codeOrchestra.lcs.project.SourceSettings;
 import codeOrchestra.lcs.run.LiveCodingAnnotation;
 import codeOrchestra.lcs.sources.IgnoredSources;
 import codeOrchestra.lcs.sources.SourceFile;
@@ -51,8 +50,9 @@ public class FlexConfigBuilder {
     if (incrementalCompilation) {
       // Add root module generated sources
       String outputFileName = compilerSettings.getOutputFilename().replaceFirst("\\.swf$", ".swc");
-      flexConfig.addLibraryPath(compilerSettings.getOutputPath() + "/" + outputFileName);
-
+      flexConfig.addLibraryPath(compilerSettings.getOutputPath() +  File.separator + outputFileName);
+      flexConfig.setOutputPath(PathUtils.getIncrementalSWCPath(project));
+      
       // Load root module link report file for externs for Live-Coding
       // incremental module
       flexConfig.setLoadExternsFilePath(getLinkReportFilePath());
@@ -80,7 +80,9 @@ public class FlexConfigBuilder {
     flexConfig.setLinkReportFilePath(getLinkReportFilePath());
 
     // Output path
-    flexConfig.setOutputPath(compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename());
+    if (!incrementalCompilation) {
+      flexConfig.setOutputPath(compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename());
+    }
 
     // Libraries
     for (String libraryPath : project.getSourceSettings().getLibraryPaths()) {

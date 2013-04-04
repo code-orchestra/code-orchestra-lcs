@@ -60,7 +60,12 @@ public class LCSProject {
 	private void initPaths() {    
     File outputDir = getOutputDir();
     if (!outputDir.exists()) {
-      outputDir.mkdir();
+      outputDir.mkdirs();
+    }
+    
+    File outputIncrementalDir = new File(outputDir, "livecoding");
+    if (!outputIncrementalDir.exists()) {
+      outputIncrementalDir.mkdirs();
     }
   }
 

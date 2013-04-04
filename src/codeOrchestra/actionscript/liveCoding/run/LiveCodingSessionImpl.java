@@ -11,6 +11,7 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   private long startTimestamp;
   private SocketWriter socketWriter;
   private String sessionId;
+  private int packageId = 1;
 
   public LiveCodingSessionImpl(String sessionId, long startTimestamp, SocketWriter socketWriter) {
     this.sessionId = sessionId;
@@ -30,4 +31,16 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   public String getSessionId() {
     return sessionId;
   }
+
+  @Override
+  public int getPackageNumber() {
+    return packageId;
+  }
+
+  @Override
+  public void incrementPackageNumber() {
+    packageId++;    
+  }
+  
+  
 }

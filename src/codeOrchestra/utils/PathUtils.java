@@ -4,6 +4,9 @@ import java.io.File;
 
 import org.eclipse.core.runtime.Platform;
 
+import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.session.LiveCodingManager;
+
 /**
  * @author Alexander Eliseyev
  */
@@ -18,7 +21,15 @@ public class PathUtils {
     File productDir = getApplicationBaseDir();    
     return new File(productDir, "as_libs" + File.separator + "source").getPath();
   }
+  
+  public static String getIncrementalSWFPath(LCSProject project, int packageId) {
+    return project.getCompilerSettings().getOutputPath() + File.separator + "livecoding" +  File.separator + "package_" + packageId + ".swf";
+  }
 
+  public static String getIncrementalSWCPath(LCSProject project) {
+    return project.getCompilerSettings().getOutputPath() +  File.separator + project.getName() + "_liveCoding.swf";
+  }
+  
   public static File getApplicationBaseDir() {
     // Try the bundle path (deployed product)
     File dir = Platform.getProduct().getDefiningBundle().getDataFile("tmp").getParentFile();

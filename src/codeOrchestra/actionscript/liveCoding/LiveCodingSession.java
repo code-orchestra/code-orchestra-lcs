@@ -13,4 +13,8 @@ public interface LiveCodingSession {
 
   SocketWriter getSocketWriter();
   
+  int getPackageNumber();
+  
+  void incrementPackageNumber();
+  
 }

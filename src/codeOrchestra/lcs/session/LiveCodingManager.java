@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.session;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import codeOrchestra.lcs.socket.command.impl.PongTraceCommand.PongListener;
 import codeOrchestra.lcs.sources.SourceFile;
 import codeOrchestra.lcs.sources.SourcesTrackerCallback;
 import codeOrchestra.lcs.sources.SourcesTrackerThread;
+import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.PathUtils;
+import codeOrchestra.utils.UnzipUtil;
 
 /**
  * @author Alexander Eliseyev
@@ -97,7 +101,8 @@ public class LiveCodingManager {
     return false;
   }
 
-  public void runIncrementalCompilation() {
+  public synchronized void runIncrementalCompilation() {
+    LCSProject currentProject = LCSProject.getCurrentProject();
     try {
       compilationInProgress = true;
 
@@ -110,10 +115,36 @@ public class LiveCodingManager {
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
       try {
         if (lcsMaker.make()) {
+          // Extract and copy the artifact
+          try {            
+            UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
+          } catch (IOException e) {
+            // TODO: handle this nicely
+            e.printStackTrace();
+          }
+          
+          File extractedSWF = new File(FileUtils.getTempDir(), "library.swf"); 
+          if (extractedSWF.exists()) { 
+            File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, getCurrentSession().getPackageNumber())); 
+            try {
+              FileUtils.copyFileChecked(extractedSWF, artifact, false);
+            } catch (IOException e) {
+              // TODO: handle this nicely
+              e.printStackTrace();
+            } 
+            
+            getCurrentSession().incrementPackageNumber();
+            
+               
+            // TODO:!
+            // LiveCodingManager.instance().fireArtifactEvent(artifact.getPath()); 
+          }
+          
           tryRunIncrementalCompilation();
         }
       } catch (MakeException e) {
         // TODO: handle this nicely
+        e.printStackTrace();
       }
     } finally {
       compilationInProgress = false;
