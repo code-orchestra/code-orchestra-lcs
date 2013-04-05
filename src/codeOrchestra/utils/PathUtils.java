@@ -5,7 +5,6 @@ import java.io.File;
 import org.eclipse.core.runtime.Platform;
 
 import codeOrchestra.lcs.project.LCSProject;
-import codeOrchestra.lcs.session.LiveCodingManager;
 
 /**
  * @author Alexander Eliseyev
@@ -27,7 +26,7 @@ public class PathUtils {
   }
 
   public static String getIncrementalSWCPath(LCSProject project) {
-    return project.getCompilerSettings().getOutputPath() +  File.separator + project.getName() + "_liveCoding.swf";
+    return project.getCompilerSettings().getOutputPath() +  File.separator + project.getName() + "_liveCoding.swc";
   }
   
   public static File getApplicationBaseDir() {
