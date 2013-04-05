@@ -41,6 +41,10 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   public void incrementPackageNumber() {
     packageId++;    
   }
-  
+
+  @Override
+  public void sendLiveCodingMessage(String message) {
+    socketWriter.writeToSocket("livecoding::" + message + "::" + sessionId + "::" + packageId);
+  }
   
 }

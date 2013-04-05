@@ -17,4 +17,6 @@ public interface LiveCodingSession {
   
   void incrementPackageNumber();
   
+  void sendLiveCodingMessage(String message);
+  
 }
