@@ -8,6 +8,7 @@ import codeOrchestra.actionScript.modulemaker.messages.CompilerMessage;
 import codeOrchestra.actionScript.modulemaker.messages.CompilerMessagesWrapper;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.utils.FileUtils;
 
 import java.io.File;
@@ -19,7 +20,8 @@ public abstract class AbstractCompileCommandCallback extends AbstractCommandCall
 
   private static final String COMMAND_LINE_ERROR_TOKEN = "command line: ";
   private static final String COMPILE_ERRORS_LOG_FILE_NAME = "compile_errors.log";
-
+  private static final String DELIVERY_MESSAGE_MARKER = "Delivery Message:";
+  
   public static final CompilationResult OK_COMPILATION_RESULT = new CompilationResult(0, 0, false);
 
   protected abstract CompilationResult compile(CommandOutput response);
@@ -40,6 +42,14 @@ public abstract class AbstractCompileCommandCallback extends AbstractCommandCall
     return compilationResult;
   }
 
+  protected void processResponseAdditionally(String[] responseLines) {    
+    for (String responseLine : responseLines) {
+      if (responseLine.contains(DELIVERY_MESSAGE_MARKER)) {
+        LiveCodingManager.instance().addDeliveryMessage(responseLine.substring(responseLine.indexOf("[") + 1, responseLine.indexOf("]")));
+      }
+    }
+  }
+  
   protected abstract String getExecutableName();
 
   protected CompilationResult getCompilationResult(CommandOutput response) {

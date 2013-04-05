@@ -172,6 +172,7 @@ public class FCSHManager {
   public CompilationResult incrementalCOMPC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
+    /*
     synchronized (compilerTargets) {
       CompilerCommand compilerCommand = new CompilerCommand(arguments, LivecodingIncrementalCOMPCCommand.EXECUTABLE_NAME);
       CompilerTarget compilerTarget = compilerTargets.get(compilerCommand);
@@ -179,6 +180,7 @@ public class FCSHManager {
         return compile(compilerTarget);
       }
     }
+    */
 
     LivecodingIncrementalCOMPCCommand compcCommand = new LivecodingIncrementalCOMPCCommand(this, arguments);
     LOG.info("Compiling: " + compcCommand.getCommand());

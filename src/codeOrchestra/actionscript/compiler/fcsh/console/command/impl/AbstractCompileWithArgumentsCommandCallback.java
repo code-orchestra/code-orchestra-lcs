@@ -34,7 +34,7 @@ public abstract class AbstractCompileWithArgumentsCommandCallback extends Abstra
   private String getArgumentsSeparated() {
     return StringUtils.join(arguments, " ");
   }
-
+  
   protected CompilationResult compile(CommandOutput response) {
     String normalOutput = response.getNormalOutput();
     Integer targetId = null;
@@ -53,6 +53,8 @@ public abstract class AbstractCompileWithArgumentsCommandCallback extends Abstra
     if (targetId == null) {
       throw new RuntimeException("Can't retrieve the compile target ID assigned from the output:\n" + normalOutput);
     }
+    
+    processResponseAdditionally(responseLines);
 
     // Get the compilation result
     CompilationResult compilationResult = getCompilationResult(response);

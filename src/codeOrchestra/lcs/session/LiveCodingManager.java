@@ -45,18 +45,24 @@ public class LiveCodingManager {
   
   private Object runMonitor = new Object();
   private Object listenerMonitor = new Object();
-
-  public LiveCodingManager() {
-    addListener(finisherThreadLiveCodingListener);
-  }
   
+  private List<String> deliveryMessages = new ArrayList<String>();
+
   private SourcesTrackerCallback sourcesTrackerCallback = new SourcesTrackerCallback() {
     @Override
     public void sourceFileChanged(SourceFile sourceFile) {
       reportChangedFile(sourceFile);
     }
   };
-
+  
+  public LiveCodingManager() {
+    addListener(finisherThreadLiveCodingListener);
+  }
+  
+  public void addDeliveryMessage(String deliveryMessage) {
+    deliveryMessages.add(deliveryMessage);
+  }
+  
   public void addListener(LiveCodingListener listener) {
     synchronized (listenerMonitor) {
       liveCodingListeners.add(listener);
@@ -132,6 +138,11 @@ public class LiveCodingManager {
               // TODO: handle this nicely
               e.printStackTrace();
             } 
+            
+            for (String deliveryMessage : deliveryMessages) {
+              getCurrentSession().sendLiveCodingMessage(deliveryMessage);
+            }
+            deliveryMessages.clear();
             
             getCurrentSession().incrementPackageNumber();
             
