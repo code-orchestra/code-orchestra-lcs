@@ -53,11 +53,11 @@ public final class LiveCodingProjectViews {
       activated = true;
     }
     
-    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestra Live Coding Server - " + project.getName() + " - " + project.getPath());
+    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool - " + project.getName() + " - " + project.getPath());
   }
   
   public static void closeProjectViews() {
-    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("CodeOrchestra Live Coding Server");
+    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool");
     
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if (page != null) {
