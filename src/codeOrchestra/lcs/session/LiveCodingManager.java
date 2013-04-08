@@ -36,16 +36,16 @@ public class LiveCodingManager {
   private SourcesTrackerThread sourceTrackerThread;
   private boolean compilationInProgress;
   private List<SourceFile> changedFiles = new ArrayList<SourceFile>();
-  
+
   private List<LiveCodingListener> liveCodingListeners = new ArrayList<LiveCodingListener>();
-  
+
   private LiveCodingSession currentSession;
-  
+
   private LiveCodingListener finisherThreadLiveCodingListener = new SessionHandleListener();
-  
+
   private Object runMonitor = new Object();
   private Object listenerMonitor = new Object();
-  
+
   private List<String> deliveryMessages = new ArrayList<String>();
 
   private SourcesTrackerCallback sourcesTrackerCallback = new SourcesTrackerCallback() {
@@ -54,15 +54,15 @@ public class LiveCodingManager {
       reportChangedFile(sourceFile);
     }
   };
-  
+
   public LiveCodingManager() {
     addListener(finisherThreadLiveCodingListener);
   }
-  
+
   public void addDeliveryMessage(String deliveryMessage) {
     deliveryMessages.add(deliveryMessage);
   }
-  
+
   public void addListener(LiveCodingListener listener) {
     synchronized (listenerMonitor) {
       liveCodingListeners.add(listener);
@@ -74,7 +74,7 @@ public class LiveCodingManager {
       liveCodingListeners.remove(listener);
     }
   }
-  
+
   private void fireSessionStart() {
     synchronized (listenerMonitor) {
       for (LiveCodingListener listener : liveCodingListeners) {
@@ -90,7 +90,7 @@ public class LiveCodingManager {
       }
     }
   }
-  
+
   public boolean runBaseCompilation() {
     try {
       compilationInProgress = true;
@@ -117,40 +117,39 @@ public class LiveCodingManager {
         changedFilesSnapshot = new ArrayList<SourceFile>(changedFiles);
         changedFiles.clear();
       }
-      
+
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
       try {
         if (lcsMaker.make()) {
           // Extract and copy the artifact
-          try {            
+          try {
             UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
           } catch (IOException e) {
             // TODO: handle this nicely
             e.printStackTrace();
           }
-          
-          File extractedSWF = new File(FileUtils.getTempDir(), "library.swf"); 
-          if (extractedSWF.exists()) { 
-            File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, getCurrentSession().getPackageNumber())); 
+
+          File extractedSWF = new File(FileUtils.getTempDir(), "library.swf");
+          if (extractedSWF.exists()) {
+            File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, getCurrentSession().getPackageNumber()));
             try {
               FileUtils.copyFileChecked(extractedSWF, artifact, false);
             } catch (IOException e) {
               // TODO: handle this nicely
               e.printStackTrace();
-            } 
-            
+            }
+
             for (String deliveryMessage : deliveryMessages) {
               getCurrentSession().sendLiveCodingMessage(deliveryMessage);
             }
             deliveryMessages.clear();
-            
+
             getCurrentSession().incrementPackageNumber();
-            
-               
+
             // TODO:!
-            // LiveCodingManager.instance().fireArtifactEvent(artifact.getPath()); 
+            // LiveCodingManager.instance().fireArtifactEvent(artifact.getPath());
           }
-          
+
           tryRunIncrementalCompilation();
         }
       } catch (MakeException e) {
@@ -164,19 +163,19 @@ public class LiveCodingManager {
 
   private void reportChangedFile(SourceFile sourceFile) {
     synchronized (runMonitor) {
-      changedFiles.add(sourceFile);      
+      changedFiles.add(sourceFile);
     }
-    
-    tryRunIncrementalCompilation();    
+
+    tryRunIncrementalCompilation();
   }
 
   private void tryRunIncrementalCompilation() {
     synchronized (runMonitor) {
       if (changedFiles.isEmpty()) {
         return;
-      }      
+      }
     }
-    
+
     if (!compilationInProgress) {
       runIncrementalCompilation();
     }
@@ -191,7 +190,7 @@ public class LiveCodingManager {
 
     // Save session object
     currentSession = new LiveCodingSessionImpl(sessionId, System.currentTimeMillis(), clientSocketHandler);
-    
+
     // Start listening for source changes
     List<File> sourceDirs = new ArrayList<File>();
     LCSProject currentProject = LCSProject.getCurrentProject();
@@ -204,27 +203,33 @@ public class LiveCodingManager {
 
     sourceTrackerThread = new SourcesTrackerThread(sourcesTrackerCallback, sourceDirs);
     sourceTrackerThread.start();
-    
+
     fireSessionStart();
   }
 
   public void stopSession() {
     currentSession = null;
-    
+
     if (sourceTrackerThread != null) {
       sourceTrackerThread.stopRightThere();
       sourceTrackerThread = null;
     }
-    
+
     fireSessionEnd();
   }
-  
+
   private class SessionHandleListener extends LiveCodingAdapter {
 
     private SessionFinisher sessionFinisherThread;
 
     @Override
     public void onSessionStart(LiveCodingSession session) {
+      // Clear livecoding output folder
+      File incrementalDir = new File(PathUtils.getIncrementalSWCPath(LCSProject.getCurrentProject()));
+      if (incrementalDir.exists()) {
+        FileUtils.clear(incrementalDir);
+      }
+
       if (sessionFinisherThread != null) {
         sessionFinisherThread.stopRightThere();
       }
@@ -240,7 +245,7 @@ public class LiveCodingManager {
       }
     }
   }
-  
+
   private class SessionFinisher extends Thread implements PongListener {
 
     public static final int PING_TIMEOUT = 2000;
