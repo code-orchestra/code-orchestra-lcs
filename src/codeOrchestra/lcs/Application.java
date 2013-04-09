@@ -22,9 +22,9 @@ public class Application implements IApplication {
 		Display display = PlatformUI.createDisplay();
 		try {
 		  // TODO: handle errors
-		  serverSocketThread.openSocket();		  
+		  getServerSocketThread().openSocket();		  
 		  
-		  int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
+		  int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor(this));
 			if (returnCode == PlatformUI.RETURN_RESTART) {
 				return IApplication.EXIT_RESTART;
 			}
@@ -33,7 +33,7 @@ public class Application implements IApplication {
 			display.dispose();
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#stop()
 	 */
@@ -42,7 +42,7 @@ public class Application implements IApplication {
 			return;
 		
     // TODO: handle errors
-		serverSocketThread.closeSocket();
+		getServerSocketThread().closeSocket();
 		
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		final Display display = workbench.getDisplay();
@@ -53,4 +53,12 @@ public class Application implements IApplication {
 			}
 		});
 	}
+
+  public LoggerServerSocketThread getServerSocketThread() {
+    return serverSocketThread;
+  }
+
+  public void setServerSocketThread(LoggerServerSocketThread serverSocketThread) {
+    this.serverSocketThread = serverSocketThread;
+  }
 }

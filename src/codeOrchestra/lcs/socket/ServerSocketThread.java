@@ -1,11 +1,11 @@
 package codeOrchestra.lcs.socket;
 
-import codeOrchestra.utils.ExceptionUtils;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+
+import codeOrchestra.utils.ExceptionUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -16,17 +16,21 @@ public abstract class ServerSocketThread extends Thread {
   private ClientSocketHandlerFactory handlerFactory;
   private ServerSocket serverSocket;
   private boolean socketOpen;
+  
+  private Throwable socketInitException;
 
   public ServerSocketThread(int port, ClientSocketHandlerFactory handlerFactory) {
     assert handlerFactory != null;
     this.handlerFactory = handlerFactory;
     this.port = port;
   }
-
-  public final void run() {
+  
+    public final void run() {
     try {
       serverSocket = new ServerSocket(port);
       ClientSocketHandler lastHandler = null;
+      
+      socketOpen = true;
 
       while (!serverSocket.isClosed()) {
         // Wait to accept a new connection
@@ -55,8 +59,7 @@ public abstract class ServerSocketThread extends Thread {
         new Thread(lastHandler = handlerFactory.createHandler(clientSocket)).start();
       }
     } catch (IOException e) {
-      // TODO: improve logging
-      // LOG.error("Can't open logging server socket", e);
+      setSocketInitException(e);
     }
   }
 
@@ -70,8 +73,6 @@ public abstract class ServerSocketThread extends Thread {
     if (socketOpen) {
       throw new IllegalStateException("Socket is open");
     }
-
-    socketOpen = true;
 
     start();
   }
@@ -90,6 +91,14 @@ public abstract class ServerSocketThread extends Thread {
         // throw new RuntimeException("Error while attempting to close a server socket", e);
       }
     }
+  }
+
+  public Throwable getSocketInitException() {
+    return socketInitException;
+  }
+
+  private void setSocketInitException(Throwable socketInitException) {
+    this.socketInitException = socketInitException;
   }
 
 }
