@@ -77,7 +77,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     flexSDKPathEditor = new DirectoryFieldEditor("flexSDKPath", "Flex SDK Path:", flexPathComposite);
     flexSDKPathEditor.setPreferenceStore(getPreferenceStore());
     flexSDKPathEditor.load();
-    if (flexSDKPathEditor.getStringValue() == null) {
+    if (StringUtils.isEmpty(flexSDKPathEditor.getStringValue())) {
       flexSDKPathEditor.setStringValue(FlexSDKSettings.getDefaultFlexSDKPath());
     }
     flexSDKPathEditor.setPropertyChangeListener(new IPropertyChangeListener() {

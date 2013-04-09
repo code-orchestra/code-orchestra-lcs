@@ -35,7 +35,7 @@ public class PathUtils {
     while ((dir = dir.getParentFile()) != null) {
       File possibleFlexSDKDir = new File(dir, "flex_sdk");
       if (possibleFlexSDKDir.exists()) {
-        return possibleFlexSDKDir;
+        return dir;
       }
     }
     

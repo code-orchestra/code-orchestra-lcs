@@ -112,7 +112,7 @@
             name="Code Orchestra Livecoding Tool">
          <property
                name="aboutText"
-               value="Code Orchestra Livecoding Tool">
+               value="Code Orchestra Live Coding Tool (COLT)">
          </property>
          <property
                name="windowImages"
@@ -124,7 +124,7 @@
          </property>
          <property
                name="appName"
-               value="COLT">
+               value="Code Orchestra Livecoding Tool">
          </property>
       </product>
    </extension>
