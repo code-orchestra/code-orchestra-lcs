@@ -112,7 +112,7 @@
             name="Code Orchestra Livecoding Tool">
          <property
                name="aboutText"
-               value="RCP Mail template created by PDE">
+               value="Code Orchestra Livecoding Tool">
          </property>
          <property
                name="windowImages"

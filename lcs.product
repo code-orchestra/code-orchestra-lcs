@@ -6,7 +6,7 @@
    <aboutInfo>
       <image path="product_lg.gif"/>
       <text>
-         RCP Mail template created by PDE
+         Code Orchestra Live Coding Tool (COLT)
       </text>
    </aboutInfo>
 
@@ -18,6 +18,18 @@
    </launcherArgs>
 
    <windowImages i16="icons/sample2.gif"/>
+
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
 
    <plugins>
       <plugin id="code-orchestra-lcs"/>
