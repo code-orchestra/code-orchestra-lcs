@@ -39,6 +39,8 @@ public class LCSMaker {
   }
 
   public boolean make() throws MakeException {
+    FSCHCompilerKind compilerKind = isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC;
+    
     LCSProject currentProject = LCSProject.getCurrentProject();
     CompilerSettings compilerSettings = currentProject.getCompilerSettings();
     
@@ -52,7 +54,7 @@ public class LCSMaker {
       throw new MakeException("Can't build a flex config", e);
     }
     try {
-      flexConfigFile = flexConfig.saveToFile(currentProject.getFlexConfigPath(currentProject));
+      flexConfigFile = flexConfig.saveToFile(currentProject.getFlexConfigPath(currentProject, compilerKind));
     } catch (LCSException e) {
       throw new MakeException("Can't save a flex config", e);
     }
@@ -76,14 +78,16 @@ public class LCSMaker {
       }
     }
     
-    // Base/incremental compilation first phase
-    FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC);
+    // Base/incremental compilation first phase    
+    FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
     if (!doCompile(flexSDKRunner)) {
       return false;
     }
     
     // Base compilation second phase
     if (!isIncremental) {
+      compilerKind = FSCHCompilerKind.BASE_COMPC;
+      
       flexConfig.setOutputPath(flexConfig.getOutputPath().replaceFirst("\\.swf$", ".swc"));
       flexConfig.setLinkReportFilePath(null);
       flexConfig.setLibrary(true);   
@@ -93,14 +97,14 @@ public class LCSMaker {
       
       flexConfigFile.delete();
       try {
-        flexConfigFile = flexConfig.saveToFile(currentProject.getFlexConfigPath(currentProject));
+        flexConfigFile = flexConfig.saveToFile(currentProject.getFlexConfigPath(currentProject, compilerKind));
       } catch (LCSException e) {
         throw new MakeException("Can't save a flex config", e);
       }
       
       FCSHManager.instance().clearTargets();
 
-      flexSDKRunner = getFlexSDKRunner(flexConfigFile, FSCHCompilerKind.BASE_COMPC);
+      flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
       if (!doCompile(flexSDKRunner)) {
         return false;
       }
