@@ -42,6 +42,8 @@ public class LCSProject {
 
   private LCSProject(String descriptorFile) {
     this.path = descriptorFile;
+    
+    RecentProjects.addRecentProject(descriptorFile);
 
     preferenceStore = new PreferenceStore(descriptorFile);
     try {

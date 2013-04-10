@@ -9,10 +9,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.ICommandIds;
-import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
-import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.project.ProjectManager;
 
 /**
  * @author Alexander Eliseyev
@@ -44,14 +42,7 @@ public class OpenProjectAction extends Action {
           return;
         }
 
-        // Close previous project
-        LiveCodingProjectViews.closeProjectViews();
-        
-        // Clear fcsh targets
-        FCSHManager.instance().clearTargets();
-
-        LCSProject newProject = LCSProject.loadFrom(fileSelected);
-        LiveCodingProjectViews.openProjectViews(window, newProject);
+        ProjectManager.getInstance().openProject(fileSelected, window);
       } catch (PartInitException e) {
         MessageDialog.openError(window.getShell(), "Error", "Error opening view:" + e.getMessage());
       }

@@ -21,6 +21,7 @@ import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
 import codeOrchestra.lcs.actions.StartSessionAction;
+import codeOrchestra.lcs.menu.RecentProjectMenuItem;
 import codeOrchestra.lcs.status.SessionStatusLineItem;
 
 /**
@@ -81,9 +82,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menuBar.add(helpMenu);
         
         // File
+        
         fileMenu.add(newProjectAction);
         fileMenu.add(new Separator());
         fileMenu.add(openProjectAction);
+        fileMenu.add(new RecentProjectMenuItem("recentProjects"));
         fileMenu.add(new Separator());
         fileMenu.add(saveProjectAction);
         fileMenu.add(new Separator());        
