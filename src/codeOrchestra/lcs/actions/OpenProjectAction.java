@@ -35,7 +35,7 @@ public class OpenProjectAction extends Action {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
         FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-        dialog.setFilterExtensions(new String[] { "*.lcp" });
+        dialog.setFilterExtensions(new String[] { "*.colt" });
         dialog.setFilterNames(new String[] { "Live Coding Project" });
         String fileSelected = dialog.open();
 
