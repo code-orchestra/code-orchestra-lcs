@@ -1,5 +1,7 @@
 package codeOrchestra.lcs.menu;
 
+import java.io.File;
+
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -40,6 +42,10 @@ public class RecentProjectMenuItem extends ContributionItem {
     rootItem.setMenu(subMenu);
 
     for (final String recentPath : RecentProjects.getRecentProjectsPaths()) {
+      if (!new File(recentPath).exists()) {
+        continue;
+      }
+      
       MenuItem menuItem = new MenuItem(subMenu, SWT.NONE);
       menuItem.setText(recentPath);
 
