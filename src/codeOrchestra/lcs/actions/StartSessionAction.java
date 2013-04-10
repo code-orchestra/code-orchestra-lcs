@@ -6,13 +6,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessHandler;
-
 import codeOrchestra.lcs.ICommandIds;
+import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveLauncher;
 import codeOrchestra.lcs.session.LiveCodingManager;
+
+import com.intellij.execution.ExecutionException;
 
 public class StartSessionAction extends Action {
 
@@ -37,6 +37,10 @@ public class StartSessionAction extends Action {
   
   @Override
   public void run() {
+    LCSProject currentProject = LCSProject.getCurrentProject();
+    LiveCodingProjectViews.saveProjectViewsState(window, currentProject);   
+    currentProject.save();
+    
     new Thread() {
       public void run() {
         // 1 - Base compilation
