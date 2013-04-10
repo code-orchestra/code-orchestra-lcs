@@ -18,6 +18,8 @@ public class PathEditorEx extends PathEditor {
 		super(name, labelText, text, parent);
 		this.dirsOnly = dirsOnly;
 		this.text = text;
+		
+		getAddButton().setText("Add");
 	}
 	
 	@Override
