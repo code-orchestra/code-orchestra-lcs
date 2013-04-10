@@ -7,6 +7,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -29,7 +35,7 @@ public class MessagesView extends ViewPart {
 
   private Table table;
   private String scopeName;
-  
+
   private Button sourceButton;
   private Button infoButton;
   private Button warningButton;
@@ -97,7 +103,7 @@ public class MessagesView extends ViewPart {
           for (Entry<Message, TableItem> entry : messages.entrySet()) {
             if (entry.getValue() == tableItem) {
               Message message = entry.getKey();
-              tableItem.setText(message.getMessageText(sourceButton.getSelection()));               
+              tableItem.setText(message.getMessageText(sourceButton.getSelection()));
               break;
             }
           }
@@ -106,7 +112,26 @@ public class MessagesView extends ViewPart {
     });
 
     // Table
-    table = new Table(parent, SWT.BORDER);
+    table = new Table(parent, SWT.BORDER | SWT.MULTI);
+    table.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (((e.stateMask & SWT.CTRL) != 0 || (e.stateMask & SWT.COMMAND) != 0) && e.keyCode == 99) {
+          TableItem[] selection = table.getSelection();
+          if (selection != null && selection.length > 0) {
+            StringBuilder sb = new StringBuilder();
+
+            for (TableItem selectedTableItem : selection) {
+              sb.append(selectedTableItem.getText()).append("\n");
+            }
+
+            final Clipboard cb = new Clipboard(Display.getDefault());
+            TextTransfer textTransfer = TextTransfer.getInstance();
+            cb.setContents(new Object[] { sb.toString() }, new Transfer[] { textTransfer });
+          }
+        }
+      }
+    });
     GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
     table.setLayoutData(tableLayoutData);
   }
@@ -114,19 +139,19 @@ public class MessagesView extends ViewPart {
   private void refresh() {
     table.clearAll();
     table.setItemCount(0);
-    
+
     List<Message> messagesList = new ArrayList<Message>(messages.keySet());
-    
+
     for (Message message : messagesList) {
       if ((message.getLevel() == Level.INFO && !infoButton.getSelection()) || (message.getLevel() == Level.WARN && !warningButton.getSelection())) {
         continue;
       }
 
-      TableItem tableItem = message.createTableItem(table, sourceButton.getSelection());      
+      TableItem tableItem = message.createTableItem(table, sourceButton.getSelection());
       messages.put(message, tableItem);
     }
   }
-  
+
   public void addMessage(final String source, final Level level, final String message, final long timestamp) {
     Display.getDefault().asyncExec(new Runnable() {
       public void run() {
