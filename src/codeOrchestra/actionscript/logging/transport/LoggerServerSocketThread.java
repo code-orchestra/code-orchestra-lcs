@@ -7,7 +7,7 @@ import codeOrchestra.lcs.socket.ServerSocketThread;
  */
 public class LoggerServerSocketThread extends ServerSocketThread {
 
-  public static final int LOGGING_PORT = 6125;
+  public static final int LOGGING_PORT = 6126;
 
   public LoggerServerSocketThread() {
     super(LOGGING_PORT, LoggerClientSocketHandlerFactory.getInstance());

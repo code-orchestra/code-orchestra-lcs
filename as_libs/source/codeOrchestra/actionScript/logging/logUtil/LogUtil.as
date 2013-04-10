@@ -13,7 +13,7 @@ package codeOrchestra.actionScript.logging.logUtil{
     private static var socket : XMLSocket ;
     private static var messages : Array  = new Array() ;
     private static var scopes : Array  = new Array(["Main", 0]) ;
-    private static const PORT : Number  = 6125 ;
+    private static const PORT : Number  = 6126 ;
     private static var hasError : Boolean  = false ;
     private static var tabsCount : int  = 0 ;
     private static var tabsString : String  = "" ;
