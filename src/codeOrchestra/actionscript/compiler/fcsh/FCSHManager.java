@@ -7,6 +7,7 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingB
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingCachesDeleteCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingIncrementalCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.target.CompilerCommand;
 import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
@@ -190,6 +191,13 @@ public class FCSHManager {
     return compcCommand.getCompileResult();
   }
 
+  public void deleteLivecodingCaches() throws FCSHException {
+    assureFCSHIsActive();
+
+    LivecodingCachesDeleteCommand deleteCachesCommand = new LivecodingCachesDeleteCommand();
+    submitCommand(deleteCachesCommand);
+  }
+  
   public void clear() throws FCSHException {
     // FCSH in livecoding mode clears itself after every compilation
     if (true) {
