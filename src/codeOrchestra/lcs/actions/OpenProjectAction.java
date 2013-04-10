@@ -9,6 +9,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.project.LCSProject;
@@ -45,6 +46,9 @@ public class OpenProjectAction extends Action {
 
         // Close previous project
         LiveCodingProjectViews.closeProjectViews();
+        
+        // Clear fcsh targets
+        FCSHManager.instance().clearTargets();
 
         LCSProject newProject = LCSProject.loadFrom(fileSelected);
         LiveCodingProjectViews.openProjectViews(window, newProject);
