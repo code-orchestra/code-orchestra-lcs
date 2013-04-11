@@ -6,6 +6,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 
+import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.project.LCSProject;
@@ -37,9 +39,18 @@ public class StartSessionAction extends Action {
   
   @Override
   public void run() {
+    // Save project
     LCSProject currentProject = LCSProject.getCurrentProject();
     LiveCodingProjectViews.saveProjectViewsState(window, currentProject);   
     currentProject.save();
+    
+    // Restart FCSH
+    try {
+      FCSHManager.instance().restart();
+    } catch (FCSHException e) {
+      // TODO: handle nicely
+      e.printStackTrace();
+    }
     
     new Thread() {
       public void run() {

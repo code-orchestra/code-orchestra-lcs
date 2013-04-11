@@ -1,11 +1,17 @@
 package codeOrchestra.actionScript.compiler.fcsh;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandRunnable;
-import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingCachesDeleteCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingIncrementalCOMPCCommand;
@@ -14,12 +20,6 @@ import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * TODO: destroyProcess on app close
