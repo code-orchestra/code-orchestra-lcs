@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFolderLayout;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -17,8 +18,8 @@ public class MessagesManager {
 
   private static MessagesManager instance;
 
-  public static void init(IFolderLayout folder) {
-    instance = new MessagesManager(folder);
+  public static void init(IPageLayout layout, IFolderLayout folder) {
+    MessagesManager.instance = new MessagesManager(folder, layout);
   }
 
   public static MessagesManager getInstance() {
@@ -33,9 +34,11 @@ public class MessagesManager {
   private Set<String> compositeViewIds = new HashSet<String>();
 
   private Map<String, MessagesView> messageScopeViews = new HashMap<String, MessagesView>();
+  private final IPageLayout layout;
 
-  public MessagesManager(IFolderLayout folder) {
+  public MessagesManager(IFolderLayout folder, IPageLayout layout) {
     this.folder = folder;
+    this.layout = layout;
   }
 
   public void addTab(final String name) {
@@ -49,8 +52,10 @@ public class MessagesManager {
           IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
           try {
             workbenchWindows[0].getActivePage().showView(MessagesView.ID, name, IWorkbenchPage.VIEW_ACTIVATE);
+            layout.getViewLayout(MessagesView.ID).setCloseable(false);
           } catch (Throwable e) {
             folder.addView(compositeViewId);
+            layout.getViewLayout(compositeViewId).setCloseable(false);
           }          
         }        
       });

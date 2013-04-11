@@ -33,15 +33,21 @@ public class Perspective implements IPerspectiveFactory {
 		liveCodingFolder.addPlaceholder(LiveCodingSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(CompilerSettingsView.ID + ":*");
 
+		layout.getViewLayout(SourceSettingsView.ID).setCloseable(false);
+		layout.getViewLayout(LiveCodingSettingsView.ID).setCloseable(false);
+		layout.getViewLayout(CompilerSettingsView.ID).setCloseable(false);
+		
 		// Messages
     IFolderLayout messagesFolder = layout.createFolder("messages", IPageLayout.LEFT, 0.40f, editorArea);
 		messagesFolder.addPlaceholder(MessagesView.ID + ":*");
-    MessagesManager.init(messagesFolder);
+    MessagesManager.init(layout, messagesFolder);
 		MessagesManager.getInstance().addTab("Main");
 		
 		// Console
     IFolderLayout fcshFolder = layout.createFolder("fcsh", IPageLayout.RIGHT, 0.60f, editorArea);
     fcshFolder.addView(FCSHConsoleView.ID);
+    
+    layout.getViewLayout(FCSHConsoleView.ID).setCloseable(false);
 	}
 
   public String getName() {
