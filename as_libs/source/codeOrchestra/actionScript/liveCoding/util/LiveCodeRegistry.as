@@ -2,17 +2,18 @@ package codeOrchestra.actionScript.liveCoding.util{
   
   import codeOrchestra.actionScript.collections.util.CollectionsLanguageUtil;
   import codeOrchestra.actionScript.logging.logUtil.LogUtil;
-  import org.casalib.util.DateUtil;
   import flash.utils.getDefinitionByName;
   import flash.events.DataEvent;
   import flash.utils.Dictionary;
   import flash.events.EventDispatcher;
-  import flash.display.Loader;
+  import flash.net.URLLoader;
+  import flash.net.URLLoaderDataFormat;
   import flash.events.Event;
-  import flash.events.IOErrorEvent;
-  import flash.net.URLRequest;
+  import flash.display.Loader;
   import flash.system.LoaderContext;
   import flash.system.ApplicationDomain;
+  import flash.events.IOErrorEvent;
+  import flash.net.URLRequest;
   
   [AlwaysUsed]
   [Event(name="methodUpdate", type="codeOrchestra.actionScript.liveCoding.util.MethodUpdateEvent")]
@@ -35,13 +36,11 @@ package codeOrchestra.actionScript.liveCoding.util{
     public function putMethod ( id : String, method : Class, methodInfo : MethodChange  = null ) : void {
       if ( methodInfo ) {
         if ( !(CollectionsLanguageUtil.containsKey(methods, id)) ) {
-          addMethod(methodInfo.className, methodInfo.methodName, methodInfo.isStatic, methodInfo.type);
+          addMethod(methodInfo.className, methodInfo.methodName, methodInfo.isStatic, methodInfo.type, methodInfo.changeClassName);
         }else{
-          var now : Date  = new Date();
-          var updateTime : Date  = new Date(Number(methodInfo.timestamp));
           {
             LogUtil.enterLogScope("livecoding", "6940745366554867689");
-            LogUtil.log("trace", "8951269775177402558", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["-> update method: \"" + methodInfo.className + "." + methodInfo.methodName + "\", delivery time: " + DateUtil.getTimeBetween(updateTime, now) + " ms"].join(", "));
+            LogUtil.log("trace", "8951269775177402558", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["-> update method: \"" + methodInfo.className + "." + methodInfo.methodName + "\", delivery time: " + (new Date().getTime() - Number(methodInfo.timestamp)) + " ms"].join(", "));
             LogUtil.exitLogScope("livecoding", "6940745366554867689");
           }
         }
@@ -54,19 +53,31 @@ package codeOrchestra.actionScript.liveCoding.util{
        */
       return methods[id];
     }
-    public function addMethod ( className : String, methodName : String, isStaticMethod : Boolean, methodType : MethodType ) : void {
+    public function addMethod ( className : String, methodName : String, isStaticMethod : Boolean, methodType : MethodType, methodClassName : String ) : void {
       {
         LogUtil.enterLogScope("livecoding", "5629317685584077");
-        LogUtil.log("trace", "2233284459626233172", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["add method: " + "arguments=[" + ["className=", className, ", methodName=", methodName, ", isStaticMethod=", isStaticMethod, ", methodType=", methodType].join("") + "]"].join(", "));
+        LogUtil.log("trace", "2233284459626233172", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["add method: " + "arguments=[" + ["className=", className, ", methodName=", methodName, ", isStaticMethod=", isStaticMethod, ", methodType=", methodType, ", methodClassName=", methodClassName].join("") + "]"].join(", "));
         LogUtil.exitLogScope("livecoding", "5629317685584077");
       }
-      getDefinitionByName(className).prototype[methodName] =       function ( ...rest ) : void {
-        {
-          LogUtil.enterLogScope("livecoding", "9091078376703266061");
-          LogUtil.log("trace", "2233284459626233133", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["method: " + className + "." + "method-name: " + rest].join(", "));
-          LogUtil.exitLogScope("livecoding", "9091078376703266061");
-        }
-      };
+      
+      var methodId : String  = className + "." + methodName;
+      try {
+        putMethod(methodId, getDefinitionByName(methodClassName) as Class);
+      } catch ( e : Error ) {
+        LogUtil.log("error", "3005252694877199952", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["cant't find method-update class: " + methodClassName].join(", "), e);
+      }
+      
+      if ( !(isStaticMethod) ) {
+        getDefinitionByName(className).prototype[methodName] =         function ( ...rest ) : void {
+          {
+            LogUtil.enterLogScope("livecoding", "9091078376703266061");
+            var method : Class  = getMethod(methodId);
+            var instance : *  = new method(this);
+            instance.run.apply(instance, rest);
+            LogUtil.exitLogScope("livecoding", "9091078376703266061");
+          }
+        };
+      }
     }
     public function updateMethod ( method : Class ) : void {
       
@@ -111,7 +122,6 @@ package codeOrchestra.actionScript.liveCoding.util{
             } else if ( /^asset:/.test(token) ) {
               var assetChange : AssetChange  = new AssetChange(token);
               assetChange.event = new AssetUpdateEvent(assetChange.source);
-              LogUtil.log("trace", "107014212918918925", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + [["assetChange=", assetChange].join("")].join(", "));
               (CollectionsLanguageUtil.add(assets, assetChange, AssetChange) as AssetChange);
               loadPackage(packageId, methods, assets);
             } else if ( /^base-url:/.test(token) ) {
@@ -122,51 +132,56 @@ package codeOrchestra.actionScript.liveCoding.util{
       }
     }
     private function loadPackage ( packageId : int, methods : Array, assets : Array ) : void {
-      var loader : Loader  = new Loader();
+      var loader : URLLoader  = new URLLoader();
+      loader.dataFormat = URLLoaderDataFormat.BINARY;
       var url : String  = "livecoding/package_" + packageId + ".swf";
       if ( baseUrl ) {
         url = baseUrl + "/" + url;
       }
-      LogUtil.log("trace", "107014212920061326", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + [">>>> url: " + url].join(", "));
-      loader.contentLoaderInfo.addEventListener(Event.COMPLETE,       function ( e : Event ) : void {
-        lastPackage = packageId;
-        CollectionsLanguageUtil.forEach(methods,         function ( it : MethodChange, stops : Object ) : void {
-          try {
-            var methodClass : Class  = getDefinitionByName(it.changeClassName) as Class;
-            putMethod(it.methodId, methodClass, it);
-            dispatchEvent(it.event);
-          } catch ( e : Error ) {
-            {
-              LogUtil.enterLogScope("livecoding", "4671562459499402741");
-              LogUtil.log("error", "4671562459499402745", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["cant't find method-update class: " + it.changeClassName].join(", "), e);
-              LogUtil.exitLogScope("livecoding", "4671562459499402741");
+      loader.addEventListener(Event.COMPLETE,       function ( e : Event ) : void {
+        var classLoader : Loader  = new Loader();
+        var loaderContext : LoaderContext  = new LoaderContext(false, ApplicationDomain.currentDomain);
+        loaderContext.allowCodeImport = true;
+        classLoader.contentLoaderInfo.addEventListener(Event.COMPLETE,         function ( e : Event ) : void {
+          lastPackage = packageId;
+          CollectionsLanguageUtil.forEach(methods,           function ( it : MethodChange, stops : Object ) : void {
+            try {
+              var methodClass : Class  = getDefinitionByName(it.changeClassName) as Class;
+              putMethod(it.methodId, methodClass, it);
+              dispatchEvent(it.event);
+            } catch ( e : Error ) {
+              {
+                LogUtil.enterLogScope("livecoding", "4671562459499402741");
+                LogUtil.log("error", "4671562459499402745", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["cant't find method-update class: " + it.changeClassName].join(", "), e);
+                LogUtil.exitLogScope("livecoding", "4671562459499402741");
+              }
             }
-          }
-        }, this, false);
-        CollectionsLanguageUtil.forEach(assets,         function ( it : AssetChange, stops : Object ) : void {
-          try {
-            LogUtil.log("trace", "107014212919336482", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + [["getDefinitionByName((name:String))=", getDefinitionByName(it.className)].join("")].join(", "));
-            var messageClass : Class  = getDefinitionByName(it.className) as Class;
-            var assetUpdate : IAssetUpdate  = new messageClass();
-            it.event.assetClass = assetUpdate.getAsset();
-            dispatchEvent(it.event);
-          } catch ( e : Error ) {
-            {
-              LogUtil.enterLogScope("livecoding", "4671562459499402802");
-              LogUtil.log("error", "4671562459499402806", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["cant't find asset-update class: " + it.className].join(", "), e);
-              LogUtil.exitLogScope("livecoding", "4671562459499402802");
+          }, this, false);
+          CollectionsLanguageUtil.forEach(assets,           function ( it : AssetChange, stops : Object ) : void {
+            try {
+              var messageClass : Class  = getDefinitionByName(it.className) as Class;
+              var assetUpdate : IAssetUpdate  = new messageClass();
+              it.event.assetClass = assetUpdate.getAsset();
+              dispatchEvent(it.event);
+            } catch ( e : Error ) {
+              {
+                LogUtil.enterLogScope("livecoding", "4671562459499402802");
+                LogUtil.log("error", "4671562459499402806", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["cant't find asset-update class: " + it.className].join(", "), e);
+                LogUtil.exitLogScope("livecoding", "4671562459499402802");
+              }
             }
-          }
-        }, this, false);
+          }, this, false);
+        });
+        classLoader.loadBytes(loader.data, loaderContext);
       });
-      loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,       function ( e : IOErrorEvent ) : void {
+      loader.addEventListener(IOErrorEvent.IO_ERROR,       function ( e : IOErrorEvent ) : void {
         {
           LogUtil.enterLogScope("livecoding", "4671562459499402879");
           LogUtil.log("error", "4671562459499402883", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["error loading file from: " + url].join(", "));
           LogUtil.exitLogScope("livecoding", "4671562459499402879");
         }
       });
-      loader.load(new URLRequest(url), new LoaderContext(false, ApplicationDomain.currentDomain));
+      loader.load(new URLRequest(url));
     }
   }
 }

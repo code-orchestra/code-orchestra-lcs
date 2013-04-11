@@ -5,3 +5,5 @@ flex_sdk/
 *.jar
 *.war
 *.ear
+
+as_libs/source/.DS_Store
