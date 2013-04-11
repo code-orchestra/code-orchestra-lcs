@@ -19,9 +19,12 @@ public class RecentProjects {
 
   public static void addRecentProject(String path) {
     List<String> paths = getRecentProjectsPaths();
-    if (!paths.contains(path)) {
-      paths.add(0, path);
+    
+    if (paths.contains(path)) {
+      paths.remove(path);
     }
+    
+    paths.add(0, path);
     
     store.setValue(RECENT_COLT_PROJECTS, createList(paths));
     try {
