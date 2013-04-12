@@ -1,5 +1,8 @@
 package codeOrchestra.lcs.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -39,6 +42,15 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 
   private Composite flashPlayerPathComposite;
   private Composite webAddressComposite;
+  
+  @Override
+  public List<String> validate() {
+    List<String> errors = new ArrayList<String>();
+    
+    // TODO: implement
+    
+    return errors;
+  }
   
   @Override
   public void createPartControl(Composite parent) {

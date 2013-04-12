@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.views;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -60,6 +61,23 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
 
   private Label targetPlayerErrorLabel;
 
+  @Override
+  public List<String> validate() {
+    List<String> errors = new ArrayList<String>();
+    
+    String mainClassPath = mainClassEditor.getStringValue();
+    if (StringUtils.isEmpty(mainClassPath) || !new File(mainClassPath).exists()) {
+      errors.add("Invalid main class path " + mainClassPath);
+    }
+    
+    String flexSDKPath = flexSDKPathEditor.getStringValue();
+    if (StringUtils.isEmpty(flexSDKPath) || !new File(flexSDKPath).exists()) {
+      errors.add("Invalid Flex SDK path " + flexSDKPath);
+    }
+    
+    return errors;
+  }
+  
   @Override
   public void createPartControl(Composite parent) {
     GridLayout layout = new GridLayout();

@@ -44,6 +44,11 @@ public class StartSessionAction extends Action {
     LiveCodingProjectViews.saveProjectViewsState(window, currentProject);   
     currentProject.save();
     
+    // Validate project 
+    if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
+      return;
+    }
+    
     // Restart FCSH
     try {
       FCSHManager.instance().restart();

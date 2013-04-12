@@ -1,6 +1,9 @@
 package codeOrchestra.lcs.views;
 
-import org.eclipse.jface.preference.PathEditor;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -16,13 +19,31 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
   
   public static final String ID = "LCS.sourcesView";
 
-  private PathEditor sourcePathsEditor;
-  private PathEditor libraryPathsEditor;
+  private PathEditorEx sourcePathsEditor;
+  private PathEditorEx libraryPathsEditor;
   
   @Override
   public void savePart() {
     sourcePathsEditor.store();
     libraryPathsEditor.store();    
+  }
+  
+  @Override
+  public List<String> validate() {
+    List<String> errors = new ArrayList<String>();
+    
+    List<String> sourcePaths = sourcePathsEditor.getItems();
+    if (sourcePaths.isEmpty()) {
+      errors.add("No source paths specified");
+    }
+    
+    for (String sourcePath : sourcePaths) {
+      if (!new File(sourcePath).exists()) {
+        errors.add("Invalid source path " + sourcePath);
+      }
+    }
+    
+    return errors;
   }
 
   @Override

@@ -1,8 +1,11 @@
 package codeOrchestra.lcs.config.view;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -28,6 +31,38 @@ public final class LiveCodingProjectViews {
   
   public static boolean isLiveCodingView(IViewReference viewReference) {
     return lcpViewIDs.contains(viewReference.getId());
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static boolean validateProjectViewsState(IWorkbenchWindow window, LCSProject project) {
+    List<String> errors = new ArrayList<String>();
+    
+    IViewReference[] viewReferences = window.getActivePage().getViewReferences();
+    for (String viewId : lcpViewIDs) {      
+      for (int i = 0; i < viewReferences.length; i++) {
+        if (viewReferences[i].getId().equals(viewId)) {
+          IViewPart view = viewReferences[i].getView(false);
+          if (view != null && view instanceof LiveCodingProjectPartView) {
+            @SuppressWarnings("rawtypes")
+            LiveCodingProjectPartView liveCodingProjectPartView = (LiveCodingProjectPartView) view;
+            errors.addAll(liveCodingProjectPartView.validate());
+          }
+        }
+      }
+    }
+    
+    if (!errors.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      for (String errorMessage : errors) {
+        sb.append(errorMessage).append("\n");
+      }
+      
+      MessageDialog.openError(window.getShell(), "Invalid settings", "Can't start a livecoding session due to invalid settings:\n\n" + sb.toString());
+      
+      return false;
+    }
+    
+    return true;
   }
   
   public static void saveProjectViewsState(IWorkbenchWindow window, LCSProject project) {

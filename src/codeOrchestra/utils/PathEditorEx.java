@@ -1,5 +1,8 @@
 package codeOrchestra.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.preference.PathEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -20,6 +23,17 @@ public class PathEditorEx extends PathEditor {
 		this.text = text;
 		
 		getAddButton().setText("Add");
+	}
+	
+	public List<String> getItems() {
+	  List<String> items = new ArrayList<String>();
+	  
+	  String[] itemsArray = getList().getItems();
+	  for (int i = 0; i < itemsArray.length; i++) {
+	    items.add(itemsArray[i]);
+	  }
+	  
+	  return items;
 	}
 	
 	@Override
