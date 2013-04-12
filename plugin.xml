@@ -90,6 +90,11 @@
             id="LCS.sessionStart"
             name="Start Live Coding Session">
       </command>
+      <command
+            description="Clear Caches"
+            id="LCS.clearCaches"
+            name="Clear Caches">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">

@@ -17,6 +17,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
+import codeOrchestra.lcs.actions.ClearCachesAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
@@ -38,6 +39,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenProjectAction openProjectAction;
     private SaveProjectAction saveProjectAction;    
     private NewProjectAction newProjectAction;
+    private ClearCachesAction clearCachesAction;
     
     private StartSessionAction startSessionAction;
 
@@ -68,6 +70,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openProjectAction = new OpenProjectAction(window, "Open Project");
         register(openProjectAction);
         
+        clearCachesAction = new ClearCachesAction();
+        register(clearCachesAction);
+        
         startSessionAction = new StartSessionAction(window);
         register(startSessionAction);
     }
@@ -90,6 +95,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(saveProjectAction);
         fileMenu.add(new Separator());        
+        fileMenu.add(clearCachesAction);
+        fileMenu.add(new Separator());
         fileMenu.add(exitAction);
         
         // Help
