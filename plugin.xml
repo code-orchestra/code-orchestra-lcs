@@ -120,10 +120,6 @@
                value="Code Orchestra Live Coding Tool (COLT)">
          </property>
          <property
-               name="windowImages"
-               value="icons/sample2.gif">
-         </property>
-         <property
                name="aboutImage"
                value="product_lg.gif">
          </property>

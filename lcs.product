@@ -17,12 +17,14 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="icons/sample2.gif"/>
+   <windowImages/>
 
 
    <launcher>
+      <macosx icon="/code-orchestra-lcs/icons/COLT.icns"/>
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="/code-orchestra-lcs/icons/COLT.ico"/>
          <bmp/>
       </win>
    </launcher>
