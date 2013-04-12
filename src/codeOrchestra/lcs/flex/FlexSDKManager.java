@@ -107,6 +107,8 @@ public class FlexSDKManager {
       result.add(playerVersion);
     }
     
+    Collections.reverse(result);
+    
     return result;
   }
   
