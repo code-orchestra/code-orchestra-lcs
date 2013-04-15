@@ -19,6 +19,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
@@ -133,6 +135,16 @@ public class MessagesView extends ViewPart {
     });
     GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
     table.setLayoutData(tableLayoutData);
+
+    final Menu tablePopup = new Menu(table);
+    table.setMenu(tablePopup);
+    final MenuItem moveBeforeItem = new MenuItem(tablePopup, SWT.NONE);
+    moveBeforeItem.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(final SelectionEvent e) {
+        table.removeAll();
+      }
+    });
+    moveBeforeItem.setText("Clear");
   }
 
   private void refresh() {
