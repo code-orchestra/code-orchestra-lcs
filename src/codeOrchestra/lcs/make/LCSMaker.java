@@ -127,9 +127,7 @@ public class LCSMaker {
   }
 
   private boolean doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
-    long compilationStart = System.currentTimeMillis();
     CompilationResult compilationResult = flexSDKRunner.run();
-    long compilationTook = System.currentTimeMillis() - compilationStart;
 
     if (compilationResult.getErrors() > 0) {
       final String outputFile = flexSDKRunner.getErrorLogFilePath();
@@ -141,7 +139,6 @@ public class LCSMaker {
 
     LOG.info("Compilation is completed successfully");
     return true;
-    // TODO: log compilation time
   }
 
   private FCSHFlexSDKRunner getFlexSDKRunner(File flexConfigFile, FSCHCompilerKind compilerKind) {

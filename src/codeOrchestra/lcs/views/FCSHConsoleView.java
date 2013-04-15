@@ -48,7 +48,6 @@ public class FCSHConsoleView extends ViewPart {
         consoleTextArea.append(text.trim());        
         consoleTextArea.append("\n");        
         consoleTextArea.setSelection(consoleTextArea.getText().length());
-//        consoleTextArea.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT)); // weird hack
       }
     });
   }

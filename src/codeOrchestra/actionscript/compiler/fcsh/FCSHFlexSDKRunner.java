@@ -53,15 +53,16 @@ public class FCSHFlexSDKRunner extends AbstractFlexSDKRunner {
   protected List<String> getCommandArguments() {
     List<String> commandArguments = new ArrayList<String>();
 
-    // Copy the file to the temp dir
+    // Use default SDK flex config
+    String loadConfigOperator = compilerSettings.useDefaultSDKConfiguration() ? "+=" : "=";
 
     // Custom configuration file
     if (compilerSettings.useCustomSDKConfiguration()) {
-      String customConfigFileArg = "-load-config+=" + copyConfigToTempDir(compilerSettings.getCustomConfigPath());
+      String customConfigFileArg = "-load-config" + loadConfigOperator + copyConfigToTempDir(compilerSettings.getCustomConfigPath());
       commandArguments.add(customConfigFileArg);
     } else {
       // Module configuration file
-      String configFileArg = "-load-config+=" + copyConfigToTempDir(configFile.getPath());
+      String configFileArg = "-load-config" + loadConfigOperator + copyConfigToTempDir(configFile.getPath());
       commandArguments.add(configFileArg);
     }
 

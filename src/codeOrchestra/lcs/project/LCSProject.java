@@ -21,6 +21,7 @@ public class LCSProject {
   public static LCSProject createNew(String name, String path) {
     currentProject = new LCSProject(path);
     currentProject.name = name;
+    currentProject.initDefaultValues();
     currentProject.save();
 
     return currentProject;
@@ -117,6 +118,10 @@ public class LCSProject {
     return preferenceStore;
   }
 
+  private void initDefaultValues() {
+    preferenceStore.setValue("useDefaultSDKConfiguration", true);
+  }
+  
   public void save() {
     try {
       preferenceStore.setValue("name", name);
