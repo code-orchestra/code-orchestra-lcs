@@ -129,7 +129,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
         { "All the methods", "all" }
     };
     liveMethodsGroupEditor = new RadioGroupFieldEditor("liveMethods", "", 1, liveMethodOptions, liveMethodsComposite);
-    liveMethodsGroupEditor.setEnabled(false, liveMethodsComposite);
     liveMethodsGroupEditor.setPreferenceStore(getPreferenceStore());
     
     Label startSessionPausedLabel = new Label(liveSettingsGroup, SWT.NONE);
@@ -151,7 +150,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     makeGettersSettersLiveCompositeGridData.horizontalIndent = 8;
     makeGettersSettersLiveComposite.setLayoutData(makeGettersSettersLiveCompositeGridData);    
     makeGettersSettersLiveEditor = new BooleanFieldEditor("makeGettersSettersLive", "", makeGettersSettersLiveComposite);
-    makeGettersSettersLiveEditor.setEnabled(false, makeGettersSettersLiveComposite);
     makeGettersSettersLiveEditor.setPreferenceStore(getPreferenceStore());
     
     Label maxLoopIterationsLabel = new Label(liveSettingsGroup, SWT.NONE);
@@ -161,7 +159,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     GridData maxLoopIterationsCompositeGridData = new GridData(SWT.BEGINNING, SWT.BEGINNING, true, false);
     maxLoopIterationsComposite.setLayoutData(maxLoopIterationsCompositeGridData);    
     maxLoopIterationsEditor = new StringFieldEditor("maxLoopIterations", "", 7, maxLoopIterationsComposite);
-    maxLoopIterationsEditor.setEnabled(false, maxLoopIterationsComposite);
     maxLoopIterationsEditor.setPreferenceStore(getPreferenceStore());
     
     reset();

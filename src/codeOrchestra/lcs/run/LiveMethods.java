@@ -23,5 +23,9 @@ public enum LiveMethods {
     
     return null;
   }
+
+  public String getPreferenceValue() {
+    return preferenceValue;
+  }
   
 }
