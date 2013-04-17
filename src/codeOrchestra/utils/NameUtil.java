@@ -18,5 +18,12 @@ public final class NameUtil {
 
     return fqName.substring(offset + 1);
   }
+  
+  public static String longNameFromNamespaceAndShortName(String namespace, String name) {
+    if (StringUtils.isEmpty(namespace)) {
+      return name;
+    }
+    return namespace + '.' + name;
+  }
 
 }
