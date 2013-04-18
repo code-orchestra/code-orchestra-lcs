@@ -2,7 +2,7 @@
 
 # Package Files #
 flex_sdk/
-*.jar
+
 *.war
 *.ear
 
