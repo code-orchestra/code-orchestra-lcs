@@ -72,6 +72,11 @@ public class LCSProject {
     if (!outputIncrementalDir.exists()) {
       outputIncrementalDir.mkdirs();
     }
+    
+    File digestsDir = getDigestsDir();
+    if (!digestsDir.exists()) {
+      digestsDir.mkdirs();
+    }
   }
 
   public File getOrCreateIncrementalSourcesDir() {
@@ -84,6 +89,10 @@ public class LCSProject {
 
   public File getOutputDir() {
     return new File(getBaseDir(), "lcs_output");
+  }
+  
+  public File getDigestsDir() {
+    return new File(getBaseDir(), "digests");
   }
 
   public File getBaseDir() {

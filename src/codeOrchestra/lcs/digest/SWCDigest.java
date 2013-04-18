@@ -60,7 +60,7 @@ public class SWCDigest {
     for (String packName : digestsMap.keySet()) {
       Document document = digestsMap.get(packName);
       try {
-        XMLUtils.saveToFile(new File(outputPath, "digest_" + packName + ".xml").getPath(), document);
+        XMLUtils.saveToFile(new File(outputPath, packName + ".digest").getPath(), document);
       } catch (TransformerException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -68,6 +68,7 @@ public class SWCDigest {
     }
   }
 
+  @SuppressWarnings("rawtypes")
   private void init(String swcPath) {
     File swcFile = new File(swcPath);
     TagContainer tagContainer = TagContainer.fromFile(swcFile);

@@ -4,7 +4,7 @@
 <product name="Code Orchestra Livecoding Tool" uid="code.orchestra.lcs.product" id="code-orchestra-lcs.product" application="code-orchestra-lcs.application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="product_lg.gif"/>
+      <image path="/code-orchestra-lcs/icons/COLT.png"/>
       <text>
          Code Orchestra Live Coding Tool (COLT)
       </text>
@@ -18,7 +18,6 @@
    </launcherArgs>
 
    <windowImages/>
-
 
    <launcher>
       <macosx icon="/code-orchestra-lcs/icons/COLT.icns"/>

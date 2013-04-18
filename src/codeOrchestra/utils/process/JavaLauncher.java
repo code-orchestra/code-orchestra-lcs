@@ -1,16 +1,15 @@
 package codeOrchestra.utils.process;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import jetbrains.mps.execution.api.commands.ProcessHandlerBuilder;
 import codeOrchestra.utils.StringUtils;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.openapi.util.SystemInfo;
-import jetbrains.mps.execution.api.commands.ProcessHandlerBuilder;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Alexander Eliseyev

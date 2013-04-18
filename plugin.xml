@@ -121,7 +121,7 @@
          </property>
          <property
                name="aboutImage"
-               value="product_lg.gif">
+               value="icons/COLT.png">
          </property>
          <property
                name="appName"

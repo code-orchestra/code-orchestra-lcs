@@ -20,6 +20,10 @@ public final class Logger {
   }};
   private static Map<String, Logger> pool = new HashMap<String, Logger>();
 
+  public static Logger getLogger(Class clazz) {
+    return getLogger(clazz.getSimpleName());
+  }
+  
   public synchronized static Logger getLogger(String name) {
     if (pool.containsKey(name)) {
       return pool.get(name);

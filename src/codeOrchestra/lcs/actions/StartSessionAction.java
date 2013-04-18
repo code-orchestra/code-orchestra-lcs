@@ -10,6 +10,7 @@ import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
+import codeOrchestra.lcs.digest.ProjectDigestHelper;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveLauncher;
 import codeOrchestra.lcs.session.LiveCodingManager;
@@ -48,6 +49,9 @@ public class StartSessionAction extends Action {
     if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
       return;
     }
+    
+    // Build digests
+    new ProjectDigestHelper(currentProject).build();
     
     // Restart FCSH
     try {

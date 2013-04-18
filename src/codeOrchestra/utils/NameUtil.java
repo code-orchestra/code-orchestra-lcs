@@ -25,5 +25,9 @@ public final class NameUtil {
     }
     return namespace + '.' + name;
   }
+  
+  public static boolean isEmpty(String command) {
+    return command == null || command.trim().isEmpty();
+  }
 
 }
