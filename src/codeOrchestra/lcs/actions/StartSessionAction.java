@@ -1,5 +1,9 @@
 package codeOrchestra.lcs.actions;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -27,56 +31,77 @@ public class StartSessionAction extends Action {
     setId(ICommandIds.CMD_START_SESSION);
     setActionDefinitionId(ICommandIds.CMD_START_SESSION);
     setImageDescriptor(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/run.png"));
-    
+
     setEnabled(false);
-    
-    window.addPerspectiveListener(new PerspectiveAdapter() {      
+
+    window.addPerspectiveListener(new PerspectiveAdapter() {
       @Override
       public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
         setEnabled(LCSProject.getCurrentProject() != null);
       }
     });
   }
-  
+
   @Override
   public void run() {
-    // Save project
-    LCSProject currentProject = LCSProject.getCurrentProject();
-    LiveCodingProjectViews.saveProjectViewsState(window, currentProject);   
-    currentProject.save();
+    setEnabled(false);
     
-    // Validate project 
+    // Save project
+    final LCSProject currentProject = LCSProject.getCurrentProject();
+    LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
+    currentProject.save();
+
+    // Validate project
     if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
       return;
     }
-    
-    // Build digests
-    new ProjectDigestHelper(currentProject).build();
-    
-    // Restart FCSH
-    try {
-      FCSHManager.instance().restart();
-    } catch (FCSHException e) {
-      // TODO: handle nicely
-      e.printStackTrace();
-    }
-    
-    new Thread() {
-      public void run() {
-        // 1 - Base compilation
-        boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();    
-            
-        // 2 - Start the compiled SWF
+
+    Job job = new Job("Base Compilation") {
+      @Override
+      protected IStatus run(IProgressMonitor monitor) {
+        monitor.beginTask("Base Compilation", 100);
+        
+        // Build digests
+        monitor.setTaskName("Building libs digests");
+        new ProjectDigestHelper(currentProject).build();
+        monitor.worked(40);
+        
+        // Restart FCSH
+        monitor.setTaskName("Restaring FCSH");
+        try {
+          FCSHManager.instance().restart();
+        } catch (FCSHException e) {
+          // TODO: handle nicely
+          e.printStackTrace();
+          setEnabled(true);
+          return Status.CANCEL_STATUS;
+        }
+        monitor.worked(10);
+
+        // Base compilation
+        monitor.setTaskName("Compiling");
+        boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();
+        monitor.worked(40);
+
+        // Start the compiled SWF
+        monitor.setTaskName("Launching");
         if (successfulBaseGeneration) {
           try {
             new LiveLauncher().launch(LCSProject.getCurrentProject());
           } catch (ExecutionException e) {
             // TODO: handle nicely
             e.printStackTrace();
+            setEnabled(true);
+            e.printStackTrace();
           }
         }
-      };
-    }.start();    
+        monitor.worked(10);
+
+        setEnabled(true);
+        return Status.OK_STATUS;
+      }
+    };
+    job.schedule();
   }
-  
+
 }

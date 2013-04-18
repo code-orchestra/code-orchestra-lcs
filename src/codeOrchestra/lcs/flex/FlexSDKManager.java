@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import codeOrchestra.actionScript.flexsdk.FlexSDKLib;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.StringUtils;
 
@@ -72,12 +73,12 @@ public class FlexSDKManager {
       cacheLibPath(flexLibKey, playerglobalSWCPath);
       return playerglobalSWCPath;
     } else {
-      String libPath = flexSDKDir.getPath() + File.separator + REGULAR_LIBS_RELATIVE_PATH + File.separator + flexSDKLib.getLibPath();
+      String libPath = flexSDKDir.getPath() + File.separator + REGULAR_LIBS_RELATIVE_PATH + File.separator + flexSDKLib.getLibRelativePath();
       if (FileUtils.doesExist(libPath)) {
         cacheLibPath(flexLibKey, libPath);
         return libPath;
       }
-      throw new FlexSDKNotPresentException("Can't locate the " + flexSDKLib.getLibPath() + " in the Flex SDK path configured");
+      throw new FlexSDKNotPresentException("Can't locate the " + flexSDKLib.getLibRelativePath() + " in the Flex SDK path configured");
     }
   }
   

@@ -50,17 +50,22 @@ public class SWCDigest {
 
   public void generate() {
     for (String swcPath : swcPaths) {
+      digestsMap.clear();
       init(swcPath);
+      save(new File(swcPath).getName());
     }
-    
-    save();
   }
 
-  private void save() {
+  private void save(String swcName) {
     for (String packName : digestsMap.keySet()) {
       Document document = digestsMap.get(packName);
       try {
-        XMLUtils.saveToFile(new File(outputPath, packName + ".digest").getPath(), document);
+        File outputDir = new File(outputPath, swcName);
+        if (!outputDir.exists()) {
+          outputDir.mkdirs();
+        }
+
+        XMLUtils.saveToFile(new File(outputPath, swcName + File.separator + packName + ".digest").getPath(), document);
       } catch (TransformerException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -153,7 +158,7 @@ public class SWCDigest {
   }
 
   private void extractMemberName(AbcTrait trait, java.util.List<String> result) {
-    // Skip private members    
+    // Skip private members
     int namespaceKind = trait.name().namespace().kind();
     if (namespaceKind == AbcNamespaceKind.Private()) {
       return;
@@ -180,14 +185,14 @@ public class SWCDigest {
       }
     } else if (traitKind == AbcTraitKind.Const() || traitKind == AbcTraitKind.Slot()) {
       String fieldName;
-      if (traitKind == AbcTraitKind.Const()) { 
-        AbcTraitConst traitConst = (AbcTraitConst) trait; 
-        fieldName = traitConst.name().name().name;         
-      } else if (traitKind == AbcTraitKind.Slot()) { 
-        AbcTraitSlot traitSlot = (AbcTraitSlot) trait; 
-        fieldName = traitSlot.name().name().name; 
-      } else { 
-        return; 
+      if (traitKind == AbcTraitKind.Const()) {
+        AbcTraitConst traitConst = (AbcTraitConst) trait;
+        fieldName = traitConst.name().name().name;
+      } else if (traitKind == AbcTraitKind.Slot()) {
+        AbcTraitSlot traitSlot = (AbcTraitSlot) trait;
+        fieldName = traitSlot.name().name().name;
+      } else {
+        return;
       }
       if (!result.contains(fieldName)) {
         result.add(fieldName);
