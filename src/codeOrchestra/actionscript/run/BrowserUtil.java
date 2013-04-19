@@ -65,11 +65,8 @@ public class BrowserUtil {
       if (curl != null) {
         final String urlString = curl.toString();
         String[] commandLine;
-        if (SystemInfo.isWindows) {
-          commandLine = new String[command.length + 2];
-          System.arraycopy(command, 0, commandLine, 0, command.length);
-          commandLine[commandLine.length - 2] = "\"\"";
-          commandLine[commandLine.length - 1] = "\"" + redirectUrl(url, urlString) + "\"";
+        if (SystemInfo.isWindows) {      
+        	commandLine = new String[] { String.format("cmd /C \"start %1s\"", escapeUrl_(urlString)) };        	
         } else {
           commandLine = new String[command.length + 1];
           System.arraycopy(command, 0, commandLine, 0, command.length);
@@ -84,7 +81,7 @@ public class BrowserUtil {
     }
     return null;
   }
-
+  
   /**
    * This method works around Windows 'start' command behaivor of dropping
    * anchors from the url for local urls.
@@ -117,6 +114,10 @@ public class BrowserUtil {
       return url.replaceAll(" ", "%20");
     }
   }
+  
+  public static String escapeUrl_(String url) {
+	  return url.replaceAll(" ", "%20");
+	  }
 
   public static ProcessBuilder launchBrowser(final String url) {
     return launchBrowser(url, (String) null);

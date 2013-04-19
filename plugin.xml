@@ -127,6 +127,10 @@
                name="appName"
                value="Code Orchestra Livecoding Tool">
          </property>
+         <property
+               name="windowImages"
+               value="icons/COLT.png">
+         </property>
       </product>
    </extension>
 

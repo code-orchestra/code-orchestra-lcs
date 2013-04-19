@@ -76,6 +76,12 @@ public class StartSessionAction extends Action {
           setEnabled(true);
           return Status.CANCEL_STATUS;
         }
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         monitor.worked(10);
 
         // Base compilation
