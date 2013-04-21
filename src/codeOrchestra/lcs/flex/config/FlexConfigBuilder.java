@@ -73,6 +73,34 @@ public class FlexConfigBuilder {
           throw new LCSException("Can't copy changed source file to 'incremental' dir", e);
         }
       }
+      // Copy assets to the incremental source dir
+      for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
+        File sourceDir = new File(sourcePath);
+        if (sourceDir.exists()) {
+          List<File> nonSources = FileUtils.listFileRecursively(sourceDir, new FileFilter() {            
+            @Override
+            public boolean accept(File file) {
+              if (file.isDirectory()) {
+                return false;
+              }
+              String fileNameLowerCase = file.getName().toLowerCase();
+              return !fileNameLowerCase.endsWith(".as") && !fileNameLowerCase.endsWith(".mxml");
+            }
+          });
+          for (File nonSource : nonSources) {
+            String relativePath = FileUtils.getRelativePath(nonSource.getPath(), sourceDir.getPath(), File.separator);
+            try {
+              File newFile = new File(incrementalSourcesDir, relativePath);
+              if (!newFile.getParentFile().exists()) {
+                newFile.getParentFile().mkdirs();
+              }
+              FileUtils.copyFileChecked(nonSource, newFile, false);
+            } catch (IOException e) {
+              throw new LCSException("Can't copy file to 'incremental' dir", e);
+            }
+          }
+        }
+      }
       flexConfig.addSourcePath(incrementalSourcesDir.getPath());
     }
 

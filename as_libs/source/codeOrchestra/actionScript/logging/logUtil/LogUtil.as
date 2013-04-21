@@ -116,6 +116,7 @@ package codeOrchestra.actionScript.logging.logUtil{
         return messageString;
       }
       
+	  var tmp:* = XML.ignoreWhitespace;
       XML.ignoreWhitespace = false;
       
       var xmlMessage : XML  =       
@@ -134,6 +135,8 @@ package codeOrchestra.actionScript.logging.logUtil{
       }
       
       messages.push(xmlMessage);
+
+	XML.ignoreWhitespace  = tmp;	
       
       flush();
       
