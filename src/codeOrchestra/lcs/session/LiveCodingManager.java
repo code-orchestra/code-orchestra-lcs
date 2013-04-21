@@ -210,10 +210,10 @@ public class LiveCodingManager {
     fireSessionStart();
   }
 
-  public void sendBaseUrl(String baseUrl) { 
-    currentSession.sendLiveCodingMessage("base-url:" + baseUrl); 
-  } 
-  
+  public void sendBaseUrl(String baseUrl) {
+    currentSession.sendLiveCodingMessage("base-url:" + baseUrl);
+  }
+
   public void stopSession() {
     currentSession = null;
 
@@ -242,8 +242,10 @@ public class LiveCodingManager {
       }
       sessionFinisherThread = new SessionFinisher();
       sessionFinisherThread.start();
-      
-      sendBaseUrl("http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output");
+
+      if (LCSProject.getCurrentProject().getLiveCodingSettings().isWebAddressTarget()) {
+        sendBaseUrl("http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output");
+      }
     }
 
     @Override
