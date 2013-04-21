@@ -6,6 +6,7 @@ import java.io.FilenameFilter;
 import jetbrains.mps.execution.api.commands.ProcessHandlerBuilder;
 
 import codeOrchestra.actionScript.run.BrowserUtil;
+import codeOrchestra.actionScript.security.TrustedLocations;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
@@ -22,20 +23,23 @@ public class LiveLauncher {
   public ProcessHandler launch(LCSProject project) throws ExecutionException {
     LiveCodingSettings liveCodingSettings = project.getLiveCodingSettings();
     CompilerSettings compilerSettings = project.getCompilerSettings();
-    
+
     LauncherType launcherType = liveCodingSettings.getLauncherType();
 
-    String target = liveCodingSettings.isWebAddressTarget() ?
-        liveCodingSettings.getWebAddress() :
-          compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename();
-        
+    String swfPath = compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename();
+    if (!liveCodingSettings.isWebAddressTarget()) {
+      TrustedLocations.getInstance().addTrustedLocation(swfPath);
+    }
+    
+    String target = liveCodingSettings.isWebAddressTarget() ? liveCodingSettings.getWebAddress() : swfPath;
+
     switch (launcherType) {
-      case DEFAULT:
-        return new ProcessHandlerBuilder().append(getCommand(BrowserUtil.launchBrowser(target, null))).build();
-      case FLASH_PLAYER:
-        return new ProcessHandlerBuilder().append(completeFlashPlayerPath(liveCodingSettings.getFlashPlayerPath())).append(protect(target)).build();
-      default:
-        throw new ExecutionException("Unsupported launcher type: " + launcherType);
+    case DEFAULT:
+      return new ProcessHandlerBuilder().append(getCommand(BrowserUtil.launchBrowser(target, null))).build();
+    case FLASH_PLAYER:
+      return new ProcessHandlerBuilder().append(completeFlashPlayerPath(liveCodingSettings.getFlashPlayerPath())).append(protect(target)).build();
+    default:
+      throw new ExecutionException("Unsupported launcher type: " + launcherType);
     }
   }
 
