@@ -16,6 +16,11 @@ public class PathUtils {
     return new File(productDir, "flex_sdk").getPath();
   }
   
+  public static String getTemplaesDir() {
+    File productDir = getApplicationBaseDir();    
+    return new File(productDir, "templates").getPath();
+  }
+  
   public static String getActionScriptLibsSourcePath() {
     File productDir = getApplicationBaseDir();    
     return new File(productDir, "as_libs" + File.separator + "source").getPath();

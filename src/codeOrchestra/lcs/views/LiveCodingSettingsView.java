@@ -1,5 +1,6 @@
 package codeOrchestra.lcs.views;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 
+import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
+import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
+import codeOrchestra.lcs.run.index.IndexHTMLGenerator;
+import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.StringUtils;
 
@@ -36,12 +44,21 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   
   private Button defaultLauncherButton;
   private Button flashPlayerLauncherButton;
+  private Button generateIndexButton;
   
   private Button defaultTargetButton;
   private Button webAddressTargetButton;
 
   private Composite flashPlayerPathComposite;
   private Composite webAddressComposite;
+
+  private IWorkbenchWindow window;
+  
+  @Override
+  public void init(IViewSite site) throws PartInitException {    
+    super.init(site);
+    window = site.getWorkbenchWindow();
+  }
   
   @Override
   public List<String> validate() {
@@ -62,7 +79,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 
     Group targetSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
     targetSettingsGroup.setText("Target");
-    GridLayout targetSettingsLayout = new GridLayout(2, false);
+    GridLayout targetSettingsLayout = new GridLayout(3, false);
     targetSettingsLayout.marginHeight = 5;
     targetSettingsLayout.marginWidth = 5;
     targetSettingsGroup.setLayout(targetSettingsLayout);
@@ -72,7 +89,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     defaultTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
     defaultTargetButton.setText("Compiled SWF");
     GridData defaultTargetButtonLayoutData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
-    defaultTargetButtonLayoutData.horizontalSpan = 2;
+    defaultTargetButtonLayoutData.horizontalSpan = 3;
     defaultTargetButton.setLayoutData(defaultTargetButtonLayoutData);
     defaultTargetButton.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
@@ -82,9 +99,31 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     webAddressTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
     webAddressTargetButton.setText("Web Address:");
     webAddressComposite = new Composite(targetSettingsGroup, SWT.NONE);
-    webAddressComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+    webAddressComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
     webAddressEditor = new StringFieldEditor("webAddress", "", webAddressComposite);
     webAddressEditor.setPreferenceStore(getPreferenceStore());
+    generateIndexButton = new Button(targetSettingsGroup, SWT.PUSH);
+    generateIndexButton.setText("Generate index.html");
+    generateIndexButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        // 1 - save
+        LCSProject currentProject = LCSProject.getCurrentProject();
+        LiveCodingProjectViews.saveProjectViewsState(window, currentProject);   
+        currentProject.save();
+        
+        // 2 - generate
+        try {
+          new IndexHTMLGenerator(currentProject).generate();
+        } catch (IOException e1) {
+          // TODO: handle nicely
+          e1.printStackTrace();
+        }
+        
+        // 3 - update address
+        webAddressEditor.setStringValue(LiveCodingManager.instance().getWebOutputAddress() + "/index.html");
+      }
+    });
     
     Group launcherSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
     launcherSettingsGroup.setText("Launcher");
@@ -210,6 +249,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     flashPlayerLauncherButton.setEnabled(!webAddressTargetButton.getSelection());
 
     webAddressEditor.setEnabled(webAddressTargetButton.getSelection(), webAddressComposite);
+    generateIndexButton.setEnabled(webAddressTargetButton.getSelection());
     
     if (webAddressTargetButton.getSelection() && flashPlayerLauncherButton.getSelection()) {
       flashPlayerLauncherButton.setSelection(false);

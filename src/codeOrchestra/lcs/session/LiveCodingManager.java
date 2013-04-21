@@ -14,7 +14,6 @@ import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.socket.ClientSocketHandler;
-import codeOrchestra.lcs.socket.SocketWriter;
 import codeOrchestra.lcs.socket.command.impl.PongTraceCommand;
 import codeOrchestra.lcs.socket.command.impl.PongTraceCommand.PongListener;
 import codeOrchestra.lcs.sources.SourceFile;
@@ -224,6 +223,10 @@ public class LiveCodingManager {
 
     fireSessionEnd();
   }
+  
+  public String getWebOutputAddress() {
+    return "http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output";
+  }
 
   private class SessionHandleListener extends LiveCodingAdapter {
 
@@ -244,7 +247,7 @@ public class LiveCodingManager {
       sessionFinisherThread.start();
 
       if (LCSProject.getCurrentProject().getLiveCodingSettings().isWebAddressTarget()) {
-        sendBaseUrl("http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output");
+        sendBaseUrl(getWebOutputAddress());
       }
     }
 
