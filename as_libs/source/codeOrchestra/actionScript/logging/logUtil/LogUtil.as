@@ -13,12 +13,14 @@ package codeOrchestra.actionScript.logging.logUtil{
     private static var socket : XMLSocket ;
     private static var messages : Array  = new Array() ;
     private static var scopes : Array  = new Array(["Main", 0]) ;
-    private static const PORT : Number  = 6126 ;
+    private static var host : String  = "localhost" ;
+    private static var port : Number  = 6125 ;
     private static var hasError : Boolean  = false ;
     private static var tabsCount : int  = 0 ;
     private static var tabsString : String  = "" ;
     private static var listenersMap : Dictionary  = new Dictionary() ;
     private static var pondDisable : Boolean ;
+    private static var classCreatedTimestamp : String  = (new Date()).getTime() + "" ;
     public function LogUtil(  ){
       
     }
@@ -49,7 +51,7 @@ package codeOrchestra.actionScript.logging.logUtil{
             dispatchEvent(e.clone());
           }
         });
-        socket.connect("localhost", PORT);
+        socket.connect(host, port);
       } catch ( e : Error ) {
         closeSocketAfterError();
       }
@@ -116,7 +118,7 @@ package codeOrchestra.actionScript.logging.logUtil{
         return messageString;
       }
       
-	  var tmp:* = XML.ignoreWhitespace;
+      var oldWhiteSpace : Boolean  = XML.ignoreWhitespace;
       XML.ignoreWhitespace = false;
       
       var xmlMessage : XML  =       
@@ -131,14 +133,14 @@ package codeOrchestra.actionScript.logging.logUtil{
 ;
       
       for each ( var scope : Array in scopes ) {
-        xmlMessage.scopes[0].appendChild(<scope id={scope[0]}  >{scope[0]}</scope>)
+        xmlMessage.scopes[0].appendChild(<scope id={scope[0] + "_" + classCreatedTimestamp}  >{scope[0]}</scope>)
       }
       
       messages.push(xmlMessage);
-
-	XML.ignoreWhitespace  = tmp;	
       
       flush();
+      
+      XML.ignoreWhitespace = oldWhiteSpace;
       
       return messageString;
     }
@@ -166,6 +168,10 @@ package codeOrchestra.actionScript.logging.logUtil{
     }
     public static function startLiveCodingSession ( sessionId : String ) : void {
       log("start-live-coding-session", "", "", "", sessionId);
+    }
+    public static function setSocketAddress ( host : String, port : int  = 6125 ) : void {
+      LogUtil.host = host;
+      LogUtil.port = port;
     }
     public static function pong (  ) : void {
       log("pong", "", "", "", "");

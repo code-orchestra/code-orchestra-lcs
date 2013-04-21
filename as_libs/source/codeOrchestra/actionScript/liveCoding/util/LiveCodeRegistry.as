@@ -36,7 +36,7 @@ package codeOrchestra.actionScript.liveCoding.util{
     public function putMethod ( id : String, method : Class, methodInfo : MethodChange  = null ) : void {
       if ( methodInfo ) {
         if ( !(CollectionsLanguageUtil.containsKey(methods, id)) ) {
-          addMethod(methodInfo.className, methodInfo.methodName, methodInfo.isStatic, methodInfo.type, methodInfo.changeClassName);
+          addMethod(methodInfo.className, methodInfo.methodName, methodInfo.isStatic, methodInfo.type, methodInfo.changeClassName, id);
         }else{
           {
             LogUtil.enterLogScope("livecoding", "6940745366554867689");
@@ -53,14 +53,12 @@ package codeOrchestra.actionScript.liveCoding.util{
        */
       return methods[id];
     }
-    public function addMethod ( className : String, methodName : String, isStaticMethod : Boolean, methodType : MethodType, methodClassName : String ) : void {
+    public function addMethod ( className : String, methodName : String, isStaticMethod : Boolean, methodType : MethodType, methodClassName : String, methodId : String ) : void {
       {
         LogUtil.enterLogScope("livecoding", "5629317685584077");
-        LogUtil.log("trace", "2233284459626233172", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["add method: " + "arguments=[" + ["className=", className, ", methodName=", methodName, ", isStaticMethod=", isStaticMethod, ", methodType=", methodType, ", methodClassName=", methodClassName].join("") + "]"].join(", "));
+        LogUtil.log("trace", "2233284459626233172", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["add method: " + "arguments=[" + ["className=", className, ", methodName=", methodName, ", isStaticMethod=", isStaticMethod, ", methodType=", methodType, ", methodClassName=", methodClassName, ", methodId=", methodId].join("") + "]"].join(", "));
         LogUtil.exitLogScope("livecoding", "5629317685584077");
       }
-      
-      var methodId : String  = className + "." + methodName;
       try {
         putMethod(methodId, getDefinitionByName(methodClassName) as Class);
       } catch ( e : Error ) {
@@ -68,13 +66,22 @@ package codeOrchestra.actionScript.liveCoding.util{
       }
       
       if ( !(isStaticMethod) ) {
-        getDefinitionByName(className).prototype[methodName] =         function ( ...rest ) : void {
+        getDefinitionByName(className).prototype[methodName] =         function ( ...rest ) : * {
           {
             LogUtil.enterLogScope("livecoding", "9091078376703266061");
             var method : Class  = getMethod(methodId);
             var instance : *  = new method(this);
-            instance.run.apply(instance, rest);
+            return instance.run.apply(instance, rest);
             LogUtil.exitLogScope("livecoding", "9091078376703266061");
+          }
+        };
+      }else{
+        getDefinitionByName(className)[methodName] =         function ( ...rest ) : * {
+          {
+            LogUtil.enterLogScope("livecoding", "7473368133778549627");
+            var method : Class  = getMethod(methodId);
+            return method.run.apply(null, rest);
+            LogUtil.exitLogScope("livecoding", "7473368133778549627");
           }
         };
       }
@@ -138,6 +145,7 @@ package codeOrchestra.actionScript.liveCoding.util{
       if ( baseUrl ) {
         url = baseUrl + "/" + url;
       }
+      LogUtil.log("trace", "855151659769229414", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["try to load package from \"" + url + "\""].join(", "));
       loader.addEventListener(Event.COMPLETE,       function ( e : Event ) : void {
         var classLoader : Loader  = new Loader();
         var loaderContext : LoaderContext  = new LoaderContext(false, ApplicationDomain.currentDomain);

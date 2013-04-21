@@ -6,4 +6,4 @@ flex_sdk/
 *.war
 *.ear
 
-as_libs/source/.DS_Store
+.DS_Store
