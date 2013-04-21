@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/jetty-6.1.26.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jetty-util-6.1.26.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/servlet-api-2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/apparat-core-1.0.RC9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/apparat-log-1.0.RC9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/scala-library.jar"/>

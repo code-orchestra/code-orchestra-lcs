@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
+import codeOrchestra.http.CodeOrchestraHttpServer;
 
 /**
  * @author Alexander Eliseyev
@@ -22,6 +23,7 @@ public class Application implements IApplication {
 		Display display = PlatformUI.createDisplay();
 		try {
 		  // TODO: handle errors
+		  CodeOrchestraHttpServer.getInstance().init();
 		  getServerSocketThread().openSocket();		  
 		  
 		  int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor(this));
@@ -41,7 +43,7 @@ public class Application implements IApplication {
 		if (!PlatformUI.isWorkbenchRunning())
 			return;
 		
-    // TODO: handle errors
+		CodeOrchestraHttpServer.getInstance().dispose();
 		getServerSocketThread().closeSocket();
 		
 		final IWorkbench workbench = PlatformUI.getWorkbench();

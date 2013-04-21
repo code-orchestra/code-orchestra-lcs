@@ -10,15 +10,18 @@ import codeOrchestra.actionScript.liveCoding.listener.LiveCodingAdapter;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingListener;
 import codeOrchestra.actionScript.liveCoding.run.LiveCodingSessionImpl;
 import codeOrchestra.actionScript.modulemaker.MakeException;
+import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.socket.ClientSocketHandler;
+import codeOrchestra.lcs.socket.SocketWriter;
 import codeOrchestra.lcs.socket.command.impl.PongTraceCommand;
 import codeOrchestra.lcs.socket.command.impl.PongTraceCommand.PongListener;
 import codeOrchestra.lcs.sources.SourceFile;
 import codeOrchestra.lcs.sources.SourcesTrackerCallback;
 import codeOrchestra.lcs.sources.SourcesTrackerThread;
 import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.LocalhostUtil;
 import codeOrchestra.utils.PathUtils;
 import codeOrchestra.utils.UnzipUtil;
 
@@ -207,6 +210,10 @@ public class LiveCodingManager {
     fireSessionStart();
   }
 
+  public void sendBaseUrl(String baseUrl) { 
+    currentSession.sendLiveCodingMessage("base-url:" + baseUrl); 
+  } 
+  
   public void stopSession() {
     currentSession = null;
 
@@ -235,6 +242,8 @@ public class LiveCodingManager {
       }
       sessionFinisherThread = new SessionFinisher();
       sessionFinisherThread.start();
+      
+      sendBaseUrl("http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output");
     }
 
     @Override

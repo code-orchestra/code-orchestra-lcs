@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.eclipse.jface.preference.PreferenceStore;
 
 import codeOrchestra.actionScript.compiler.fcsh.FSCHCompilerKind;
+import codeOrchestra.http.CodeOrchestraHttpServer;
 
 /**
  * @author Alexander Eliseyev
@@ -60,6 +61,8 @@ public class LCSProject {
     liveCodingSettings = new LiveCodingSettings(preferenceStore);
 
     initPaths();
+    
+    CodeOrchestraHttpServer.getInstance().addAlias(getOutputDir(), "/output");
   }
 
   private void initPaths() {

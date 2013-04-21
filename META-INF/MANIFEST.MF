@@ -9,7 +9,10 @@ Require-Bundle: org.eclipse.ui,
  org.apache.ant
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: lib/apparat-core-1.0.RC9.jar,
+Bundle-ClassPath: .,
+ lib/apparat-core-1.0.RC9.jar,
  lib/apparat-log-1.0.RC9.jar,
  lib/scala-library.jar,
- .
+ lib/jetty-6.1.26.jar,
+ lib/jetty-util-6.1.26.jar,
+ lib/servlet-api-2.5.jar
