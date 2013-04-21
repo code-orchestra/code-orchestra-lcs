@@ -2,9 +2,11 @@ package codeOrchestra.actionScript.compiler.fcsh;
 
 import java.io.File;
 
+import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
+import codeOrchestra.utils.LocalhostUtil;
 import codeOrchestra.utils.process.JavaLauncher;
 
 import com.intellij.openapi.util.SystemInfo;
@@ -35,6 +37,10 @@ public class FCSHLauncher extends JavaLauncher {
     programParameters.append(" -Duser.country=US");
     programParameters.append(" -Djava.awt.headless=true");
 
+    // Tracing parameters
+    programParameters.append(" -DcodeOrchestra.trace.host=" + LocalhostUtil.getLocalhostIp());
+    programParameters.append(" -DcodeOrchestra.trace.port=" + LoggerServerSocketThread.LOGGING_PORT);
+    
     // Livecoding parameters
     if (currentProject != null) {
       LiveCodingSettings liveCodingSettings = currentProject.getLiveCodingSettings();
