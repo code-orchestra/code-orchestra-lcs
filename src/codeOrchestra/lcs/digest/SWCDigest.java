@@ -149,15 +149,18 @@ public class SWCDigest {
     }
 
     // Members
-    java.util.List<String> members = getMembers(traitClass);
-    for (String member : members) {
+    java.util.List<Member> members = getMembers(traitClass);
+    for (Member member : members) {
       Element memberElement = document.createElement("member");
-      memberElement.setAttribute("name", member);
+      memberElement.setAttribute("name", member.getName());
+      if (member.isStatic()) {
+        memberElement.setAttribute("static", Boolean.TRUE.toString());
+      }
       traitElement.appendChild(memberElement);
     }
   }
 
-  private void extractMemberName(AbcTrait trait, java.util.List<String> result) {
+  private void extractMemberName(AbcTrait trait, java.util.List<Member> result, boolean isStatic) {
     // Skip private members
     int namespaceKind = trait.name().namespace().kind();
     if (namespaceKind == AbcNamespaceKind.Private()) {
@@ -180,8 +183,9 @@ public class SWCDigest {
       } else {
         return;
       }
-      if (!result.contains(methodName)) {
-        result.add(methodName);
+      Member member = new Member(methodName, isStatic);      
+      if (!result.contains(member)) {
+        result.add(member);
       }
     } else if (traitKind == AbcTraitKind.Const() || traitKind == AbcTraitKind.Slot()) {
       String fieldName;
@@ -194,14 +198,15 @@ public class SWCDigest {
       } else {
         return;
       }
-      if (!result.contains(fieldName)) {
-        result.add(fieldName);
+      Member member = new Member(fieldName, isStatic);
+      if (!result.contains(member)) {
+        result.add(member);
       }
     }
   }
 
-  private java.util.List<String> getMembers(AbcTraitClass traitClass) {
-    java.util.List<String> result = new ArrayList<String>();
+  private java.util.List<Member> getMembers(AbcTraitClass traitClass) {
+    java.util.List<Member> result = new ArrayList<Member>();
 
     AbcClass klass = traitClass.nominalType().klass();
     AbcInstance abcInstance = traitClass.nominalType().inst();
@@ -209,12 +214,13 @@ public class SWCDigest {
     // Static
     AbcTrait[] staticTraits = klass.traits();
     for (AbcTrait staticTrait : staticTraits) {
-      extractMemberName(staticTrait, result);
+      extractMemberName(staticTrait, result, true);
     }
 
+    // Instance
     AbcTrait[] instanceTraits = abcInstance.traits();
     for (AbcTrait instanceTrait : instanceTraits) {
-      extractMemberName(instanceTrait, result);
+      extractMemberName(instanceTrait, result, false);
     }
 
     return result;
