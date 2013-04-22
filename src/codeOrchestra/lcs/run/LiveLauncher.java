@@ -7,6 +7,7 @@ import jetbrains.mps.execution.api.commands.ProcessHandlerBuilder;
 
 import codeOrchestra.actionScript.run.BrowserUtil;
 import codeOrchestra.actionScript.security.TrustedLocations;
+import codeOrchestra.lcs.air.ipaBuildScriptGenerator;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
@@ -23,15 +24,19 @@ public class LiveLauncher {
   public ProcessHandler launch(LCSProject project) throws ExecutionException {
     LiveCodingSettings liveCodingSettings = project.getLiveCodingSettings();
     CompilerSettings compilerSettings = project.getCompilerSettings();
+    Target launchTarget = liveCodingSettings.getLaunchTarget();
 
-    LauncherType launcherType = liveCodingSettings.getLauncherType();
-
-    String swfPath = compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename();
-    if (!liveCodingSettings.isWebAddressTarget()) {
+    if (launchTarget == Target.AIR) {
+      return new ProcessHandlerBuilder().append(protect(ipaBuildScriptGenerator.getSctiptPath(project).getPath())).build(project.getOutputDir());
+    }
+    
+    LauncherType launcherType = liveCodingSettings.getLauncherType();    
+    String swfPath = compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename();    
+    if (launchTarget == Target.SWF) {
       TrustedLocations.getInstance().addTrustedLocation(swfPath);
     }
     
-    String target = liveCodingSettings.isWebAddressTarget() ? liveCodingSettings.getWebAddress() : swfPath;
+    String target = launchTarget == Target.WEB_ADDRESS ? liveCodingSettings.getWebAddress() : swfPath;
 
     switch (launcherType) {
     case DEFAULT:

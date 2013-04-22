@@ -41,6 +41,11 @@ public class LoggerTraceCommand implements TraceCommand {
         scopeIds.add(scopeWrapper.getId());
       }
     }
+    
+    // TODO: delete
+    if (loggerMessage.getStackTrace() != null) {
+      System.out.println(loggerMessage.getStackTrace());
+    }
 
     // Timestamp
     long timestamp = loggerMessage.getTimestamp();

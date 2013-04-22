@@ -2,11 +2,17 @@ package codeOrchestra.lcs.run.index;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.PathUtils;
+import codeOrchestra.utils.TemplateProcessor;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class IndexHTMLGenerator {
 
   private LCSProject project;
@@ -22,9 +28,9 @@ public class IndexHTMLGenerator {
     File targetIndexFile = new File(project.getOutputDir(), "index.html");
     FileUtils.copyFileChecked(new File(PathUtils.getTemplaesDir(), "index.html"), targetIndexFile, false);
     
-    String indexContent = FileUtils.read(targetIndexFile);
-    indexContent = indexContent.replace("{SWF_NAME}", project.getCompilerSettings().getOutputFilename());
-    FileUtils.write(targetIndexFile, indexContent);
+    Map<String, String> replacements = new HashMap<String, String>();
+    replacements.put("{SWF_NAME}", project.getCompilerSettings().getOutputFilename());
+    new TemplateProcessor(targetIndexFile, replacements).process();
   }
   
 }

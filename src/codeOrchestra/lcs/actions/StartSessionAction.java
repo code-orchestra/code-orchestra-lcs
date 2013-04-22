@@ -15,11 +15,16 @@ import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.digest.ProjectDigestHelper;
+import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveLauncher;
+import codeOrchestra.lcs.run.LoggingProcessListener;
 import codeOrchestra.lcs.session.LiveCodingManager;
 
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.process.ProcessAdapter;
+import com.intellij.execution.process.ProcessEvent;
+import com.intellij.execution.process.ProcessHandler;
 
 public class StartSessionAction extends Action {
 
@@ -93,12 +98,13 @@ public class StartSessionAction extends Action {
         monitor.setTaskName("Launching");
         if (successfulBaseGeneration) {
           try {
-            new LiveLauncher().launch(LCSProject.getCurrentProject());
+            ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject());
+            processHandler.addProcessListener(new LoggingProcessListener("Launch"));
+            processHandler.startNotify();
           } catch (ExecutionException e) {
             // TODO: handle nicely
             e.printStackTrace();
             setEnabled(true);
-            e.printStackTrace();
           }
         }
         monitor.worked(10);

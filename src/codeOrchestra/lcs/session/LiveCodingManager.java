@@ -13,6 +13,7 @@ import codeOrchestra.actionScript.modulemaker.MakeException;
 import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.run.Target;
 import codeOrchestra.lcs.socket.ClientSocketHandler;
 import codeOrchestra.lcs.socket.command.impl.PongTraceCommand;
 import codeOrchestra.lcs.socket.command.impl.PongTraceCommand.PongListener;
@@ -246,7 +247,7 @@ public class LiveCodingManager {
       sessionFinisherThread = new SessionFinisher();
       sessionFinisherThread.start();
 
-      if (LCSProject.getCurrentProject().getLiveCodingSettings().isWebAddressTarget()) {
+      if (LCSProject.getCurrentProject().getLiveCodingSettings().getLaunchTarget() != Target.SWF) {
         sendBaseUrl(getWebOutputAddress());
       }
     }

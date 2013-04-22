@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import codeOrchestra.lcs.run.LauncherType;
 import codeOrchestra.lcs.run.LiveMethods;
+import codeOrchestra.lcs.run.Target;
 
 /**
  * @author Alexander Eliseyev
@@ -37,8 +38,8 @@ public class LiveCodingSettings extends ProjectSettingsPart {
 	  return LiveMethods.parseValue(liveMethodsStringValue);
 	}
 	
-	public boolean isWebAddressTarget() {
-	  return getPreferenceStore().getBoolean("webAddressTarget");
+	public Target getLaunchTarget() {
+	  return Target.parse(getPreferenceStore().getString("target"));
 	}
 	
 	public boolean startSessionPaused() {
