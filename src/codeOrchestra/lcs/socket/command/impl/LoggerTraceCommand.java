@@ -42,11 +42,6 @@ public class LoggerTraceCommand implements TraceCommand {
       }
     }
     
-    // TODO: delete
-    if (loggerMessage.getStackTrace() != null) {
-      System.out.println(loggerMessage.getStackTrace());
-    }
-
     // Timestamp
     long timestamp = loggerMessage.getTimestamp();
 
@@ -55,7 +50,7 @@ public class LoggerTraceCommand implements TraceCommand {
     } else if (severity == Level.WARN) {
       asLogger.warning(loggerMessage.getMessage(), scopeIds, timestamp);
     } else if (severity == Level.ERROR || severity == Level.FATAL) {
-      asLogger.error(loggerMessage.getMessage(), scopeIds, timestamp);
+      asLogger.error(loggerMessage.getMessage(), scopeIds, timestamp, loggerMessage.getStackTrace());
     }
   }
 

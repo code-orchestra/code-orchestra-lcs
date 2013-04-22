@@ -14,12 +14,14 @@ public class Message {
   private String source;
   private Level level;
   private String message;
+  private String stackTrace;
   
-  public Message(String source, Level level, String message, long timestamp) {
+  public Message(String source, Level level, String message, long timestamp, String stackTrace) {
     this.source = source;
     this.level = level;
     this.message = message;
     this.timestamp = timestamp;
+    this.stackTrace = stackTrace;
   }
   
   public Level getLevel() {
@@ -52,5 +54,10 @@ public class Message {
   public String getMessageText(boolean showSource) {
     return getCreationTimeString(timestamp) + (showSource ? " : [" + source + "] " : " ") +  message;
   }
+
+  public String getStackTrace() {
+    return stackTrace;
+  }
+
 
 }

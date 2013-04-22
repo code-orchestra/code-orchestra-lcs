@@ -12,6 +12,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -26,6 +28,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.mags.remas.view.dialogs.TextAreaMessageDialog;
 
 import codeOrchestra.lcs.logging.Level;
 import codeOrchestra.lcs.messages.MessagesManager;
@@ -138,6 +141,21 @@ public class MessagesView extends ViewPart {
 
     final Menu tablePopup = new Menu(table);
     table.setMenu(tablePopup);
+
+    table.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseDoubleClick(MouseEvent e) {
+        TableItem[] selection = table.getSelection();
+        if (selection != null && selection.length == 1) {
+          for (Message message : messages.keySet()) {
+            if (selection[0] == messages.get(message) && message.getStackTrace() != null) {
+              TextAreaMessageDialog.openError(Display.getDefault().getActiveShell(), "Stack Trace", "Exception Stack Trace", message.getStackTrace());
+            }
+          }
+        }
+      }
+    });
+
     final MenuItem moveBeforeItem = new MenuItem(tablePopup, SWT.NONE);
     moveBeforeItem.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(final SelectionEvent e) {
@@ -163,11 +181,14 @@ public class MessagesView extends ViewPart {
     }
   }
 
-  public void addMessage(final String source, final Level level, final String message, final long timestamp) {
+  public void addMessage(final String source, final Level level, final String message, final long timestamp, final String stackTrace) {
     Display.getDefault().asyncExec(new Runnable() {
       public void run() {
-        Message newMessage = new Message(source, level, message, timestamp);
+        Message newMessage = new Message(source, level, message, timestamp, stackTrace);
         TableItem tableItem = newMessage.createTableItem(table, sourceButton.getSelection());
+        if (stackTrace != null) {
+          tableItem.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+        }
         messages.put(newMessage, tableItem);
       }
     });

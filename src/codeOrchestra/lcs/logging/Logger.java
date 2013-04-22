@@ -47,8 +47,8 @@ public final class Logger {
     log(message, scopeIds, timestamp, Level.WARN);
   }
 
-  public void error(String message, List<String> scopeIds, long timestamp) {
-    log(message, scopeIds, timestamp, Level.ERROR);
+  public void error(String message, List<String> scopeIds, long timestamp, String stackTrace) {
+    log(message, scopeIds, timestamp, Level.ERROR, stackTrace);
   }
   
   public void error(String message) {
@@ -81,6 +81,10 @@ public final class Logger {
   }
   
   private void log(String message, List<String> scopeIds, long timestamp, Level level) {
+    log(message, scopeIds, timestamp, level, null);
+  }
+  
+  private void log(String message, List<String> scopeIds, long timestamp, Level level, String stackTrace) {
     for (String scopeId : scopeIds) {
       MessageScope scope = MessageScopeRegistry.getInstance().getScope(scopeId);
       if (scope == null) {
@@ -92,7 +96,7 @@ public final class Logger {
         continue;
       }
       
-      messageView.addMessage(name, level, message, timestamp);
+      messageView.addMessage(name, level, message, timestamp, stackTrace);
     }
   }
 
