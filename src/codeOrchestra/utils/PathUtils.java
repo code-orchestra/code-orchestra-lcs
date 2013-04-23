@@ -27,11 +27,11 @@ public class PathUtils {
   }
   
   public static String getIncrementalSWFPath(LCSProject project, int packageId) {
-    return project.getCompilerSettings().getOutputPath() + File.separator + "livecoding" +  File.separator + "package_" + packageId + ".swf";
+    return project.getOutputDir().getPath() + File.separator + "livecoding" +  File.separator + "package_" + packageId + ".swf";
   }
 
   public static String getIncrementalSWCPath(LCSProject project) {
-    return project.getCompilerSettings().getOutputPath() +  File.separator + project.getName() + "_liveCoding.swc";
+    return project.getOutputDir().getPath() +  File.separator + project.getName() + "_liveCoding.swc";
   }
   
   public static File getApplicationBaseDir() {

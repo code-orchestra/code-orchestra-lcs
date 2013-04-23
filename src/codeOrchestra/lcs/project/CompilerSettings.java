@@ -35,9 +35,11 @@ public class CompilerSettings extends ProjectSettingsPart {
 	  return getPreferenceStore().getString("outputFileName");
 	}
 	
+	/*
 	public String getOutputPath() {
 	  return getPreferenceStore().getString("outputPath");
 	}
+	*/
 	
 	public String getTargetPlayerVersion() {
 	  return getPreferenceStore().getString("targetPlayerVersion");

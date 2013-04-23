@@ -50,7 +50,7 @@ public class FlexConfigBuilder {
     if (incrementalCompilation) {
       // Add root module generated sources
       String outputFileName = compilerSettings.getOutputFilename().replaceFirst("\\.swf$", ".swc");
-      flexConfig.addLibraryPath(compilerSettings.getOutputPath() +  File.separator + outputFileName);
+      flexConfig.addLibraryPath(project.getOutputDir().getPath() +  File.separator + outputFileName);
       flexConfig.setOutputPath(PathUtils.getIncrementalSWCPath(project));
       
       // Load root module link report file for externs for Live-Coding
@@ -109,7 +109,7 @@ public class FlexConfigBuilder {
 
     // Output path
     if (!incrementalCompilation) {
-      flexConfig.setOutputPath(compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename());
+      flexConfig.setOutputPath(project.getOutputDir().getPath() + File.separator + compilerSettings.getOutputFilename());
     }
 
     // Libraries
@@ -184,7 +184,7 @@ public class FlexConfigBuilder {
   }
 
   private String getLinkReportFilePath() {
-    return new File(project.getCompilerSettings().getOutputPath(), "link-report.xml").getPath();
+    return new File(project.getOutputDir(), "link-report.xml").getPath();
   }
 
 }

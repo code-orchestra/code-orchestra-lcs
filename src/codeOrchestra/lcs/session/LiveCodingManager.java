@@ -263,7 +263,7 @@ public class LiveCodingManager {
 
   private class SessionFinisher extends Thread implements PongListener {
 
-    public static final int PING_TIMEOUT = 2000;
+    public static final int PING_TIMEOUT = 20000;
     public static final String PING_COMMAND = "ping";
 
     private boolean stop;

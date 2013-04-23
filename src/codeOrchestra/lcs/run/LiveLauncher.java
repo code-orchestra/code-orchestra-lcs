@@ -31,7 +31,7 @@ public class LiveLauncher {
     }
     
     LauncherType launcherType = liveCodingSettings.getLauncherType();    
-    String swfPath = compilerSettings.getOutputPath() + File.separator + compilerSettings.getOutputFilename();    
+    String swfPath = project.getOutputDir().getPath() + File.separator + compilerSettings.getOutputFilename();    
     if (launchTarget == Target.SWF) {
       TrustedLocations.getInstance().addTrustedLocation(swfPath);
     }

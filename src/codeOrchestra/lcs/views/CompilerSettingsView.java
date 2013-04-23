@@ -25,7 +25,6 @@ import codeOrchestra.lcs.flex.FlexSDKNotPresentException;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
-import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.SWTUtil;
 import codeOrchestra.utils.StringUtils;
 
@@ -43,7 +42,6 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private BooleanFieldEditor defaultSDKBooleanEditor;
   private BooleanFieldEditor customSDKBooleanEditor;
   private StringFieldEditor outputFileNameEditor;
-  private DirectoryFieldEditor outputPathEditor;
   private DirectoryFieldEditor flexSDKPathEditor;
   private ComboFieldEditor targetPlayerEditor;
   private BooleanFieldEditor useFrameworkAsRSLEditor;
@@ -144,29 +142,20 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     Composite mainClassComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     mainClassComposite.setLayout(new GridLayout());
     GridData mainClassCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
-    mainClassCompositeGridData.horizontalIndent = 10;
+    mainClassCompositeGridData.horizontalIndent = 3;
     mainClassComposite.setLayoutData(mainClassCompositeGridData);
     mainClassEditor = new FileFieldEditor("mainClass", "Main class:", mainClassComposite);
     mainClassEditor.setFileExtensions(new String[] { "*.as" });
     mainClassEditor.setPreferenceStore(getPreferenceStore());
 
-    // Compiler output group
+    Composite outputFileComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
+    outputFileComposite.setLayout(new GridLayout());
+    GridData outputFileCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+//    outputFileCompositeGridData.horizontalIndent = 5;
+    outputFileComposite.setLayoutData(outputFileCompositeGridData);
 
-    Group compilerOutputSettingsGroup = new Group(generalCompilerSettingsGroup, SWT.SHADOW_ETCHED_IN);
-    compilerOutputSettingsGroup.setLayout(new GridLayout(3, false));
-    GridData compilerOutputSettingsGroupLayoutData = new GridData(SWT.FILL, SWT.BEGINNING, false, false);
-    compilerOutputSettingsGroup.setLayoutData(compilerOutputSettingsGroupLayoutData);
-    compilerOutputSettingsGroup.setText("Compiler Output");
-
-    outputFileNameEditor = new StringFieldEditor("outputFileName", " Output file name:", compilerOutputSettingsGroup);
-    SWTUtil.setEditorIndent(outputFileNameEditor, compilerOutputSettingsGroup, 5, 5);
+    outputFileNameEditor = new StringFieldEditor("outputFileName", " Output file name:", outputFileComposite);
     outputFileNameEditor.setPreferenceStore(getPreferenceStore());
-
-    new Label(compilerOutputSettingsGroup, SWT.NONE); // cell filler
-
-    outputPathEditor = new DirectoryFieldEditorEx("outputPath", " Output Path:", compilerOutputSettingsGroup);
-    SWTUtil.setEditorIndent(outputPathEditor, compilerOutputSettingsGroup, 5, 5);
-    outputPathEditor.setPreferenceStore(getPreferenceStore());
 
     // Target player composite
     // This control has to be saved/restored manually, w/o preferences store
@@ -268,10 +257,12 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
       outputFileNameEditor.setStringValue(LCSProject.getCurrentProject().getName() + ".swf");
     }
 
+    /*
     outputPathEditor.load();
     if (StringUtils.isEmpty(outputPathEditor.getStringValue())) {
       outputPathEditor.setStringValue(LCSProject.getCurrentProject().getOutputDir().getAbsolutePath());
     }
+    */
 
     useFrameworkAsRSLEditor.load();
     nonDefaultLocaleEditor.load();
@@ -288,7 +279,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customSDKBooleanEditor.store();
     customCompilerConfigEditor.store();
     outputFileNameEditor.store();
-    outputPathEditor.store();
+//    outputPathEditor.store();
     targetPlayerEditor.store();
     useFrameworkAsRSLEditor.store();
     nonDefaultLocaleEditor.store();
