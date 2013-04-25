@@ -50,27 +50,33 @@ public class StartSessionAction extends Action {
   @Override
   public void run() {
     setEnabled(false);
-    
-    // Save project
-    final LCSProject currentProject = LCSProject.getCurrentProject();
-    LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
-    currentProject.save();
 
-    // Validate project
-    if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
-      return;
+    try {
+      // Save project
+      final LCSProject currentProject = LCSProject.getCurrentProject();
+      LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
+      currentProject.save();
+
+      // Validate project
+      if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
+        setEnabled(true);
+        return;
+      }
+    } catch (Throwable t) {
+      setEnabled(true);
+      throw new RuntimeException(t);
     }
 
     Job job = new Job("Base Compilation") {
       @Override
       protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask("Base Compilation", 100);
-        
+
         // Build digests
         monitor.setTaskName("Building libs digests");
-        new ProjectDigestHelper(currentProject).build();
+        new ProjectDigestHelper(LCSProject.getCurrentProject()).build();
         monitor.worked(40);
-        
+
         // Restart FCSH
         monitor.setTaskName("Restaring FCSH");
         try {
@@ -82,11 +88,9 @@ public class StartSessionAction extends Action {
           return Status.CANCEL_STATUS;
         }
         try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+          Thread.sleep(1000);
+        } catch (InterruptedException e1) {
+        }
         monitor.worked(10);
 
         // Base compilation
