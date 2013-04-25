@@ -25,7 +25,6 @@ import codeOrchestra.lcs.flex.FlexSDKNotPresentException;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
-import codeOrchestra.utils.SWTUtil;
 import codeOrchestra.utils.StringUtils;
 
 /**

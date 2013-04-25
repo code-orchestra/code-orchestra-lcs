@@ -23,6 +23,7 @@ import codeOrchestra.lcs.sources.SourcesTrackerThread;
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.LocalhostUtil;
 import codeOrchestra.utils.PathUtils;
+import codeOrchestra.utils.StringUtils;
 import codeOrchestra.utils.UnzipUtil;
 
 /**
@@ -143,7 +144,9 @@ public class LiveCodingManager {
             }
 
             for (String deliveryMessage : deliveryMessages) {
-              getCurrentSession().sendLiveCodingMessage(deliveryMessage);
+              if (StringUtils.isNotEmpty(deliveryMessage)) {
+                getCurrentSession().sendLiveCodingMessage(deliveryMessage);
+              }
             }
             deliveryMessages.clear();
 
@@ -236,7 +239,7 @@ public class LiveCodingManager {
     @Override
     public void onSessionStart(LiveCodingSession session) {
       // Clear livecoding output folder
-      File incrementalDir = new File(PathUtils.getIncrementalSWCPath(LCSProject.getCurrentProject()));
+      File incrementalDir = new File(PathUtils.getIncrementalOutputDir(LCSProject.getCurrentProject()));
       if (incrementalDir.exists()) {
         FileUtils.clear(incrementalDir);
       }
