@@ -153,6 +153,7 @@ public class SWCDigest {
     for (Member member : members) {
       Element memberElement = document.createElement("member");
       memberElement.setAttribute("name", member.getName());
+      memberElement.setAttribute("kind", member.getKind().name());
       if (member.isStatic()) {
         memberElement.setAttribute("static", Boolean.TRUE.toString());
       }
@@ -168,6 +169,7 @@ public class SWCDigest {
     }
 
     int traitKind = trait.kind();
+    MemberKind memberKind = MemberKind.byTraitKind(traitKind);
     if (traitKind == AbcTraitKind.Method() || traitKind == AbcTraitKind.Getter() || traitKind == AbcTraitKind.Setter()) {
       // Methods
       String methodName;
@@ -182,8 +184,8 @@ public class SWCDigest {
         methodName = traitSetter.name().name().name;
       } else {
         return;
-      }
-      Member member = new Member(methodName, isStatic);      
+      }      
+      Member member = new Member(methodName, isStatic, memberKind);      
       if (!result.contains(member)) {
         result.add(member);
       }
@@ -198,7 +200,7 @@ public class SWCDigest {
       } else {
         return;
       }
-      Member member = new Member(fieldName, isStatic);
+      Member member = new Member(fieldName, isStatic, memberKind);
       if (!result.contains(member)) {
         result.add(member);
       }

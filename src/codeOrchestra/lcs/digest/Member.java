@@ -4,10 +4,12 @@ public class Member {
 
   private String name;
   private boolean isStatic;
+  private MemberKind kind;
   
-  public Member(String name, boolean isStatic) {
+  public Member(String name, boolean isStatic, MemberKind kind) {
     this.name = name;
     this.isStatic = isStatic;
+    this.kind = kind;
   }
 
   public String getName() {
@@ -18,11 +20,16 @@ public class Member {
     return isStatic;
   }
 
+  public MemberKind getKind() {
+    return kind;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + (isStatic ? 1231 : 1237);
+    result = prime * result + ((kind == null) ? 0 : kind.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }
@@ -38,6 +45,8 @@ public class Member {
     Member other = (Member) obj;
     if (isStatic != other.isStatic)
       return false;
+    if (kind != other.kind)
+      return false;
     if (name == null) {
       if (other.name != null)
         return false;
@@ -45,7 +54,6 @@ public class Member {
       return false;
     return true;
   }
-  
-  
+    
   
 }
