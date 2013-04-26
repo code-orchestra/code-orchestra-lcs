@@ -1,15 +1,50 @@
 package codeOrchestra.lcs.digest;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * @author Alexander Eliseyev
+ */
 public class Member {
 
+  private String type;
   private String name;
   private boolean isStatic;
   private MemberKind kind;
+  private Visibility visibility;
   
-  public Member(String name, boolean isStatic, MemberKind kind) {
+  private List<Parameter> parameters;
+  
+  public Member(String name, String type, boolean isStatic, MemberKind kind, Visibility visibility) {
+    this.type = type;
     this.name = name;
     this.isStatic = isStatic;
     this.kind = kind;
+    this.visibility = visibility;
+  }
+  
+  public void addParameter(String name, String type) {
+    if (parameters == null) {
+      parameters = new ArrayList<Parameter>();
+    }
+    parameters.add(new Parameter(name, type));
+  }
+  
+  public List<Parameter> getParameters() {
+    if (parameters == null) {
+      return Collections.emptyList();
+    }
+    return parameters;
+  }
+  
+  public String getType() {
+    return type;
+  }
+
+  public Visibility getVisibility() {
+    return visibility;
   }
 
   public String getName() {
@@ -54,6 +89,5 @@ public class Member {
       return false;
     return true;
   }
-    
   
 }

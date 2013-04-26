@@ -11,11 +11,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import scala.Option;
+import scala.Symbol;
 import scala.collection.Iterator;
 import scala.collection.immutable.List;
 import apparat.abc.Abc;
 import apparat.abc.AbcClass;
 import apparat.abc.AbcInstance;
+import apparat.abc.AbcMethod;
+import apparat.abc.AbcMethodParameter;
 import apparat.abc.AbcName;
 import apparat.abc.AbcNamespaceKind;
 import apparat.abc.AbcQName;
@@ -28,12 +31,17 @@ import apparat.abc.AbcTraitKind;
 import apparat.abc.AbcTraitMethod;
 import apparat.abc.AbcTraitSetter;
 import apparat.abc.AbcTraitSlot;
+import apparat.abc.AbcTypename;
 import apparat.swf.DoABC;
 import apparat.swf.SwfTag;
 import apparat.utils.TagContainer;
 import codeOrchestra.utils.NameUtil;
+import codeOrchestra.utils.StringUtils;
 import codeOrchestra.utils.XMLUtils;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class SWCDigest {
 
   public static String VECTOR_PACKAGE = "__AS3__.vec";
@@ -153,9 +161,17 @@ public class SWCDigest {
     for (Member member : members) {
       Element memberElement = document.createElement("member");
       memberElement.setAttribute("name", member.getName());
+      memberElement.setAttribute("type", member.getType());
       memberElement.setAttribute("kind", member.getKind().name());
       if (member.isStatic()) {
         memberElement.setAttribute("static", Boolean.TRUE.toString());
+      }
+      memberElement.setAttribute("visibility", member.getVisibility().name());
+      for (Parameter parameter : member.getParameters()) {
+        Element parameterElement = document.createElement("parameter");
+        parameterElement.setAttribute("name", parameter.getName());
+        parameterElement.setAttribute("type", parameter.getType());
+        memberElement.appendChild(parameterElement);
       }
       traitElement.appendChild(memberElement);
     }
@@ -173,40 +189,96 @@ public class SWCDigest {
     if (traitKind == AbcTraitKind.Method() || traitKind == AbcTraitKind.Getter() || traitKind == AbcTraitKind.Setter()) {
       // Methods
       String methodName;
+      AbcMethod methodInfo;
       if (traitKind == AbcTraitKind.Method()) {
         AbcTraitMethod traitMethod = (AbcTraitMethod) trait;
+        methodInfo = traitMethod.method();
         methodName = traitMethod.name().name().name;
       } else if (traitKind == AbcTraitKind.Getter()) {
         AbcTraitGetter traitGetter = (AbcTraitGetter) trait;
+        methodInfo = traitGetter.method();
         methodName = traitGetter.name().name().name;
       } else if (traitKind == AbcTraitKind.Setter()) {
         AbcTraitSetter traitSetter = (AbcTraitSetter) trait;
+        methodInfo = traitSetter.method();
         methodName = traitSetter.name().name().name;
       } else {
         return;
-      }      
-      Member member = new Member(methodName, isStatic, memberKind);      
+      }            
+      Member member = new Member(methodName, getType(methodInfo.returnType()), isStatic, memberKind, getVisibility(trait));
+      int i = 0;
+      for (AbcMethodParameter p : methodInfo.parameters()) {
+        String parameterName = null; 
+        
+        Option<Symbol> nameOption = p.name(); 
+        if (!(nameOption.isEmpty())) { 
+          Symbol nameSymbol = nameOption.get(); 
+          if (nameSymbol != null) { 
+            parameterName = nameSymbol.name; 
+          } 
+        } 
+        if (parameterName == null) { 
+          parameterName = "arg" + (i++); 
+        }
+        
+        member.addParameter(parameterName, getType(p.typeName()));
+      }
       if (!result.contains(member)) {
         result.add(member);
       }
     } else if (traitKind == AbcTraitKind.Const() || traitKind == AbcTraitKind.Slot()) {
       String fieldName;
+      String typeName;
       if (traitKind == AbcTraitKind.Const()) {
         AbcTraitConst traitConst = (AbcTraitConst) trait;
+        typeName = getType(traitConst.typeName());
         fieldName = traitConst.name().name().name;
       } else if (traitKind == AbcTraitKind.Slot()) {
         AbcTraitSlot traitSlot = (AbcTraitSlot) trait;
+        typeName = getType(traitSlot.typeName());
         fieldName = traitSlot.name().name().name;
       } else {
         return;
       }
-      Member member = new Member(fieldName, isStatic, memberKind);
+      Member member = new Member(fieldName, typeName, isStatic, memberKind, getVisibility(trait));
       if (!result.contains(member)) {
         result.add(member);
       }
     }
   }
 
+  private String getType(AbcName typeInfo) {
+    if (typeInfo instanceof AbcTypename) {
+      return "Vector";
+    }
+    
+    String targetPackage = MultiNameUtil.getNamespace(typeInfo); 
+    String targetType = MultiNameUtil.getName(typeInfo);
+    
+    if (StringUtils.isEmpty(targetType) || "*".equals(targetType)) {
+      return "*";
+    }
+    if (StringUtils.isEmpty(targetPackage)) {
+      return targetType;
+    }
+    return NameUtil.longNameFromNamespaceAndShortName(targetPackage, targetType);
+  }
+  
+  private Visibility getVisibility(AbcTrait trait) {
+    int namespaceKind = trait.name().namespace().kind();
+    
+    if (namespaceKind == AbcNamespaceKind.Private()) { 
+      return Visibility.PRIVATE; 
+    } else if (namespaceKind == AbcNamespaceKind.PackageInternal()) { 
+      return Visibility.INTERNAL; 
+    } else if (namespaceKind == AbcNamespaceKind.Protected() || namespaceKind == AbcNamespaceKind.StaticProtected()) { 
+      return Visibility.PROTECTED; 
+    } else if (namespaceKind == AbcNamespaceKind.Namespace()) {      
+      return Visibility.UNKNOWN; 
+    } 
+    return Visibility.PUBLIC;
+  }
+  
   private java.util.List<Member> getMembers(AbcTraitClass traitClass) {
     java.util.List<Member> result = new ArrayList<Member>();
 
@@ -244,3 +316,4 @@ public class SWCDigest {
   }
 
 }
+
