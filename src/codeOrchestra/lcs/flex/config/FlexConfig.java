@@ -49,6 +49,7 @@ public class FlexConfig {
   private static final String VERIFY_DIGESTS_ELEMENT = "verify-digests";
   public static final String WARNINGS_ELEMENT = "warnings";
   public static final String INCREMENTAL_ELEMENT = "incremental";
+  private static final String OMIT_TRACE_STATEMENTS = "omit-trace-statements";
 
   private List<String> customMetadataList = new ArrayList<String>();
   private List<String> sourcePaths = new ArrayList<String>();
@@ -71,6 +72,7 @@ public class FlexConfig {
   private boolean debug;
   private boolean runtimeSharedLibrary;
   private boolean doIncludeFiles;
+  private boolean omitTraceStatements;
   private String linkReportFilePath;
   private String loadExternsFilePath;
 
@@ -134,6 +136,10 @@ public class FlexConfig {
 
   public void setStrict(boolean strict) {
     this.strict = strict;
+  }
+
+  public void setOmitTraceStatements(boolean omitTraceStatements) {
+    this.omitTraceStatements = omitTraceStatements;
   }
 
   public void addCustomMetadata(String metatag) {
@@ -256,6 +262,10 @@ public class FlexConfig {
         incrementalElement.setTextContent(Boolean.valueOf(incremental).toString());
       }
 
+      // 'Omit trace statements' flag
+      Element omitTraceStatementsElement = (Element) compilerElement.appendChild(document.createElement(OMIT_TRACE_STATEMENTS));
+      omitTraceStatementsElement.setTextContent(Boolean.valueOf(omitTraceStatements).toString());
+      
       // Locale
       if (locales != null) {
         Element localeElement = (Element) compilerElement.appendChild(document.createElement(LOCALE_ELEMENT));
