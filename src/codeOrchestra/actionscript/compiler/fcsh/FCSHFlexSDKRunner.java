@@ -35,6 +35,8 @@ public class FCSHFlexSDKRunner extends AbstractFlexSDKRunner {
 
     try {
       switch (compilerKind) {
+      case COMPC:
+        return fcshManager.compc(getCommandArguments());      
       case BASE_MXMLC:
         return fcshManager.baseMXMLC(getCommandArguments());
       case BASE_COMPC:

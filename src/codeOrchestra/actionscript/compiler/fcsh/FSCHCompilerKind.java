@@ -6,7 +6,8 @@ package codeOrchestra.actionScript.compiler.fcsh;
 public enum FSCHCompilerKind {
   BASE_MXMLC("lcmxmlc"),
   BASE_COMPC("lccompc"),
-  INCREMENTAL_COMPC("lcicompc");
+  INCREMENTAL_COMPC("lcicompc"), 
+  COMPC("compc");
   
   private String commandName;
 

@@ -29,24 +29,30 @@ public class LCSMaker {
   private static boolean sentLiveCodingCommand;
   private boolean isIncremental;
   private List<SourceFile> changedFiles;
+  private boolean assetMode;
 
   public LCSMaker(boolean isIncremental) {
     this.isIncremental = isIncremental;
   }
 
   public LCSMaker(List<SourceFile> changedFilesSnapshot) {
+    this(changedFilesSnapshot, false);
+  }
+
+  public LCSMaker(List<SourceFile> changedFilesSnapshot, boolean assetMode) {
     this(true);
     this.changedFiles = changedFilesSnapshot;
+    this.assetMode = assetMode;
   }
 
   public boolean make() throws MakeException {
-    FSCHCompilerKind compilerKind = isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC;
+    FSCHCompilerKind compilerKind = assetMode ? FSCHCompilerKind.COMPC : (isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC);
 
     LCSProject currentProject = LCSProject.getCurrentProject();
     CompilerSettings compilerSettings = currentProject.getCompilerSettings();
 
     // Generate & save Flex config
-    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(currentProject, isIncremental, changedFiles);
+    FlexConfigBuilder flexConfigBuilder = new FlexConfigBuilder(currentProject, isIncremental, changedFiles, assetMode);
     FlexConfig flexConfig = null;
     File flexConfigFile = null;
     try {
@@ -61,25 +67,27 @@ public class LCSMaker {
     }
 
     // Toggle livecoding mode in fcsh
-    if (isIncremental) {
-      if (!sentLiveCodingCommand) {
-        try {
-          FCSHManager fcshManager = FCSHManager.instance();
-          fcshManager.submitCommand(new LivecodingStartCommand());
-        } catch (FCSHException e) {
-          throw new MakeException("Unable to start livecoding mode in FCSH", e);
+    if (!assetMode) {
+      if (isIncremental) {
+        if (!sentLiveCodingCommand) {
+          try {
+            FCSHManager fcshManager = FCSHManager.instance();
+            fcshManager.submitCommand(new LivecodingStartCommand());
+          } catch (FCSHException e) {
+            throw new MakeException("Unable to start livecoding mode in FCSH", e);
+          }
+          sentLiveCodingCommand = true;
         }
-        sentLiveCodingCommand = true;
-      }
-    } else {
-      if (sentLiveCodingCommand) {
-        try {
-          FCSHManager fcshManager = FCSHManager.instance();
-          fcshManager.submitCommand(new LivecodingStopCommand());
-        } catch (FCSHException e) {
-          throw new MakeException("Unable to stop livecoding mode in FCSH", e);
+      } else {
+        if (sentLiveCodingCommand) {
+          try {
+            FCSHManager fcshManager = FCSHManager.instance();
+            fcshManager.submitCommand(new LivecodingStopCommand());
+          } catch (FCSHException e) {
+            throw new MakeException("Unable to stop livecoding mode in FCSH", e);
+          }
+          sentLiveCodingCommand = false;
         }
-        sentLiveCodingCommand = false;
       }
     }
 

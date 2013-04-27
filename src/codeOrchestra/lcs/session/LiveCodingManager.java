@@ -3,7 +3,10 @@ package codeOrchestra.lcs.session;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingAdapter;
@@ -24,6 +27,7 @@ import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.LocalhostUtil;
 import codeOrchestra.utils.PathUtils;
 import codeOrchestra.utils.StringUtils;
+import codeOrchestra.utils.TemplateCopyUtil;
 import codeOrchestra.utils.UnzipUtil;
 
 /**
@@ -168,6 +172,14 @@ public class LiveCodingManager {
   }
 
   private void reportChangedFile(SourceFile sourceFile) {
+    if (sourceFile.isAsset()) {
+       tryUpdateAsset(sourceFile);
+       return;
+    }
+    if (!sourceFile.isCompilable()) {
+      return;
+    }
+    
     synchronized (runMonitor) {
       changedFiles.add(sourceFile);
     }
@@ -175,6 +187,65 @@ public class LiveCodingManager {
     tryRunIncrementalCompilation();
   }
 
+  private synchronized void tryUpdateAsset(SourceFile assetFile) {
+    long timeStamp = System.currentTimeMillis();
+
+    // 0 - clear the incremental sources dir
+    LCSProject currentProject = LCSProject.getCurrentProject();
+    FileUtils.clear(currentProject.getOrCreateIncrementalSourcesDir());
+ 
+    // 1 - copy/modify the source template file
+    String classPostfix = assetFile.getFile().getName().replace(".", "_").replace(" ", "_") + timeStamp;
+    String className = "Asset_" + classPostfix;
+    File templateFile = new File(PathUtils.getTemplaesDir(), "Asset_update_template.as");
+    File targetFile = new File(currentProject.getOrCreateIncrementalSourcesDir(), "codeOrchestra/liveCoding/load/" + className + ".as");
+    Map<String, String> replacements = new HashMap<String, String>();
+    replacements.put("{CLASS_POSTFIX}", classPostfix);
+    replacements.put("{RELATIVE_PATH}", "../../../" + assetFile.getRelativePath());
+    try {
+      TemplateCopyUtil.copy(templateFile, targetFile, replacements);
+    } catch (IOException e) {
+      throw new RuntimeException("Can't copy the asset update source file: " + templateFile.getPath(), e);
+    }
+    
+    // 2 - compile
+    LCSMaker lcsMaker = new LCSMaker(Collections.singletonList(new SourceFile(targetFile, currentProject.getOrCreateIncrementalSourcesDir().getPath())), true);
+    try {
+      if (lcsMaker.make()) {
+        // Extract and copy the artifact
+        try {
+          UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
+        } catch (IOException e) {
+          // TODO: handle this nicely
+          e.printStackTrace();
+        }
+
+        // 3 - copy the incremental swf
+        File extractedSWF = new File(FileUtils.getTempDir(), "library.swf");
+        if (extractedSWF.exists()) {
+          File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, getCurrentSession().getPackageNumber()));
+          try {
+            FileUtils.copyFileChecked(extractedSWF, artifact, false);
+          } catch (IOException e) {
+            // TODO: handle this nicely
+            e.printStackTrace();
+          }
+
+          // 4 - send the message
+          StringBuilder sb = new StringBuilder("asset");
+          sb.append(":").append("codeOrchestra.liveCoding.load.").append(className).append(":");
+          sb.append(assetFile.getRelativePath()).append(":").append(timeStamp);
+          currentSession.sendLiveCodingMessage(sb.toString());
+          
+          getCurrentSession().incrementPackageNumber();
+        }
+      }
+    } catch (MakeException e) {
+      // TODO: handle this nicely
+      e.printStackTrace();
+    }    
+  }
+  
   private void tryRunIncrementalCompilation() {
     synchronized (runMonitor) {
       if (changedFiles.isEmpty()) {

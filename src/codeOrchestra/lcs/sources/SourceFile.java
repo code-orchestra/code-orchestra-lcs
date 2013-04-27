@@ -1,6 +1,8 @@
 package codeOrchestra.lcs.sources;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.NameUtil;
@@ -8,6 +10,30 @@ import codeOrchestra.utils.StringUtils;
 
 public class SourceFile {
 
+  private static final List<String> assetExtensions = new ArrayList<String>() {{
+    String[] extensions = new String[] { "css",
+      "swf",
+      "htm",
+      "html",
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "wav",
+      "mp3",
+      "ogg",
+      "txt",
+      "mpg",
+      "mpeg",
+      "avi",
+      "mp4",
+      "mpeg4",
+      "xml" };
+    for (String extension : extensions) {
+      add(extension);
+    }
+  }};
+  
   public static final String DOT_MXML = ".mxml";
   public static final String DOT_AS = ".as";
   
@@ -25,12 +51,23 @@ public class SourceFile {
         fqName = NameUtil.namespaceFromPath(relativePath.substring(0, relativePath.length() - DOT_AS.length()));
       } else if (relativePath.toLowerCase().endsWith(DOT_MXML)) {
         fqName = NameUtil.namespaceFromPath(relativePath.substring(0, relativePath.length() - DOT_MXML.length()));
-      } else {
-        fqName = NameUtil.namespaceFromPath(relativePath);        
       }
     } else {
       throw new IllegalArgumentException(file.getPath());
     }
+  }
+  
+  public boolean isAsset() {
+    for (String extension : assetExtensions) {
+      if (relativePath.toLowerCase().endsWith("." + extension)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public boolean isCompilable() {
+    return fqName != null;
   }
   
   public File getFile() {

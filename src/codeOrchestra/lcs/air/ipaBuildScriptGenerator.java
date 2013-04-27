@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import codeOrchestra.lcs.project.LCSProject;
-import codeOrchestra.utils.FileUtils;
 import codeOrchestra.utils.PathUtils;
-import codeOrchestra.utils.TemplateProcessor;
+import codeOrchestra.utils.TemplateCopyUtil;
 
 /**
  * @author Alexander Eliseyev
@@ -25,12 +24,12 @@ public class ipaBuildScriptGenerator {
   
   public String generate() throws IOException {
     File targetScriptFile = getSctiptPath(project);
-    FileUtils.copyFileChecked(new File(PathUtils.getTemplaesDir(), "ipaBuild.sh"), targetScriptFile, false);
+    File templateFile = new File(PathUtils.getTemplaesDir(), "ipaBuild.sh");
 
     Map<String, String> replacements = new HashMap<String, String>();
     replacements.put("{FLEX_SDK}", project.getCompilerSettings().getFlexSDKPath());
     replacements.put("{APPNAME}", appName);
-    new TemplateProcessor(targetScriptFile, replacements).process();
+    TemplateCopyUtil.copy(templateFile, targetScriptFile, replacements);
     
     targetScriptFile.setExecutable(true);
     

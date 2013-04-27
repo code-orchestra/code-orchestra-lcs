@@ -9,6 +9,7 @@ import java.util.Map;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandRunnable;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.COMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
@@ -184,6 +185,17 @@ public class FCSHManager {
     */
 
     LivecodingIncrementalCOMPCCommand compcCommand = new LivecodingIncrementalCOMPCCommand(this, arguments);
+    LOG.info("Compiling: " + compcCommand.getCommand());
+
+    submitCommand(compcCommand);
+
+    return compcCommand.getCompileResult();
+  }
+  
+  public CompilationResult compc(List<String> commandArguments) throws FCSHException {
+    assureFCSHIsActive();
+
+    COMPCCommand compcCommand = new COMPCCommand(this, commandArguments);
     LOG.info("Compiling: " + compcCommand.getCommand());
 
     submitCommand(compcCommand);

@@ -24,11 +24,13 @@ public class FlexConfigBuilder {
   private final LCSProject project;
   private final boolean incrementalCompilation;
   private final List<SourceFile> changedFiles;
+  private final boolean assetsUpdateMode;
 
-  public FlexConfigBuilder(LCSProject project, boolean incrementalCompilation, List<SourceFile> changedFiles) {
+  public FlexConfigBuilder(LCSProject project, boolean incrementalCompilation, List<SourceFile> changedFiles, boolean skipClear) {
     this.project = project;
     this.incrementalCompilation = incrementalCompilation;
     this.changedFiles = changedFiles;
+    this.assetsUpdateMode = skipClear;
   }
 
   public FlexConfig build() throws LCSException {
@@ -65,14 +67,16 @@ public class FlexConfigBuilder {
       
       // Changed source files must be copied to a separate folder and added to the config
       File incrementalSourcesDir = project.getOrCreateIncrementalSourcesDir();
-      FileUtils.clear(incrementalSourcesDir);
-      for (SourceFile sourceFile : changedFiles) {
-        try {
-          FileUtils.copyFileChecked(sourceFile.getFile(), new File(incrementalSourcesDir, sourceFile.getRelativePath()), false);
-        } catch (IOException e) {
-          throw new LCSException("Can't copy changed source file to 'incremental' dir", e);
+      if (!assetsUpdateMode) {
+        FileUtils.clear(incrementalSourcesDir);
+        for (SourceFile sourceFile : changedFiles) {
+          try {
+            FileUtils.copyFileChecked(sourceFile.getFile(), new File(incrementalSourcesDir, sourceFile.getRelativePath()), false);
+          } catch (IOException e) {
+            throw new LCSException("Can't copy changed source file to 'incremental' dir", e);
+          }
         }
-      }
+      }      
       // Copy assets to the incremental source dir
       for (String sourcePath : project.getSourceSettings().getSourcePaths()) {
         File sourceDir = new File(sourcePath);
