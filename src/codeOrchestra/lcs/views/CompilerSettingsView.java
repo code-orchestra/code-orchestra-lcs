@@ -144,7 +144,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     mainClassCompositeGridData.horizontalIndent = 3;
     mainClassComposite.setLayoutData(mainClassCompositeGridData);
     mainClassEditor = new FileFieldEditor("mainClass", "Main class:", mainClassComposite);
-    mainClassEditor.setFileExtensions(new String[] { "*.as" });
+    mainClassEditor.setFileExtensions(new String[] { "*.as", "*.mxml" });
     mainClassEditor.setPreferenceStore(getPreferenceStore());
 
     Composite outputFileComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
