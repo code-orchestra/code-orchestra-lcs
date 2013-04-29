@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 
 import codeOrchestra.actionScript.compiler.fcsh.FSCHCompilerKind;
 import codeOrchestra.http.CodeOrchestraHttpServer;
@@ -36,7 +38,7 @@ public class LCSProject {
   private String name;
   private String path;
 
-  private PreferenceStore preferenceStore;
+  private ProjectPreferenceStore preferenceStore;
 
   private CompilerSettings compilerSettings;
   private SourceSettings sourceSettings;
@@ -44,10 +46,10 @@ public class LCSProject {
 
   private LCSProject(String descriptorFile) {
     this.path = descriptorFile;
-    
+  
     RecentProjects.addRecentProject(descriptorFile);
 
-    preferenceStore = new PreferenceStore(descriptorFile);
+    preferenceStore = new ProjectPreferenceStore(descriptorFile);
     try {
       preferenceStore.load();
     } catch (IOException e) {
@@ -126,7 +128,7 @@ public class LCSProject {
     return path;
   }
 
-  public PreferenceStore getPreferenceStore() {
+  public ProjectPreferenceStore getPreferenceStore() {
     return preferenceStore;
   }
 
