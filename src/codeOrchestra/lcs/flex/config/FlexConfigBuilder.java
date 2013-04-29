@@ -47,6 +47,10 @@ public class FlexConfigBuilder {
       // Provided libraries (language extensions) sources
       flexConfig.addSourcePath(PathUtils.getActionScriptLibsSourcePath());
     }
+    
+    // Always strict = false 
+    // TODO: make configurable
+    flexConfig.setStrict(false);
 
     // Incremental settings
     if (incrementalCompilation) {
@@ -59,8 +63,7 @@ public class FlexConfigBuilder {
       // incremental module
       flexConfig.setLoadExternsFilePath(getLinkReportFilePath());
 
-      // CO-4487 - compiler shenanigans for incremental mode
-      flexConfig.setStrict(false);
+      // CO-4487 - compiler shenanigans for incremental mode      
       flexConfig.setVerifyDigests(false);
       flexConfig.setWarnings(false);
       flexConfig.setIncremental(true);
