@@ -24,15 +24,15 @@ package codeOrchestra.actionScript.liveCoding.util{
     public static function setMaxRecursionCount ( value : int ) : void {
       maxRecursionCount = value;
     }
-    public static function checkRecursion ( method : String ) : void {
+    public static function checkRecursion ( reqursionId : String ) : void {
       initCounter();
-      if ( method != lastMethod ) {
-        lastMethod = method;
+      if ( reqursionId != lastMethod ) {
+        lastMethod = reqursionId;
         recursionCount = 0;
       }
       recursionCount++;
       if ( recursionCount > maxRecursionCount ) {
-        throw new Error("Infinite recursion: " + method + ".");
+        throw new Error("Infinite recursion: " + reqursionId + ".");
       }
     }
     public static function checkLoop ( loop : String ) : void {
