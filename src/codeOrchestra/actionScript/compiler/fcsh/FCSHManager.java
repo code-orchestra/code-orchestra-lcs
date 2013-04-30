@@ -10,6 +10,8 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandRunnable;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.COMPCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CPUProfilingStartCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CPUProfilingStopCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
@@ -23,8 +25,6 @@ import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
 
 /**
- * TODO: destroyProcess on app close
- * 
  * @author Alexander Eliseyev
  */
 public class FCSHManager {
@@ -208,6 +208,22 @@ public class FCSHManager {
 
     LivecodingCachesDeleteCommand deleteCachesCommand = new LivecodingCachesDeleteCommand();
     submitCommand(deleteCachesCommand);
+  }
+  
+  public void startCPUProfiling() throws FCSHException {
+    if (!FCSHLauncher.PROFILING_ON) {
+      return;
+    }
+    assureFCSHIsActive();
+    submitCommand(new CPUProfilingStartCommand());
+  }
+  
+  public void stopCPUProfiling() throws FCSHException {
+    if (!FCSHLauncher.PROFILING_ON) {
+      return;
+    }
+    assureFCSHIsActive();
+    submitCommand(new CPUProfilingStopCommand());
   }
   
   public void clear() throws FCSHException {

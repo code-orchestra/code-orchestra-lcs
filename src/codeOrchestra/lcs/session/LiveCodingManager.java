@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
+import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingAdapter;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingListener;
@@ -126,9 +128,25 @@ public class LiveCodingManager {
         changedFiles.clear();
       }
 
+      try {
+        FCSHManager.instance().startCPUProfiling();
+      } catch (FCSHException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+      
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
       try {
         if (lcsMaker.make()) {
+
+          try {
+            FCSHManager.instance().stopCPUProfiling();
+          } catch (FCSHException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }
+
+          
           // Extract and copy the artifact
           try {
             UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());

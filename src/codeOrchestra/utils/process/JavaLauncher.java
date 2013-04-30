@@ -81,7 +81,7 @@ public class JavaLauncher {
     } catch (ExecutionException e) {
       throw new RuntimeException("Can't locate a Java executable");
     }
-    String classPathString = StringUtils.join(myClassPath, File.pathSeparator);
+    String classPathString = protect(StringUtils.join(myClassPath, File.pathSeparator));
 
     ProcessHandlerBuilder processHandlerBuilder = new ProcessHandlerBuilder().append(java).append(myVirtualMachineParameter).appendKey("classpath", classPathString).append(myProgramParameter);
     return processHandlerBuilder.getCommandLine();

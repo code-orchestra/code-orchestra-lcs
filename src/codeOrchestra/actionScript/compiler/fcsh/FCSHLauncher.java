@@ -1,7 +1,6 @@
 package codeOrchestra.actionScript.compiler.fcsh;
 
 import java.io.File;
-import java.util.Collections;
 
 import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
@@ -17,10 +16,10 @@ import com.intellij.openapi.util.SystemInfo;
  */
 public class FCSHLauncher extends JavaLauncher {
 
-  private static final boolean PROFILING_ON = System.getProperty("colt.profiling.on") != null;
+  public static final boolean PROFILING_ON = System.getProperty("colt.profiling.on") != null;
   
   public FCSHLauncher() {
-    super(PROFILING_ON ? Collections.singletonList(FlexSDKSettings.getDefaultFlexSDKPath() + "/liblc/yjp-controller-api-redist.jar") : null);
+    super(null);
 
     StringBuilder programParameters = new StringBuilder();
 
