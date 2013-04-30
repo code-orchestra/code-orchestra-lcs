@@ -34,6 +34,9 @@ package codeOrchestra.actionScript.liveCoding.util{
       return instance;
     }
     public function putMethod ( id : String, method : Class, methodInfo : MethodChange  = null ) : void {
+      /*
+          LogUtil.log("trace", "3443854535863065531", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["putMethod", "arguments=[" + ["id=", id, ", method=", method, ", methodInfo=", methodInfo].join("") + "]"].join(", "));
+       */
       if ( methodInfo ) {
         if ( !(CollectionsLanguageUtil.containsKey(methods, id)) ) {
           addMethod(methodInfo.className, methodInfo.methodName, methodInfo.isStatic, methodInfo.type, methodInfo.changeClassName, id);
