@@ -1,6 +1,7 @@
 package codeOrchestra.actionScript.compiler.fcsh;
 
 import java.io.File;
+import java.util.Collections;
 
 import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
@@ -16,8 +17,10 @@ import com.intellij.openapi.util.SystemInfo;
  */
 public class FCSHLauncher extends JavaLauncher {
 
+  private static final boolean PROFILING_ON = System.getProperty("colt.profiling.on") != null;
+  
   public FCSHLauncher() {
-    super(null);
+    super(PROFILING_ON ? Collections.singletonList(FlexSDKSettings.getDefaultFlexSDKPath() + "/liblc/yjp-controller-api-redist.jar") : null);
 
     StringBuilder programParameters = new StringBuilder();
 
@@ -54,12 +57,18 @@ public class FCSHLauncher extends JavaLauncher {
     programParameters.append(protect(FlexSDKSettings.getDefaultFlexSDKPath() + "/liblc/fcsh.jar"));
 
     setProgramParameter(programParameters.toString());
-
+    
     StringBuilder jvmParameters = new StringBuilder();
     jvmParameters.append("-Xmx384m -Dsun.io.useCanonCaches=false ");
+
+    
+    if (PROFILING_ON) {
+       jvmParameters.append("-agentpath:libyjpagent.jnilib ");
+    }
     if (!SystemInfo.isWindows) {
       jvmParameters.append("-d32 ");
     }
+    setWorkingDirectory(new File(FlexSDKSettings.getDefaultFlexSDKPath(), "bin"));
     setVirtualMachineParameter(jvmParameters.toString());
   }
 
