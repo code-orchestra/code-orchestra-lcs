@@ -64,10 +64,6 @@ public class FCSHManager {
       return;
     }
 
-    if (true) {
-      throw new FCSHException("Test");
-    }
-    
     clearTargets();
 
     FCSHLauncher fcshLauncher = new FCSHLauncher();
