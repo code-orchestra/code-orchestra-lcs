@@ -111,10 +111,10 @@ public class FlexConfigBuilder {
     }
 
     // Link report file generation
-    if (!incrementalCompilation) {
-      flexConfig.setLinkReportFilePath(getLinkReportFilePath());
-    } else {
+    if (incrementalCompilation) {
       flexConfig.setLinkReportFilePath(null);      
+    } else {
+      flexConfig.setLinkReportFilePath(getLinkReportFilePath());
     }
 
     // Output path
