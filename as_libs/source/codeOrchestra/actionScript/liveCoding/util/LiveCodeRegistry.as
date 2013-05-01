@@ -124,19 +124,22 @@ package codeOrchestra.actionScript.liveCoding.util{
           var methods : Array  = [];
           var assets : Array  = [];
           for each ( var token : String in tokens ) {
-            if ( /^method:/.test(token) ) {
-              var methodChange : MethodChange  = new MethodChange(token);
-              methodChange.event = new MethodUpdateEvent(methodChange.className, methodChange.methodName);
-              (CollectionsLanguageUtil.add(methods, methodChange, MethodChange) as MethodChange);
-              loadPackage(packageId, methods, assets);
-            } else if ( /^asset:/.test(token) ) {
-              var assetChange : AssetChange  = new AssetChange(token);
-              assetChange.event = new AssetUpdateEvent(assetChange.source);
-              (CollectionsLanguageUtil.add(assets, assetChange, AssetChange) as AssetChange);
-              loadPackage(packageId, methods, assets);
-            } else if ( /^base-url:/.test(token) ) {
+            if ( /^base-url:/.test(token) ) {
               baseUrl = /^(base-url:)(.+)$/.exec(token)[2];
+            }else{
+              if ( /^method:/.test(token) ) {
+                var methodChange : MethodChange  = new MethodChange(token);
+                methodChange.event = new MethodUpdateEvent(methodChange.className, methodChange.methodName);
+                (CollectionsLanguageUtil.add(methods, methodChange, MethodChange) as MethodChange);
+              } else if ( /^asset:/.test(token) ) {
+                var assetChange : AssetChange  = new AssetChange(token);
+                assetChange.event = new AssetUpdateEvent(assetChange.source);
+                (CollectionsLanguageUtil.add(assets, assetChange, AssetChange) as AssetChange);
+              }
             }
+          }
+          if ( (methods.length > 0) || (assets.length > 0) ) {
+            loadPackage(packageId, methods, assets);
           }
         }
       }
