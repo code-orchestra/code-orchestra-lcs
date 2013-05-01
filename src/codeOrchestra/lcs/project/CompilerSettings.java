@@ -15,6 +15,10 @@ public class CompilerSettings extends ProjectSettingsPart {
 	  return getPreferenceStore().getString("flexSDKPath");
 	}
 	
+	public boolean useStrictMode() {
+	  return getPreferenceStore().getBoolean("compilerStrict");	  
+	}
+	
 	public boolean useDefaultSDKConfiguration() {
 	  return getPreferenceStore().getBoolean("useDefaultSDKConfiguration");
 	}

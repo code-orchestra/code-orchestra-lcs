@@ -49,8 +49,7 @@ public class FlexConfigBuilder {
     }
     
     // Always strict = false 
-    // TODO: make configurable
-    flexConfig.setStrict(false);
+    flexConfig.setStrict(compilerSettings.useStrictMode());
 
     // Incremental settings
     if (incrementalCompilation) {
