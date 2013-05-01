@@ -22,6 +22,7 @@ import codeOrchestra.lcs.actions.GoToLogsFolderAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
+import codeOrchestra.lcs.actions.StartPlusAction;
 import codeOrchestra.lcs.actions.StartSessionAction;
 import codeOrchestra.lcs.menu.RecentProjectMenuItem;
 import codeOrchestra.lcs.status.SessionStatusLineItem;
@@ -42,6 +43,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private NewProjectAction newProjectAction;
     private ClearCachesAction clearCachesAction;
     private GoToLogsFolderAction goToLogsFolderAction;
+    private StartPlusAction startPlusAction;
     
     private StartSessionAction startSessionAction;
 
@@ -74,6 +76,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         clearCachesAction = new ClearCachesAction();
         register(clearCachesAction);
+        
+        startPlusAction = new StartPlusAction();
+        register(startPlusAction);
         
         goToLogsFolderAction = new GoToLogsFolderAction();
         register(goToLogsFolderAction);
@@ -119,6 +124,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 
         IToolBarManager runToolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         runToolbar.add(startSessionAction);
+        runToolbar.add(startPlusAction);
         coolBar.add(new ToolBarContributionItem(runToolbar, "run"));
     }
     

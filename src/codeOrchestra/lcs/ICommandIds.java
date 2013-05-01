@@ -11,6 +11,7 @@ public interface ICommandIds {
     public static final String CMD_SAVE = "LCS.save";
     
     public static final String CMD_START_SESSION = "LCS.sessionStart";
+    public static final String CMD_START_PLUS = "LCS.startPlus";
     
     public static final String CMD_CLEAR_CACHES = "LCS.clearCaches";
     

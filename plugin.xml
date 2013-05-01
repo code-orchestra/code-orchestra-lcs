@@ -100,6 +100,11 @@
             id="LCS.goToLogsFolder"
             name="Browse to Logs Folder">
       </command>
+      <command
+            description="Run build artifact again"
+            id="LCS.startPlus"
+            name="Run again">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
