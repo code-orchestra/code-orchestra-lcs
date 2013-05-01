@@ -184,6 +184,11 @@ public class MessagesView extends ViewPart {
   public void addMessage(final String source, final Level level, final String message, final long timestamp, final String stackTrace) {
     Display.getDefault().asyncExec(new Runnable() {
       public void run() {
+        // COLT-114
+        if (sourceButton.isDisposed()) {
+          return;
+        }
+        
         Message newMessage = new Message(source, level, message, timestamp, stackTrace);
         TableItem tableItem = newMessage.createTableItem(table, sourceButton.getSelection());
         if (stackTrace != null) {
