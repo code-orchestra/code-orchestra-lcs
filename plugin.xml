@@ -95,6 +95,11 @@
             id="LCS.clearCaches"
             name="Clear Caches">
       </command>
+      <command
+            description="Browse to Logs Folder"
+            id="LCS.goToLogsFolder"
+            name="Browse to Logs Folder">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">

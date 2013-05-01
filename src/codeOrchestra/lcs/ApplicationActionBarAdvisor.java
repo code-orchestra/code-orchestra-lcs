@@ -18,6 +18,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
 import codeOrchestra.lcs.actions.ClearCachesAction;
+import codeOrchestra.lcs.actions.GoToLogsFolderAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
@@ -40,6 +41,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private SaveProjectAction saveProjectAction;    
     private NewProjectAction newProjectAction;
     private ClearCachesAction clearCachesAction;
+    private GoToLogsFolderAction goToLogsFolderAction;
     
     private StartSessionAction startSessionAction;
 
@@ -73,6 +75,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         clearCachesAction = new ClearCachesAction();
         register(clearCachesAction);
         
+        goToLogsFolderAction = new GoToLogsFolderAction();
+        register(goToLogsFolderAction);
+        
         startSessionAction = new StartSessionAction(window);
         register(startSessionAction);
     }
@@ -95,6 +100,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(saveProjectAction);
         fileMenu.add(new Separator());        
+        fileMenu.add(goToLogsFolderAction);
         fileMenu.add(clearCachesAction);
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);

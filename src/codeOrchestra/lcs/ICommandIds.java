@@ -14,4 +14,6 @@ public interface ICommandIds {
     
     public static final String CMD_CLEAR_CACHES = "LCS.clearCaches";
     
+    public static final String CMD_GO_TO_LOGS_FOLDER = "LCS.goToLogsFolder";
+    
 }

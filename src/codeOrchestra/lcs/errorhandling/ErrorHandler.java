@@ -25,8 +25,6 @@ public class ErrorHandler {
         
         ErrorDialog.openError(Display.getCurrent().getActiveShell(), "Error", message, status);    
         Platform.getLog(Activator.getDefault().getBundle()).log(status);
-        
-        System.out.println(Platform.getLogFileLocation());
       }
     });
     
