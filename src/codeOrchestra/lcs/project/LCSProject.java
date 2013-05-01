@@ -93,7 +93,7 @@ public class LCSProject {
   }
 
   public File getOutputDir() {
-    return new File(getBaseDir(), "lcs_output");
+    return new File(getBaseDir(), "colt_output");
   }
   
   public File getDigestsDir() {

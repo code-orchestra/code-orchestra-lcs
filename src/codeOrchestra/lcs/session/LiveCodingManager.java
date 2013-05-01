@@ -16,6 +16,7 @@ import codeOrchestra.actionScript.liveCoding.listener.LiveCodingListener;
 import codeOrchestra.actionScript.liveCoding.run.LiveCodingSessionImpl;
 import codeOrchestra.actionScript.modulemaker.MakeException;
 import codeOrchestra.http.CodeOrchestraHttpServer;
+import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.Target;
@@ -109,7 +110,7 @@ public class LiveCodingManager {
       try {
         return lcsMaker.make();
       } catch (MakeException e) {
-        // TODO: handle this nicely
+        ErrorHandler.handle(e, "Error while running base compilation");
       }
     } finally {
       compilationInProgress = false;
@@ -131,8 +132,7 @@ public class LiveCodingManager {
       try {
         FCSHManager.instance().startCPUProfiling();
       } catch (FCSHException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
+        ErrorHandler.handle(e1, "Error while starting profling");
       }
       
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
@@ -142,17 +142,14 @@ public class LiveCodingManager {
           try {
             FCSHManager.instance().stopCPUProfiling();
           } catch (FCSHException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            ErrorHandler.handle(e1, "Error while stopping profling");
           }
-
           
           // Extract and copy the artifact
           try {
             UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
           } catch (IOException e) {
-            // TODO: handle this nicely
-            e.printStackTrace();
+            ErrorHandler.handle(e, "Error while unzipping incremental compilation artifact");
           }
 
           File extractedSWF = new File(FileUtils.getTempDir(), "library.swf");
@@ -161,8 +158,7 @@ public class LiveCodingManager {
             try {
               FileUtils.copyFileChecked(extractedSWF, artifact, false);
             } catch (IOException e) {
-              // TODO: handle this nicely
-              e.printStackTrace();
+              ErrorHandler.handle(e, "Error while copying incremental compilation artifact");
             }
 
             for (String deliveryMessage : deliveryMessages) {
@@ -173,16 +169,12 @@ public class LiveCodingManager {
             deliveryMessages.clear();
 
             getCurrentSession().incrementPackageNumber();
-
-            // TODO:!
-            // LiveCodingManager.instance().fireArtifactEvent(artifact.getPath());
           }
 
           tryRunIncrementalCompilation();
         }
       } catch (MakeException e) {
-        // TODO: handle this nicely
-        e.printStackTrace();
+        ErrorHandler.handle(e, "Error while compiling");
       }
     } finally {
       compilationInProgress = false;
@@ -234,8 +226,7 @@ public class LiveCodingManager {
         try {
           UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
         } catch (IOException e) {
-          // TODO: handle this nicely
-          e.printStackTrace();
+          ErrorHandler.handle(e, "Error while unzipping incremental compilation artifact (asset)");
         }
 
         // 3 - copy the incremental swf
@@ -245,8 +236,7 @@ public class LiveCodingManager {
           try {
             FileUtils.copyFileChecked(extractedSWF, artifact, false);
           } catch (IOException e) {
-            // TODO: handle this nicely
-            e.printStackTrace();
+            ErrorHandler.handle(e, "Error while copying incremental compilation artifact (asset)");
           }
 
           // 4 - send the message
@@ -259,8 +249,7 @@ public class LiveCodingManager {
         }
       }
     } catch (MakeException e) {
-      // TODO: handle this nicely
-      e.printStackTrace();
+      ErrorHandler.handle(e, "Error while compiling");
     }    
   }
   

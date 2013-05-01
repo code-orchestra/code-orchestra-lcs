@@ -15,6 +15,7 @@ import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.digest.ProjectDigestHelper;
+import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveLauncher;
 import codeOrchestra.lcs.run.LoggingProcessListener;
@@ -79,8 +80,7 @@ public class StartSessionAction extends Action {
         try {
           FCSHManager.instance().restart();
         } catch (FCSHException e) {
-          // TODO: handle nicely
-          e.printStackTrace();
+          ErrorHandler.handle(e, "Error while starting fcsh");
           setEnabled(true);
           return Status.CANCEL_STATUS;
         }
@@ -103,7 +103,7 @@ public class StartSessionAction extends Action {
             processHandler.addProcessListener(new LoggingProcessListener("Launch"));
             processHandler.startNotify();
           } catch (ExecutionException e) {
-            // TODO: handle nicely
+            ErrorHandler.handle(e, "Error while launching build artifact");
             e.printStackTrace();
             setEnabled(true);
           }

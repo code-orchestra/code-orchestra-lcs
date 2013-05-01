@@ -64,6 +64,10 @@ public class FCSHManager {
       return;
     }
 
+    if (true) {
+      throw new FCSHException("Test");
+    }
+    
     clearTargets();
 
     FCSHLauncher fcshLauncher = new FCSHLauncher();
@@ -75,6 +79,8 @@ public class FCSHManager {
       throw new FCSHException("Error while trying to start the fcsh process", e);
     }
 
+    LOG.info(fcshLauncher.getCommandString());
+    
     fcshProcessHandler = new FCSHProcessHandler(fcshProcess, fcshLauncher.getCommandString());
     fcshProcessHandler.startNotify();
 
