@@ -42,6 +42,10 @@ public class LiveCodingSettings extends ProjectSettingsPart {
 	  return Target.parse(getPreferenceStore().getString("target"));
 	}
 	
+	public boolean clearMessagesOnSessionStart() {
+	  return getPreferenceStore().getBoolean("clearMessages");	  
+	}
+	
 	public boolean startSessionPaused() {
 	  return getPreferenceStore().getBoolean("startSessionPaused");
 	}

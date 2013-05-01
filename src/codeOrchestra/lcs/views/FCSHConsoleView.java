@@ -45,6 +45,10 @@ public class FCSHConsoleView extends ViewPart {
   public void append(final String text, String key) {
     Display.getDefault().asyncExec(new Runnable() {
       public void run() {
+        if (consoleTextArea.isDisposed()) {
+          return;
+        }
+        
         consoleTextArea.append(text.trim());        
         consoleTextArea.append("\n");        
         consoleTextArea.setSelection(consoleTextArea.getText().length());

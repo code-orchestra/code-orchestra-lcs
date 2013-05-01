@@ -134,6 +134,7 @@ public class LCSProject {
 
   private void initDefaultValues() {
     preferenceStore.setValue("useDefaultSDKConfiguration", true);
+    preferenceStore.setValue("clearMessages", true);
   }
   
   public void save() {

@@ -75,5 +75,16 @@ public class MessagesManager {
   public MessagesView getViewByName(String name) {
     return messageScopeViews.get(name);
   }
+  
+  public void clear() {
+    Display.getDefault().asyncExec(new Runnable() {
+      @Override
+      public void run() {
+        for (MessagesView messageView : messageScopeViews.values()) {
+          messageView.clear();
+        }        
+      }
+    });    
+  }
 
 }

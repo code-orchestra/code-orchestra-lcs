@@ -16,6 +16,7 @@ import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.digest.ProjectDigestHelper;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
+import codeOrchestra.lcs.messages.MessagesManager;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveLauncher;
 import codeOrchestra.lcs.run.LoggingProcessListener;
@@ -48,7 +49,7 @@ public class StartSessionAction extends Action {
   @Override
   public void run() {
     setEnabled(false);
-
+    
     try {
       // Save project
       final LCSProject currentProject = LCSProject.getCurrentProject();
@@ -59,6 +60,11 @@ public class StartSessionAction extends Action {
       if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
         setEnabled(true);
         return;
+      }
+      
+      // Clear messages
+      if (currentProject.getLiveCodingSettings().clearMessagesOnSessionStart()) {
+        MessagesManager.getInstance().clear();
       }
     } catch (Throwable t) {
       setEnabled(true);

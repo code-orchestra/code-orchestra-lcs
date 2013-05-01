@@ -61,6 +61,8 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 
   private IWorkbenchWindow window;
 
+  private BooleanFieldEditor clearMessagesEditor;
+
   @Override
   public void init(IViewSite site) throws PartInitException {
     super.init(site);
@@ -246,6 +248,13 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     maxLoopIterationsEditor = new StringFieldEditor("maxLoopIterations", "", 7, maxLoopIterationsComposite);
     maxLoopIterationsEditor.setPreferenceStore(getPreferenceStore());
 
+    Composite clearMessagesComposite = new Composite(parent, SWT.NONE);
+    clearMessagesEditor = new BooleanFieldEditor("clearMessages", "Clear messages log on session start", clearMessagesComposite);
+    clearMessagesEditor.setPreferenceStore(getPreferenceStore());
+    GridData clearMessagesLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
+    clearMessagesLayoutData.horizontalSpan = 2;
+    clearMessagesComposite.setLayoutData(clearMessagesLayoutData);
+    
     reset();
     updateUI();
   }
@@ -279,6 +288,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     startSessionPausedEditor.load();
     makeGettersSettersLiveEditor.load();
     maxLoopIterationsEditor.load();
+    clearMessagesEditor.load();
 
     if (StringUtils.isEmpty(maxLoopIterationsEditor.getStringValue())) {
       maxLoopIterationsEditor.setStringValue("10000");
@@ -306,6 +316,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     startSessionPausedEditor.store();
     makeGettersSettersLiveEditor.store();
     maxLoopIterationsEditor.store();
+    clearMessagesEditor.store();
   }
 
   private void updateUI() {

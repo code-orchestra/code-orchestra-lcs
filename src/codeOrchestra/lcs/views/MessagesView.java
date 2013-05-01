@@ -159,7 +159,7 @@ public class MessagesView extends ViewPart {
     final MenuItem moveBeforeItem = new MenuItem(tablePopup, SWT.NONE);
     moveBeforeItem.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(final SelectionEvent e) {
-        table.removeAll();
+        clear();
       }
     });
     moveBeforeItem.setText("Clear");
@@ -195,12 +195,22 @@ public class MessagesView extends ViewPart {
           tableItem.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
         }
         messages.put(newMessage, tableItem);
+        
+        try {
+          table.showItem(tableItem);
+        } catch (Throwable t) {
+          // ignore
+        }
       }
     });
   }
 
   @Override
   public void setFocus() {
+  }
+
+  public void clear() {
+    table.removeAll();
   }
 
 }
