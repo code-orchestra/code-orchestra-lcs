@@ -1,5 +1,7 @@
 package codeOrchestra.actionScript.liveCoding.run;
 
+import java.util.Map;
+
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
 import codeOrchestra.lcs.socket.SocketWriter;
 
@@ -12,10 +14,10 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   private SocketWriter socketWriter;
   private String broadcastId;  
   private String clientId;
-  private String clientInfo;
+  private Map<String, String> clientInfo;
   private int packageId = 1;
 
-  public LiveCodingSessionImpl(String broadcastId, String clientId, String clientInfo, long startTimestamp, SocketWriter socketWriter) {
+  public LiveCodingSessionImpl(String broadcastId, String clientId, Map<String, String> clientInfo, long startTimestamp, SocketWriter socketWriter) {
     this.clientId = clientId;
     this.broadcastId = broadcastId;
     this.clientInfo = clientInfo;
@@ -47,8 +49,18 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   }
 
   @Override
-  public String getClientInfo() {
+  public Map<String, String> getClientInfo() {
     return clientInfo;
+  }
+  
+  @Override
+  public String getBasicClientInfo() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(clientInfo.get("OS")).append(" ");
+    sb.append(clientInfo.get("ARCH")).append(" ");
+    sb.append(clientInfo.get("L")).append(" ");
+    sb.append(clientInfo.get("R"));
+    return sb.toString();
   }
   
   @Override
@@ -91,5 +103,6 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
       return false;
     return true;
   }
+
   
 }

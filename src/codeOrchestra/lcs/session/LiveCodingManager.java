@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
@@ -17,6 +18,7 @@ import codeOrchestra.actionScript.liveCoding.run.LiveCodingSessionImpl;
 import codeOrchestra.actionScript.modulemaker.MakeException;
 import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
+import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.Target;
@@ -38,6 +40,8 @@ import codeOrchestra.utils.UnzipUtil;
  */
 public class LiveCodingManager {
 
+  private static final Logger LOG = Logger.getLogger(LiveCodingManager.class);
+  
   private static final LiveCodingManager instance = new LiveCodingManager();
 
   public static LiveCodingManager instance() {
@@ -50,7 +54,7 @@ public class LiveCodingManager {
 
   private List<LiveCodingListener> liveCodingListeners = new ArrayList<LiveCodingListener>();
 
-  private LiveCodingSession currentSession;
+  private Map<String, LiveCodingSession> currentSessions = new HashMap<String, LiveCodingSession>();
 
   private LiveCodingListener finisherThreadLiveCodingListener = new SessionHandleListener();
 
@@ -60,6 +64,8 @@ public class LiveCodingManager {
   private List<String> deliveryMessages = new ArrayList<String>();
   private Map<String, List<String>> deliveryMessagesHistory = new HashMap<String, List<String>>();
 
+  private int packageId = 1;
+  
   private SourcesTrackerCallback sourcesTrackerCallback = new SourcesTrackerCallback() {
     @Override
     public void sourceFileChanged(SourceFile sourceFile) {
@@ -74,7 +80,7 @@ public class LiveCodingManager {
   public void addDeliveryMessage(String deliveryMessage) {
     deliveryMessages.add(deliveryMessage);
     
-    String broadcastId = currentSession.getBroadcastId();
+    String broadcastId = currentSessions.get(0).getBroadcastId();
     List<String> history = deliveryMessagesHistory.get(broadcastId);
     if (history == null) {
       history = new ArrayList<String>();
@@ -95,18 +101,18 @@ public class LiveCodingManager {
     }
   }
 
-  private void fireSessionStart() {
+  private void fireSessionStart(LiveCodingSession session) {
     synchronized (listenerMonitor) {
       for (LiveCodingListener listener : liveCodingListeners) {
-        listener.onSessionStart(currentSession);
+        listener.onSessionStart(session);
       }
     }
   }
 
-  private void fireSessionEnd() {
+  private void fireSessionEnd(LiveCodingSession session) {
     synchronized (listenerMonitor) {
       for (LiveCodingListener listener : liveCodingListeners) {
-        listener.onSessionEnd(currentSession);
+        listener.onSessionEnd(session);
       }
     }
   }
@@ -163,7 +169,7 @@ public class LiveCodingManager {
 
           File extractedSWF = new File(FileUtils.getTempDir(), "library.swf");
           if (extractedSWF.exists()) {
-            File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, getCurrentSession().getPackageNumber()));
+            File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, packageId));
             try {
               FileUtils.copyFileChecked(extractedSWF, artifact, false);
             } catch (IOException e) {
@@ -172,12 +178,12 @@ public class LiveCodingManager {
 
             for (String deliveryMessage : deliveryMessages) {
               if (StringUtils.isNotEmpty(deliveryMessage)) {
-                getCurrentSession().sendLiveCodingMessage(deliveryMessage);
+                sendLiveCodingMessage(deliveryMessage);
               }
             }
             deliveryMessages.clear();
 
-            getCurrentSession().incrementPackageNumber();
+            incrementPackageNumber();
           }
 
           tryRunIncrementalCompilation();
@@ -188,6 +194,10 @@ public class LiveCodingManager {
     } finally {
       compilationInProgress = false;
     }
+  }
+
+  private void incrementPackageNumber() {
+    packageId++;    
   }
 
   private void reportChangedFile(SourceFile sourceFile) {
@@ -241,7 +251,7 @@ public class LiveCodingManager {
         // 3 - copy the incremental swf
         File extractedSWF = new File(FileUtils.getTempDir(), "library.swf");
         if (extractedSWF.exists()) {
-          File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, getCurrentSession().getPackageNumber()));
+          File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, packageId));
           try {
             FileUtils.copyFileChecked(extractedSWF, artifact, false);
           } catch (IOException e) {
@@ -252,13 +262,19 @@ public class LiveCodingManager {
           StringBuilder sb = new StringBuilder("asset");
           sb.append(":").append("codeOrchestra.liveCoding.load.").append(className).append(":");
           sb.append(assetFile.getRelativePath()).append(":").append(timeStamp);
-          currentSession.sendLiveCodingMessage(sb.toString());
+          sendLiveCodingMessage(sb.toString());
           
-          getCurrentSession().incrementPackageNumber();
+          incrementPackageNumber();
         }
       }
     } catch (MakeException e) {
       ErrorHandler.handle(e, "Error while compiling");
+    }    
+  }
+
+  public void sendLiveCodingMessage(String message) {
+    for (LiveCodingSession liveCodingSession : currentSessions.values()) {
+      liveCodingSession.sendLiveCodingMessage(message);      
     }    
   }
   
@@ -274,17 +290,20 @@ public class LiveCodingManager {
     }
   }
 
-  public LiveCodingSession getCurrentSession() {
-    return currentSession;
+  public void startSession(String broadcastId, String clientId, Map<String, String> clientInfo, ClientSocketHandler clientSocketHandler) {
+    boolean noSessionsWereActive = currentSessions.isEmpty();
+    
+    LiveCodingSession newSession = new LiveCodingSessionImpl(broadcastId, clientId, clientInfo, System.currentTimeMillis(), clientSocketHandler);
+    currentSessions.put(clientId, newSession);
+
+    if (noSessionsWereActive) {    
+      startListeningForSourcesChanges();      
+    }
+
+    fireSessionStart(newSession);
   }
 
-  public void startSession(String broadcastId, String clientId, String clientInfo, ClientSocketHandler clientSocketHandler) {
-    stopSession();
-
-    // Save session object 
-    currentSession = new LiveCodingSessionImpl(broadcastId, clientId, clientInfo, System.currentTimeMillis(), clientSocketHandler);
-
-    // Start listening for source changes
+  public void startListeningForSourcesChanges() {
     List<File> sourceDirs = new ArrayList<File>();
     LCSProject currentProject = LCSProject.getCurrentProject();
     for (String sourceDirPath : currentProject.getSourceSettings().getSourcePaths()) {
@@ -293,26 +312,20 @@ public class LiveCodingManager {
         sourceDirs.add(sourceDir);
       }
     }
-
+ 
     sourceTrackerThread = new SourcesTrackerThread(sourcesTrackerCallback, sourceDirs);
     sourceTrackerThread.start();
-
-    fireSessionStart();
   }
-
-  public void sendBaseUrl(LiveCodingSession session, String baseUrl) {
-    session.sendLiveCodingMessage("base-url:" + baseUrl);
-  }
-
-  public void stopSession() {
-    currentSession = null;
-
+  
+  public void stopListeningForSourcesChanges() {
     if (sourceTrackerThread != null) {
       sourceTrackerThread.stopRightThere();
       sourceTrackerThread = null;
     }
+  }
 
-    fireSessionEnd();
+  public void sendBaseUrl(LiveCodingSession session, String baseUrl) {
+    session.sendLiveCodingMessage("base-url:" + baseUrl);
   }
   
   public String getWebOutputAddress() {
@@ -327,36 +340,57 @@ public class LiveCodingManager {
       }
     }
   }
+  
+  private void stopSession(LiveCodingSession liveCodingSession) {
+    currentSessions.remove(liveCodingSession.getClientId());
+    
+    if (currentSessions.isEmpty()) {
+      stopListeningForSourcesChanges();
+    }
+    
+    fireSessionEnd(liveCodingSession);
+  }
 
+  public Set<String> getCurrentSessionsCliensIds() {
+    return currentSessions.keySet();
+  }
+  
   private class SessionHandleListener extends LiveCodingAdapter {
 
-    private SessionFinisher sessionFinisherThread;
+    // clientId -> session finisher thread
+    private Map<String, SessionFinisher> sessionFinisherThreads = new HashMap<String, LiveCodingManager.SessionFinisher>();
 
     @Override
     public void onSessionStart(LiveCodingSession session) {
-      // Clear livecoding output folder
-      File incrementalDir = new File(PathUtils.getIncrementalOutputDir(LCSProject.getCurrentProject()));
-      if (incrementalDir.exists()) {
-        FileUtils.clear(incrementalDir);
-      }
-
-      if (sessionFinisherThread != null) {
+      String clientId = session.getClientId();
+      
+      SessionFinisher sessionFinisherThread = getSessionFinisherThread(clientId);      
+      if (sessionFinisherThread == null) {
+        sessionFinisherThread = new SessionFinisher(clientId);
+        sessionFinisherThreads.put(clientId, sessionFinisherThread);
+      } else {
         sessionFinisherThread.stopRightThere();
-      }
-      sessionFinisherThread = new SessionFinisher();
+      }      
       sessionFinisherThread.start();
 
       if (LCSProject.getCurrentProject().getLiveCodingSettings().getLaunchTarget() != Target.SWF) {
         sendBaseUrl(session, getWebOutputAddress());
       }
+      
       restoreSessionState(session);
+      
+      LOG.info("Started a session: broadcast ID: " + session.getBroadcastId() + ", cliend ID: " + clientId + ", client: " + session.getBasicClientInfo());
+    }
+
+    public SessionFinisher getSessionFinisherThread(String clientId) {
+      return sessionFinisherThreads.get(clientId);
     }
 
     @Override
     public void onSessionEnd(LiveCodingSession session) {
+      SessionFinisher sessionFinisherThread = getSessionFinisherThread(session.getClientId());
       if (sessionFinisherThread != null) {
         sessionFinisherThread.stopRightThere();
-        sessionFinisherThread = null;
       }
     }
   }
@@ -370,9 +404,11 @@ public class LiveCodingManager {
 
     private long lastPing;
     private long lastPong;
+    
+    private final String clientId;
 
-    public SessionFinisher() {
-      PongTraceCommand.getInstance().addPongListener(this);
+    public SessionFinisher(String clientId) {
+      this.clientId = clientId;      
     }
 
     public void stopRightThere() {
@@ -380,10 +416,13 @@ public class LiveCodingManager {
       PongTraceCommand.getInstance().removePongListener(this);
     }
 
+    private LiveCodingSession getLiveCodingSession() {
+      return currentSessions.get(clientId);
+    }
+    
     private void ping() {
-      assert currentSession != null;
       lastPing = System.currentTimeMillis();
-      currentSession.getSocketWriter().writeToSocket(PING_COMMAND);
+      getLiveCodingSession().getSocketWriter().writeToSocket(PING_COMMAND);
     }
 
     @Override
@@ -393,8 +432,11 @@ public class LiveCodingManager {
 
     @Override
     public void run() {
+      this.stop = false;
+      PongTraceCommand.getInstance().addPongListener(this);
+      
       while (!stop) {
-        if (currentSession == null) {
+        if (getLiveCodingSession() == null) {
           continue;
         }
 
@@ -407,7 +449,7 @@ public class LiveCodingManager {
         }
 
         if (lastPong < lastPing) {
-          stopSession();
+          stopSession(getLiveCodingSession());
         }
       }
     }

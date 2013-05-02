@@ -1,5 +1,7 @@
 package codeOrchestra.actionScript.liveCoding;
 
+import java.util.Map;
+
 import codeOrchestra.lcs.socket.SocketWriter;
 
 /**
@@ -11,7 +13,9 @@ public interface LiveCodingSession {
   
   String getBroadcastId();
   
-  String getClientInfo();
+  String getBasicClientInfo();
+  
+  Map<String, String> getClientInfo();
 
   long getStartTimestamp();
 

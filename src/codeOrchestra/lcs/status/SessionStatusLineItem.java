@@ -1,5 +1,7 @@
 package codeOrchestra.lcs.status;
 
+import java.util.Set;
+
 import org.eclipse.swt.widgets.Display;
 
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
@@ -29,16 +31,16 @@ public class SessionStatusLineItem extends StatusLineContributionItemEx {
   }
 
   private void updateStatus() {
-    final LiveCodingSession currentSession = LiveCodingManager.instance().getCurrentSession();
+    final Set<String> sessionClientIds = LiveCodingManager.instance().getCurrentSessionsCliensIds();
     
     Display.getDefault().asyncExec(new Runnable() {
       @Override
       public void run() {
-        if (currentSession == null) {
-          setText("No active livecoding session");
+        if (sessionClientIds.isEmpty()) {
+          setText("No active livecoding sessions");
           setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/live-coding-disable.png").createImage());
         } else {
-          setText("Active livecoding session: #" + currentSession.getClientId());
+          setText("Active livecoding sessions: " + sessionClientIds.size());
           setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/live-coding-enable.png").createImage());      
         }    
       }
