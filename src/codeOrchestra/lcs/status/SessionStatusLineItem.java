@@ -38,7 +38,7 @@ public class SessionStatusLineItem extends StatusLineContributionItemEx {
           setText("No active livecoding session");
           setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/live-coding-disable.png").createImage());
         } else {
-          setText("Active livecoding session: #" + currentSession.getSessionId());
+          setText("Active livecoding session: #" + currentSession.getClientId());
           setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/live-coding-enable.png").createImage());      
         }    
       }

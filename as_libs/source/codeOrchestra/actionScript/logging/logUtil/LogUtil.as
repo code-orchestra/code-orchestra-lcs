@@ -8,6 +8,7 @@ package codeOrchestra.actionScript.logging.logUtil{
   import flash.utils.setTimeout;
   import flash.utils.getTimer;
   import flash.utils.Dictionary;
+  import flash.system.Capabilities;
   
   public class LogUtil {
     private static var socket : XMLSocket ;
@@ -20,7 +21,7 @@ package codeOrchestra.actionScript.logging.logUtil{
     private static var tabsString : String  = "" ;
     private static var listenersMap : Dictionary  = new Dictionary() ;
     private static var pondDisable : Boolean ;
-    private static var classCreatedTimestamp : String  = (new Date()).getTime() + "" ;
+    private static var clientId : String  = (new Date()).getTime() + "" ;
     public function LogUtil(  ){
       
     }
@@ -122,7 +123,7 @@ package codeOrchestra.actionScript.logging.logUtil{
       XML.ignoreWhitespace = false;
       
       var xmlMessage : XML  =       
-      <logMessage>
+      <logMessage clientId={clientId}  >
         <source nodeId={nodeId} modelReference={modelId}  />
         <message severity={severity}  >{"|" + tabsString + messageString}</message>
         <root>{rootFQN}</root>
@@ -133,7 +134,7 @@ package codeOrchestra.actionScript.logging.logUtil{
 ;
       
       for each ( var scope : Array in scopes ) {
-        xmlMessage.scopes[0].appendChild(<scope id={scope[0] + "_" + classCreatedTimestamp}  >{scope[0]}</scope>)
+        xmlMessage.scopes[0].appendChild(<scope id={scope[0] + "_" + clientId}  >{scope[0]}</scope>)
       }
       
       messages.push(xmlMessage);
@@ -166,8 +167,8 @@ package codeOrchestra.actionScript.logging.logUtil{
     public static function selectNode ( modelId : String, nodeId : String ) : void {
       log("select-node", nodeId, modelId, "", "");
     }
-    public static function startLiveCodingSession ( sessionId : String ) : void {
-      log("start-live-coding-session", "", "", "", sessionId);
+    public static function startLiveCodingSession ( broadcastId : String ) : void {
+      log("start-live-coding-session", "", "", "", broadcastId + ":" + clientId + ":" + Capabilities.serverString);
     }
     public static function setSocketAddress ( host : String, port : int  = 6125 ) : void {
       LogUtil.host = host;

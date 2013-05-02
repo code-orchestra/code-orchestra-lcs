@@ -7,7 +7,11 @@ import codeOrchestra.lcs.socket.SocketWriter;
  */
 public interface LiveCodingSession {
 
-  String getSessionId();
+  String getClientId();
+  
+  String getBroadcastId();
+  
+  String getClientInfo();
 
   long getStartTimestamp();
 

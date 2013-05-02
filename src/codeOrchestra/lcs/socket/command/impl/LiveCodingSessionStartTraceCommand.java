@@ -23,7 +23,24 @@ public class LiveCodingSessionStartTraceCommand implements TraceCommand {
 
     // RF-1307 - we do this check in case no project is open, but a live-coding-compiled swf is run
     if (liveCodingManager != null) {
-      liveCodingManager.startSession(message.getMessage(), clientSocketHandler);
+      String sessionId = message.getMessage();
+      String[] sessionIdSplit = sessionId.split(":");
+      
+      String broadcastId = sessionIdSplit[0];
+      String clientId = sessionIdSplit[1];
+      String clientInfo = sessionIdSplit[2];
+      
+      liveCodingManager.startSession(broadcastId, clientId, clientInfo, clientSocketHandler);
     }
   }
+  
+  public static void main(String[] args) {
+    String sessionId = "aaa:bbb:asdasdasdasdasd";
+    String[] sessionIdSplit = sessionId.split(":");
+    
+    System.out.println(sessionIdSplit[0]);
+    System.out.println(sessionIdSplit[1]);
+    System.out.println(sessionIdSplit[2]);
+  }
+  
 }

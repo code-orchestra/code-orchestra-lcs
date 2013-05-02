@@ -58,6 +58,7 @@ public class LiveCodingManager {
   private Object listenerMonitor = new Object();
 
   private List<String> deliveryMessages = new ArrayList<String>();
+  private Map<String, List<String>> deliveryMessagesHistory = new HashMap<String, List<String>>();
 
   private SourcesTrackerCallback sourcesTrackerCallback = new SourcesTrackerCallback() {
     @Override
@@ -72,6 +73,14 @@ public class LiveCodingManager {
 
   public void addDeliveryMessage(String deliveryMessage) {
     deliveryMessages.add(deliveryMessage);
+    
+    String broadcastId = currentSession.getBroadcastId();
+    List<String> history = deliveryMessagesHistory.get(broadcastId);
+    if (history == null) {
+      history = new ArrayList<String>();
+      deliveryMessagesHistory.put(broadcastId, history);
+    }
+    history.add(deliveryMessage);
   }
 
   public void addListener(LiveCodingListener listener) {
@@ -269,11 +278,11 @@ public class LiveCodingManager {
     return currentSession;
   }
 
-  public void startSession(String sessionId, ClientSocketHandler clientSocketHandler) {
+  public void startSession(String broadcastId, String clientId, String clientInfo, ClientSocketHandler clientSocketHandler) {
     stopSession();
 
-    // Save session object
-    currentSession = new LiveCodingSessionImpl(sessionId, System.currentTimeMillis(), clientSocketHandler);
+    // Save session object 
+    currentSession = new LiveCodingSessionImpl(broadcastId, clientId, clientInfo, System.currentTimeMillis(), clientSocketHandler);
 
     // Start listening for source changes
     List<File> sourceDirs = new ArrayList<File>();
@@ -291,8 +300,8 @@ public class LiveCodingManager {
     fireSessionStart();
   }
 
-  public void sendBaseUrl(String baseUrl) {
-    currentSession.sendLiveCodingMessage("base-url:" + baseUrl);
+  public void sendBaseUrl(LiveCodingSession session, String baseUrl) {
+    session.sendLiveCodingMessage("base-url:" + baseUrl);
   }
 
   public void stopSession() {
@@ -308,6 +317,15 @@ public class LiveCodingManager {
   
   public String getWebOutputAddress() {
     return "http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output";
+  }
+  
+  private void restoreSessionState(LiveCodingSession session) {
+    List<String> history = deliveryMessagesHistory.get(session.getBroadcastId());
+    if (history != null) {
+      for (String deliveryMessage : history) {
+        session.sendLiveCodingMessage(deliveryMessage);
+      }
+    }
   }
 
   private class SessionHandleListener extends LiveCodingAdapter {
@@ -329,8 +347,9 @@ public class LiveCodingManager {
       sessionFinisherThread.start();
 
       if (LCSProject.getCurrentProject().getLiveCodingSettings().getLaunchTarget() != Target.SWF) {
-        sendBaseUrl(getWebOutputAddress());
+        sendBaseUrl(session, getWebOutputAddress());
       }
+      restoreSessionState(session);
     }
 
     @Override

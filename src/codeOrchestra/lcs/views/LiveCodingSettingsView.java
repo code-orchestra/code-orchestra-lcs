@@ -215,7 +215,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     Composite liveMethodsComposite = new Composite(liveSettingsGroup, SWT.NONE);
     String[][] liveMethodOptions = new String[][] { { "Annotated with [Live]", "annotated" }, { "All the methods", "all" } };
     liveMethodsGroupEditor = new RadioGroupFieldEditor("liveMethods", "", 1, liveMethodOptions, liveMethodsComposite);
-    liveMethodsGroupEditor.setEnabled(false, liveMethodsComposite); // TODO: uncomment for Release version
+//    liveMethodsGroupEditor.setEnabled(false, liveMethodsComposite); // TODO: uncomment for Release version
     liveMethodsGroupEditor.setPreferenceStore(getPreferenceStore());
 
     Label startSessionPausedLabel = new Label(liveSettingsGroup, SWT.NONE);
