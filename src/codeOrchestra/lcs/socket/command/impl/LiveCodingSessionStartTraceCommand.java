@@ -34,13 +34,4 @@ public class LiveCodingSessionStartTraceCommand implements TraceCommand {
     }
   }
   
-  public static void main(String[] args) {
-    String sessionId = "aaa:bbb:asdasdasdasdasd";
-    String[] sessionIdSplit = sessionId.split(":");
-    
-    System.out.println(sessionIdSplit[0]);
-    System.out.println(sessionIdSplit[1]);
-    System.out.println(sessionIdSplit[2]);
-  }
-  
 }
