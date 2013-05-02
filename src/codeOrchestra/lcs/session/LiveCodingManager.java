@@ -77,6 +77,10 @@ public class LiveCodingManager {
     addListener(finisherThreadLiveCodingListener);
   }
 
+  public LiveCodingSession getSession(String clientId) {
+    return currentSessions.get(clientId);
+  }
+  
   public void addDeliveryMessageToHistory(String broadcastId, String deliveryMessage) {
     List<String> history = deliveryMessagesHistory.get(broadcastId);
     if (history == null) {

@@ -21,8 +21,6 @@ public final class LoggerMessageEncoder {
 
   private static final String LOG_MESSAGE_ELEMENT = "logMessage";
   private static final String SOURCE_ELEMENT = "source";
-  private static final String NODE_ID_ATTRIBUTE = "nodeId";
-  private static final String MODEL_REFERENCE_ATTRIBUTE = "modelReference";
   private static final String MESSAGE_ELEMENT = "message";
   private static final String SEVERITY_ATTRIBUTE = "severity";
   private static final String ROOT_ELEMENT = "root";
@@ -90,9 +88,6 @@ public final class LoggerMessageEncoder {
     if (sourceNodeList == null || sourceNodeList.getLength() != 1) {
       throw new RuntimeException("Exactly one " + SOURCE_ELEMENT + " subelement expected");
     }
-    Element sourceElement = (Element) sourceNodeList.item(0);
-    String nodeIdStr = sourceElement.getAttribute(NODE_ID_ATTRIBUTE);
-    String modelReferenceStr = sourceElement.getAttribute(MODEL_REFERENCE_ATTRIBUTE);
 
     // Scopes
     List<LoggerScopeWrapper> scopesList = new ArrayList<LoggerScopeWrapper>();

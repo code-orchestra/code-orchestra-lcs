@@ -11,11 +11,14 @@ import codeOrchestra.lcs.socket.SocketWriter;
  */
 public class LiveCodingSessionImpl implements LiveCodingSession {
 
+  private static int counter = 1;
+  
   private long startTimestamp;
   private SocketWriter socketWriter;
   private String broadcastId;  
   private String clientId;
   private Map<String, String> clientInfo;
+  private int sessionNumber;
 
   public LiveCodingSessionImpl(String broadcastId, String clientId, Map<String, String> clientInfo, long startTimestamp, SocketWriter socketWriter) {
     this.clientId = clientId;
@@ -23,6 +26,12 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
     this.clientInfo = clientInfo;
     this.startTimestamp = startTimestamp;
     this.socketWriter = socketWriter;
+    this.sessionNumber = counter++;
+  }
+  
+  @Override
+  public int getSessionNumber() {
+    return sessionNumber;
   }
 
   public SocketWriter getSocketWriter() {

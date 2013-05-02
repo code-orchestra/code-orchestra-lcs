@@ -5,10 +5,12 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import codeOrchestra.lcs.messages.MessagesManager;
+import codeOrchestra.lcs.session.SessionViewManager;
 import codeOrchestra.lcs.views.CompilerSettingsView;
 import codeOrchestra.lcs.views.FCSHConsoleView;
 import codeOrchestra.lcs.views.LiveCodingSettingsView;
 import codeOrchestra.lcs.views.MessagesView;
+import codeOrchestra.lcs.views.SessionView;
 import codeOrchestra.lcs.views.SourceSettingsView;
 
 /**
@@ -32,6 +34,8 @@ public class Perspective implements IPerspectiveFactory {
 		liveCodingFolder.addPlaceholder(SourceSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(LiveCodingSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(CompilerSettingsView.ID + ":*");
+		liveCodingFolder.addPlaceholder(SessionView.ID + ":*");
+		SessionViewManager.init(layout, liveCodingFolder);
 
 		layout.getViewLayout(SourceSettingsView.ID).setCloseable(false);
 		layout.getViewLayout(LiveCodingSettingsView.ID).setCloseable(false);

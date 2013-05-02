@@ -25,4 +25,6 @@ public interface LiveCodingSession {
   
   void sendMessageAsIs(String message);
   
+  int getSessionNumber();
+  
 }
