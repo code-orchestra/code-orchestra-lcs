@@ -77,16 +77,17 @@ public class LiveCodingManager {
     addListener(finisherThreadLiveCodingListener);
   }
 
-  public void addDeliveryMessage(String deliveryMessage) {
-    deliveryMessages.add(deliveryMessage);
-    
-    String broadcastId = currentSessions.get(0).getBroadcastId();
+  public void addDeliveryMessageToHistory(String broadcastId, String deliveryMessage) {
     List<String> history = deliveryMessagesHistory.get(broadcastId);
     if (history == null) {
       history = new ArrayList<String>();
       deliveryMessagesHistory.put(broadcastId, history);
     }
     history.add(deliveryMessage);
+  }
+  
+  public void addDeliveryMessage(String deliveryMessage) {
+    deliveryMessages.add(deliveryMessage);
   }
 
   public void addListener(LiveCodingListener listener) {
@@ -274,7 +275,7 @@ public class LiveCodingManager {
 
   public void sendLiveCodingMessage(String message) {
     for (LiveCodingSession liveCodingSession : currentSessions.values()) {
-      liveCodingSession.sendLiveCodingMessage(message);      
+      liveCodingSession.sendLiveCodingMessage(message, String.valueOf(packageId), true);      
     }    
   }
   
@@ -297,6 +298,7 @@ public class LiveCodingManager {
     currentSessions.put(clientId, newSession);
 
     if (noSessionsWereActive) {    
+      resetPackageId();
       startListeningForSourcesChanges();      
     }
 
@@ -325,7 +327,7 @@ public class LiveCodingManager {
   }
 
   public void sendBaseUrl(LiveCodingSession session, String baseUrl) {
-    session.sendLiveCodingMessage("base-url:" + baseUrl);
+    session.sendLiveCodingMessage("base-url:" + baseUrl, String.valueOf(packageId), false);
   }
   
   public String getWebOutputAddress() {
@@ -336,7 +338,7 @@ public class LiveCodingManager {
     List<String> history = deliveryMessagesHistory.get(session.getBroadcastId());
     if (history != null) {
       for (String deliveryMessage : history) {
-        session.sendLiveCodingMessage(deliveryMessage);
+        session.sendMessageAsIs(deliveryMessage);
       }
     }
   }
@@ -345,10 +347,15 @@ public class LiveCodingManager {
     currentSessions.remove(liveCodingSession.getClientId());
     
     if (currentSessions.isEmpty()) {
+      resetPackageId();
       stopListeningForSourcesChanges();
     }
     
     fireSessionEnd(liveCodingSession);
+  }
+
+  public void resetPackageId() {
+    packageId = 1;
   }
 
   public Set<String> getCurrentSessionsCliensIds() {
@@ -397,7 +404,7 @@ public class LiveCodingManager {
 
   private class SessionFinisher extends Thread implements PongListener {
 
-    public static final int PING_TIMEOUT = 20000;
+    public static final int PING_TIMEOUT = 3000;
     public static final String PING_COMMAND = "ping";
 
     private boolean stop;

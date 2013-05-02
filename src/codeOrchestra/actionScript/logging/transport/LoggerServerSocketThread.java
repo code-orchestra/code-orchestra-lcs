@@ -14,6 +14,6 @@ public class LoggerServerSocketThread extends ServerSocketThread {
   }
 
   protected boolean allowMultipleConnections() {
-    return false;
+    return true;
   }
 }

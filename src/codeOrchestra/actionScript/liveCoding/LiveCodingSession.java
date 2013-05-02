@@ -21,10 +21,8 @@ public interface LiveCodingSession {
 
   SocketWriter getSocketWriter();
   
-  int getPackageNumber();
+  void sendLiveCodingMessage(String message, String packageId, boolean addToHistory);
   
-  void incrementPackageNumber();
-  
-  void sendLiveCodingMessage(String message);
+  void sendMessageAsIs(String message);
   
 }

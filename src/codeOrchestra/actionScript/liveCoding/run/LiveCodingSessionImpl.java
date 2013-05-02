@@ -3,6 +3,7 @@ package codeOrchestra.actionScript.liveCoding.run;
 import java.util.Map;
 
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
+import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.lcs.socket.SocketWriter;
 
 /**
@@ -15,7 +16,6 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   private String broadcastId;  
   private String clientId;
   private Map<String, String> clientInfo;
-  private int packageId = 1;
 
   public LiveCodingSessionImpl(String broadcastId, String clientId, Map<String, String> clientInfo, long startTimestamp, SocketWriter socketWriter) {
     this.clientId = clientId;
@@ -39,11 +39,6 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
   }
 
   @Override
-  public int getPackageNumber() {
-    return packageId;
-  }
-
-  @Override
   public String getClientId() {
     return clientId;
   }
@@ -62,15 +57,18 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
     sb.append(clientInfo.get("R"));
     return sb.toString();
   }
-  
-  @Override
-  public void incrementPackageNumber() {
-    packageId++;    
-  }
 
   @Override
-  public synchronized void sendLiveCodingMessage(String message) {
-    socketWriter.writeToSocket("livecoding::" + message + "::" + broadcastId + "::" + packageId);
+  public synchronized void sendLiveCodingMessage(String message, String packageId, boolean addToHistory) {
+    String wrappedMessage = "livecoding::" + message + "::" + broadcastId + "::" + packageId;
+    socketWriter.writeToSocket(wrappedMessage);
+    
+    LiveCodingManager.instance().addDeliveryMessageToHistory(broadcastId, wrappedMessage);
+  }
+  
+  @Override
+  public synchronized void sendMessageAsIs(String message) {
+    socketWriter.writeToSocket(message);
   }
 
   @Override
