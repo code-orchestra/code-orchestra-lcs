@@ -35,20 +35,21 @@ import codeOrchestra.lcs.logging.Level;
 public class MessagesTable {
 
   private Table table;
-  
+
   private Button sourceButton;
   private Button infoButton;
+  private Button debugButton;
   private Button warningButton;
-  
-  private Map<Message, TableItem> messages = new LinkedHashMap<Message, TableItem>();
+
+  private Map<Message, Object> messages = new LinkedHashMap<Message, Object>();
 
   private final Composite parent;
-  
+
   public MessagesTable(Composite parent, int style) {
     this.parent = parent;
     create();
   }
-  
+
   private void create() {
     // Controls
     Composite buttonsComposite = new Composite(parent, SWT.NONE);
@@ -82,6 +83,17 @@ public class MessagesTable {
       }
     });
 
+    debugButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
+    debugButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+    debugButton.setSelection(false);
+    debugButton.setImage(Level.DEBUG.getImage());
+    debugButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        refresh();
+      }
+    });
+
     sourceButton = new Button(buttonsComposite, SWT.TOGGLE | SWT.FLAT);
     sourceButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
     sourceButton.setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/messages/source.png").createImage());
@@ -90,8 +102,8 @@ public class MessagesTable {
       @Override
       public void widgetSelected(SelectionEvent e) {
         for (TableItem tableItem : table.getItems()) {
-          for (Entry<Message, TableItem> entry : messages.entrySet()) {
-            if (entry.getValue() == tableItem) {
+          for (Entry<Message, Object> entry : messages.entrySet()) {
+            if (entry.getValue() instanceof TableItem && entry.getValue() == tableItem) {
               Message message = entry.getKey();
               tableItem.setText(message.getMessageText(sourceButton.getSelection()));
               break;
@@ -150,15 +162,15 @@ public class MessagesTable {
     });
     moveBeforeItem.setText("Clear");
   }
-  
-  private void refresh() {
+
+  public void refresh() {
     table.clearAll();
     table.setItemCount(0);
 
     List<Message> messagesList = new ArrayList<Message>(messages.keySet());
 
     for (Message message : messagesList) {
-      if ((message.getLevel() == Level.INFO && !infoButton.getSelection()) || (message.getLevel() == Level.WARN && !warningButton.getSelection())) {
+      if (mustHideMessage(message)) {
         continue;
       }
 
@@ -166,11 +178,16 @@ public class MessagesTable {
       messages.put(message, tableItem);
     }
   }
-  
+
+  public boolean mustHideMessage(Message message) {
+    return (message.getLevel() == Level.INFO && !infoButton.getSelection()) || (message.getLevel() == Level.WARN && !warningButton.getSelection())
+        || (message.getLevel() == Level.DEBUG && !debugButton.getSelection());
+  }
+
   public void clear() {
     table.removeAll();
   }
-  
+
   public void addMessage(final String source, final Level level, final String message, final long timestamp, final String stackTrace) {
     Display.getDefault().asyncExec(new Runnable() {
       public void run() {
@@ -178,21 +195,24 @@ public class MessagesTable {
         if (sourceButton.isDisposed()) {
           return;
         }
-        
+
         Message newMessage = new Message(source, level, message, timestamp, stackTrace);
-        TableItem tableItem = newMessage.createTableItem(table, sourceButton.getSelection());
-        if (stackTrace != null) {
-          tableItem.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-        }
-        messages.put(newMessage, tableItem);
-        
-        try {
-          table.showItem(tableItem);
-        } catch (Throwable t) {
-          // ignore
+        if (mustHideMessage(newMessage)) {
+          messages.put(newMessage, new Object());
+        } else {
+          TableItem tableItem = newMessage.createTableItem(table, sourceButton.getSelection());
+          if (stackTrace != null) {
+            tableItem.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+          }
+          messages.put(newMessage, tableItem);
+          try {
+            table.showItem(tableItem);
+          } catch (Throwable t) {
+            // ignore
+          }
         }
       }
     });
   }
-  
+
 }

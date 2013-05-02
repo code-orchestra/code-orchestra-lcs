@@ -89,19 +89,16 @@ package codeOrchestra.actionScript.liveCoding.util{
         };
       }
     }
-    public function updateMethod ( method : Class ) : void {
-      
-    }
     public function initSession ( sessionId : String ) : void {
       this.sessionId = sessionId;
       LogUtil.addEventListener(DataEvent.DATA,       function ( e : DataEvent ) : void {
         incomingData(e.data, sessionId);
       });
       
-      LogUtil.startLiveCodingSession(sessionId);
+      var clientId : String  = LogUtil.startLiveCodingSession(sessionId);
       {
         LogUtil.enterLogScope("livecoding", "9091078376703266005");
-        LogUtil.log("trace", "4144789857666611501", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["Start Live Code Session: " + sessionId].join(", "));
+        LogUtil.log("trace", "4144789857666611501", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["Start Live Code Session: " + clientId].join(", "));
         LogUtil.exitLogScope("livecoding", "9091078376703266005");
       }
     }
@@ -151,7 +148,14 @@ package codeOrchestra.actionScript.liveCoding.util{
       if ( baseUrl ) {
         url = baseUrl + "/" + url;
       }
-      LogUtil.log("trace", "855151659769229414", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["try to load package from \"" + url + "\""].join(", "));
+      /*
+      {
+        LogUtil.enterLogScope("livecoding", "5542952190228936455");
+        LogUtil.log("trace", "855151659769229414", "r:5865b376-a157-43b1-b990-70db6dbffde6(codeOrchestra.actionScript.liveCoding.util)", "codeOrchestra.actionScript.liveCoding.util.LiveCodeRegistry", "" + ["try to load package from \"" + url + "\""].join(", "));
+        LogUtil.exitLogScope("livecoding", "5542952190228936455");
+      }
+       */
+      
       loader.addEventListener(Event.COMPLETE,       function ( e : Event ) : void {
         var classLoader : Loader  = new Loader();
         var loaderContext : LoaderContext  = new LoaderContext(false, ApplicationDomain.currentDomain);

@@ -8,7 +8,9 @@ import java.util.Map;
 import codeOrchestra.actionScript.logging.model.MessageScope;
 import codeOrchestra.actionScript.logging.scope.MessageScopeRegistry;
 import codeOrchestra.lcs.messages.MessagesManager;
+import codeOrchestra.lcs.session.SessionViewManager;
 import codeOrchestra.lcs.views.MessagesView;
+import codeOrchestra.lcs.views.SessionView;
 
 /**
  * @author Alexander Eliseyev
@@ -85,17 +87,46 @@ public final class Logger {
   }
   
   private void log(String message, List<String> scopeIds, long timestamp, Level level, String stackTrace) {
+    boolean hasLiveCodingScope = false;
+    for (String scopeId : scopeIds) {
+      if (scopeId.startsWith("livecoding")) {
+        hasLiveCodingScope = true;
+      }
+    }
+    if (hasLiveCodingScope) {
+      level = Level.DEBUG;
+      
+      if (scopeIds.get(0).contains("_")) {
+        String clientId = scopeIds.get(0).split("_")[1];
+        SessionView sessionView = SessionViewManager.getInstance().getViewByName(clientId);
+        if (sessionView == null) {
+          return;
+        }
+        sessionView.addMessage(name, level, message, timestamp, stackTrace);
+        return;
+      }
+    }
+    
     for (String scopeId : scopeIds) {
       MessageScope scope = MessageScopeRegistry.getInstance().getScope(scopeId);
       if (scope == null) {
         continue;
       }
       
+      if (scopeId.contains("_")) {
+        String clientId = scopeId.split("_")[1];
+        SessionView sessionView = SessionViewManager.getInstance().getViewByName(clientId);
+        if (sessionView == null) {
+          return;
+        }
+        sessionView.addMessage(name, level, message, timestamp, stackTrace);
+        return;
+      }
+      
       MessagesView messageView = MessagesManager.getInstance().getViewByName(scope.getName());
       if (messageView == null) {
         continue;
-      }
-      
+      }      
       messageView.addMessage(name, level, message, timestamp, stackTrace);
     }
   }

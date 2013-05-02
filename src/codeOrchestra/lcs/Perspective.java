@@ -45,7 +45,7 @@ public class Perspective implements IPerspectiveFactory {
     IFolderLayout messagesFolder = layout.createFolder("messages", IPageLayout.LEFT, 0.40f, editorArea);
 		messagesFolder.addPlaceholder(MessagesView.ID + ":*");
     MessagesManager.init(layout, messagesFolder);
-		MessagesManager.getInstance().addTab("Main");
+		MessagesManager.getInstance().addTab("Log");
 		
 		// Console
     IFolderLayout fcshFolder = layout.createFolder("fcsh", IPageLayout.RIGHT, 0.60f, editorArea);

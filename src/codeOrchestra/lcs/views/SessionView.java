@@ -13,6 +13,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
+import codeOrchestra.lcs.logging.Level;
 import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.lcs.session.SessionViewManager;
 
@@ -103,6 +104,10 @@ public class SessionView extends ViewPart {
     messagesTable = new MessagesTable(messagesComposite, SWT.NONE); 
   }
 
+  public void addMessage(final String source, final Level level, final String message, final long timestamp, final String stackTrace) {
+    messagesTable.addMessage(source, level, message, timestamp, stackTrace);
+  }
+  
   @Override
   public void setFocus() {
   }

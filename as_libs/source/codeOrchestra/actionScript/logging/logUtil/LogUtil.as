@@ -167,8 +167,9 @@ package codeOrchestra.actionScript.logging.logUtil{
     public static function selectNode ( modelId : String, nodeId : String ) : void {
       log("select-node", nodeId, modelId, "", "");
     }
-    public static function startLiveCodingSession ( broadcastId : String ) : void {
+    public static function startLiveCodingSession ( broadcastId : String ) : String {
       log("start-live-coding-session", "", "", "", broadcastId + ":" + clientId + ":" + Capabilities.serverString);
+      return clientId;
     }
     public static function setSocketAddress ( host : String, port : int  = 6125 ) : void {
       LogUtil.host = host;

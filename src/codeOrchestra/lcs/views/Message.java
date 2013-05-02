@@ -3,6 +3,7 @@ package codeOrchestra.lcs.views;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
@@ -47,6 +48,9 @@ public class Message {
     
     tableItem.setImage(level.getImage());
     tableItem.setText(getMessageText(showSource));
+    if (stackTrace != null) {
+      tableItem.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+    }
     
     return tableItem;
   }

@@ -12,7 +12,7 @@ public enum Level {
   ERROR(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/messages/error.png").createImage()),
   WARN(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/messages/warning.png").createImage()),
   INFO(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/messages/information.png").createImage()),
-  DEBUG,
+  DEBUG(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/messages/debug_gray.png").createImage()),
   TRACE,
   ALL;
   
