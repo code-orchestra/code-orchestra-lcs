@@ -27,4 +27,8 @@ public interface LiveCodingSession {
   
   int getSessionNumber();
   
+  void dispose();
+  
+  boolean isDisposed();
+  
 }

@@ -8,7 +8,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
@@ -35,6 +38,30 @@ public class SessionView extends ViewPart {
     setPartName("Session #" + session.getSessionNumber());
     
     SessionViewManager.getInstance().reportViewCreated(clientId, this);
+    
+    IPartService partService = (IPartService) site.getService(IPartService.class);
+    partService.addPartListener(new IPartListener() {      
+      @Override
+      public void partOpened(IWorkbenchPart part) {
+      }
+      
+      @Override
+      public void partDeactivated(IWorkbenchPart part) {
+      }
+      
+      @Override
+      public void partClosed(IWorkbenchPart part) {
+        LiveCodingManager.instance().stopSession(session);
+      }
+      
+      @Override
+      public void partBroughtToTop(IWorkbenchPart part) {
+      }
+      
+      @Override
+      public void partActivated(IWorkbenchPart part) {
+      }
+    });
   }
 
   @Override

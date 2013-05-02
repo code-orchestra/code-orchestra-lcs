@@ -347,7 +347,13 @@ public class LiveCodingManager {
     }
   }
   
-  private void stopSession(LiveCodingSession liveCodingSession) {
+  public void stopSession(LiveCodingSession liveCodingSession) {
+    if (liveCodingSession.isDisposed()) {
+      return;
+    }
+    
+    liveCodingSession.dispose();
+    
     currentSessions.remove(liveCodingSession.getClientId());
     
     if (currentSessions.isEmpty()) {
@@ -447,7 +453,8 @@ public class LiveCodingManager {
       PongTraceCommand.getInstance().addPongListener(this);
       
       while (!stop) {
-        if (getLiveCodingSession() == null) {
+        LiveCodingSession liveCodingSession = getLiveCodingSession();
+        if (liveCodingSession == null) {
           continue;
         }
 
@@ -460,7 +467,7 @@ public class LiveCodingManager {
         }
 
         if (lastPong < lastPing) {
-          stopSession(getLiveCodingSession());
+          stopSession(liveCodingSession);
         }
       }
     }

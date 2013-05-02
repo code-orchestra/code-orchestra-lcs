@@ -6,5 +6,7 @@ package codeOrchestra.lcs.socket;
 public interface SocketWriter {
 
   void writeToSocket(String str);
+  
+  void closeSocket();
 
 }

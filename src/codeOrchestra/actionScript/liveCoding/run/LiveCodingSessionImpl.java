@@ -13,6 +13,7 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
 
   private static int counter = 1;
   
+  private boolean disposed;
   private long startTimestamp;
   private SocketWriter socketWriter;
   private String broadcastId;  
@@ -80,6 +81,17 @@ public class LiveCodingSessionImpl implements LiveCodingSession {
     socketWriter.writeToSocket(message);
   }
 
+  @Override
+  public void dispose() {
+    disposed = true;
+    socketWriter.closeSocket();    
+  }
+  
+  @Override
+  public boolean isDisposed() {
+    return disposed;
+  }
+  
   @Override
   public int hashCode() {
     final int prime = 31;

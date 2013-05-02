@@ -30,6 +30,15 @@ public abstract class ClientSocketHandler implements Runnable, SocketWriter {
     }
   }
 
+  @Override
+  public void closeSocket() {
+    try {
+      close();
+    } catch (IOException e) {
+      // ignore
+    }
+  }
+  
   protected abstract void handle(String str);
 
   @Override
@@ -93,7 +102,7 @@ public abstract class ClientSocketHandler implements Runnable, SocketWriter {
       }
     } catch (IOException e) {
       synchronized (monitor) {
-        if (!closeRequested) {
+        if (!closeRequested || !clientSocket.isClosed()) {
           throw new RuntimeException("Error while handling client socket", e);
         }
       }
