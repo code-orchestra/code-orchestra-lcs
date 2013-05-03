@@ -137,6 +137,12 @@ public class LCSMaker {
   private boolean doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
     CompilationResult compilationResult = flexSDKRunner.run();
 
+    if (compilationResult == null) {
+      String errorMessage = String.format("Compilation timed out");
+      LOG.error(errorMessage);
+      return false;      
+    }
+    
     if (compilationResult.getErrors() > 0) {
       final String outputFile = flexSDKRunner.getErrorLogFilePath();
       String errorMessage = String.format("Compilation failed with (%d) error(s): %s", compilationResult.getErrors(), outputFile);

@@ -342,6 +342,12 @@ public class LiveCodingManager {
     List<String> history = deliveryMessagesHistory.get(session.getBroadcastId());
     if (history != null) {
       for (String deliveryMessage : history) {
+        try {
+          Thread.sleep(1500);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
         session.sendMessageAsIs(deliveryMessage);
       }
     }
