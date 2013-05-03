@@ -184,6 +184,8 @@ public class LiveCodingManager {
             for (String deliveryMessage : deliveryMessages) {
               if (StringUtils.isNotEmpty(deliveryMessage)) {
                 sendLiveCodingMessage(deliveryMessage);
+              } else {
+                LOG.debug("No updatable changes were made sine last compilation");
               }
             }
             deliveryMessages.clear();
