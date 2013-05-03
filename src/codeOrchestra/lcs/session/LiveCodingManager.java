@@ -343,10 +343,9 @@ public class LiveCodingManager {
     if (history != null) {
       for (String deliveryMessage : history) {
         try {
-          Thread.sleep(1500);
+          Thread.sleep(50);
         } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          // ignore
         }
         session.sendMessageAsIs(deliveryMessage);
       }
