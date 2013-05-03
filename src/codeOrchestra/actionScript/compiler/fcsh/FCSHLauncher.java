@@ -38,6 +38,7 @@ public class FCSHLauncher extends JavaLauncher {
     programParameters.append(" -Duser.language=en");
     programParameters.append(" -Duser.country=US");
     programParameters.append(" -Djava.awt.headless=true");
+    programParameters.append(" -Xms512m -Xmx512m");
 
     // Tracing parameters
     programParameters.append(" -DcodeOrchestra.trace.host=" + LocalhostUtil.getLocalhostIp());
