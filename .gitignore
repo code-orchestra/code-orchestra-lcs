@@ -5,5 +5,5 @@ flex_sdk/
 
 *.war
 *.ear
-
+colt.build.properties
 .DS_Store
