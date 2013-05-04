@@ -20,6 +20,7 @@ import apparat.abc.AbcInstance;
 import apparat.abc.AbcMethod;
 import apparat.abc.AbcMethodParameter;
 import apparat.abc.AbcName;
+import apparat.abc.AbcNamespace;
 import apparat.abc.AbcNamespaceKind;
 import apparat.abc.AbcQName;
 import apparat.abc.AbcScript;
@@ -107,19 +108,11 @@ public class SWCDigest {
   }
 
   private void cacheTrait(AbcTrait trait) {
-    if (trait.kind() != AbcTraitKind.Class()) {
-      return;
-    }
-
-    // Skip interfaces
-    AbcTraitClass traitClass = (AbcTraitClass) trait;
-    if (traitClass.nominalType().inst().isInterface()) {
-      return;
-    }
-
     String traitName = trait.name().name().name;
     String traitPackage = trait.name().namespace().name().name;
-
+    Document document = getOrCreateDocument(traitPackage);
+    Element rootElement = (Element) document.getFirstChild();
+    
     // Move Vector to the default package
     if (VECTOR_PACKAGE.equals(traitPackage)) {
       if (!traitName.equals("Vector")) {
@@ -128,7 +121,7 @@ public class SWCDigest {
 
       traitPackage = "";
     }
-
+    
     // FQ Name
     String fqName;
     if (traitPackage == null || "".equals(traitPackage.trim())) {
@@ -136,10 +129,36 @@ public class SWCDigest {
     } else {
       fqName = traitPackage + "." + traitName;
     }
+    
+    // Namespaces
+    if (trait.kind() == AbcTraitKind.Const()) {
+      AbcTraitConst traitConst = (AbcTraitConst) trait;
+      
+      Option<Object> valueOption = traitConst.value();
+      if (!(valueOption.isEmpty())) { 
+        if (valueOption.get() instanceof AbcNamespace) {
+          AbcNamespace abcNamespace = (AbcNamespace) valueOption.get();
+          
+          Element namespaceElement = document.createElement("namespace");
+          namespaceElement.setAttribute("name", traitName);
+          namespaceElement.setAttribute("fqName", fqName);
+          namespaceElement.setAttribute("uri", abcNamespace.name().name);
+          
+          rootElement.appendChild(namespaceElement);
+        }
+      }      
+    }
 
-    Document document = getOrCreateDocument(traitPackage);
-    Element rootElement = (Element) document.getFirstChild();
-
+    // Classes
+    if (trait.kind() != AbcTraitKind.Class()) {
+      return;
+    }
+    // Skip interfaces
+    AbcTraitClass traitClass = (AbcTraitClass) trait;
+    if (traitClass.nominalType().inst().isInterface()) {
+      return;
+    }
+    
     Element traitElement = document.createElement("trait");
     traitElement.setAttribute("fqName", fqName);
     rootElement.appendChild(traitElement);
