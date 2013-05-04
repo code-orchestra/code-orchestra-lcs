@@ -9,3 +9,5 @@ colt.build.properties
 colt.build.properties.win
 MXMLCObfuscation.win.pro
 .DS_Store
+
+colt.build.properties.mac
