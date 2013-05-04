@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="COLT" default="main" basedir=".">
+
+	
+	<!-- properties -->
+	<property file="colt.build.properties"/>
+
+	
+	<!-- Property for the platform.  -->
+    <condition property="isMac" value="true">
+        <os family="mac"/>
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>	
+    <condition property="isLnx">
+        <and>
+          <os family="unix"/>    
+          <not>
+            <os family="mac"/>    
+          </not>
+        </and>
+    </condition>
+
+	<!--
+		Notes: If you're running the main target, then there is no need to call clean first.
+		Each of the main targets for the modules will call clean themselves before proceeding.
+	-->
+
+	<target name="main" depends="thirdparty-downloads,modules,copy-libs" description="Full build" />
+
+
+</project>
