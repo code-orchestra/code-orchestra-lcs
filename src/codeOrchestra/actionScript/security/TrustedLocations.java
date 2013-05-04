@@ -22,12 +22,21 @@ public class TrustedLocations {
   }
 
   public void addTrustedLocation(String trustedLocation) {
+    addTrustedLocation(trustedLocation, false);
+  }
+  
+  public void addTrustedLocation(String trustedLocation, boolean stop) {
     List<String> trustedLocations = getTrustedLocations();
     if (!trustedLocations.contains(trustedLocation)) {
       trustedLocations.add(trustedLocation);
     }
 
     saveTrustedLocations(trustedLocations);
+    
+    // CFB-5
+    if (!stop) {
+      addTrustedLocation(new File(trustedLocation).getParent(), true);
+    }
   }
 
   private void saveTrustedLocations(List<String> trustedLocations) {
