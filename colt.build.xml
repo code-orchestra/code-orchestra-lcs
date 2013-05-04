@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<project name="COLT" default="main" basedir=".">
+	
+	<!-- Properties -->
+	<property file="colt.build.properties"/>
+	<property name="proguard.config.abs.path" location="${proguard.config.file}"/>	
+	
+	<!-- Property for the platform.  -->
+    <condition property="isMac" value="true">
+        <os family="mac"/>
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>	
+    <condition property="isLnx">
+        <and>
+          <os family="unix"/>    
+          <not>
+            <os family="mac"/>    
+          </not>
+        </and>
+    </condition>
+    
+    <!-- Targets -->
+
+	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win,compress.mac,compress.win" description="Full build" />
+	
+	<target name="build.flex.sdk">
+  	  <ant antfile="build.xml" target="main" dir="${flex.sdk.project.home}/modules/"/>
+	</target>
+	
+	<target name="rename.app" if="isMac">
+		<move file="${eclipse.export.dir}/eclipse.app" tofile="${eclipse.export.dir}/COLT.app"/>
+	</target>
+
+	<target name="rename.exe" if="isWindows">
+		<move file="${eclipse.export.dir}/eclipse.exe" tofile="${eclipse.export.dir}/COLT.exe"/>
+	</target>
+	
+	<!-- ant -f colt.build.xml -->
+	
+	<target name="copy.additional.files">
+      <copy todir="${eclipse.export.dir}/as_libs">
+        <fileset dir="${basedir}/as_libs"/>
+      </copy>
+      <copy todir="${eclipse.export.dir}/flex_sdk">
+        <fileset dir="${basedir}/flex_sdk"/>
+      </copy>
+      <copy todir="${eclipse.export.dir}/templates">
+        <fileset dir="${basedir}/templates"/>
+      </copy>
+	  <copy file="${basedir}/crossdomain.xml" todir="${eclipse.export.dir}"/>	  	  	  
+	</target>
+	
+	<target name="copy.flex.sdk">
+	  <mkdir dir="${eclipse.export.dir}/flex_sdk/liblc" />
+	  <copy todir="${eclipse.export.dir}/flex_sdk/liblc">
+	    <fileset dir="${flex.sdk.project.home}/lib">
+			<exclude name="external"/>
+			<exclude name="external/**"/>
+	    </fileset>	
+  	  </copy>
+	</target>
+	
+	<target name="clean.flex.sdk">
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/mxmlc.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/asc.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/asdoc.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/compc.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/digest.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/fcsh.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/fdb.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/flex-compiler-oem.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/flexTasks.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/fxgutils.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/mxmlc_ja.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/optimizer.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/swcdepends.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/swfdump.jar" />
+      <delete file="${eclipse.export.dir}/flex_sdk/liblc/swfutils.jar" />
+	</target>
+	
+	<target name="obfuscate.mac" if="isMac">
+		<exec executable="${proguard.home}/bin/proguard.sh">
+			<arg value="@${proguard.config.abs.path}"/>
+			<arg value="-forceprocessing"/>
+		</exec>
+	</target>
+	
+	<target name="obfuscate.win" if="isWin">
+		<exec executable="${proguard.home}/bin/proguard.bat">
+			<arg value="@${proguard.config.abs.path}"/>
+			<arg value="-forceprocessing"/>
+		</exec>
+	</target>	
+	
+	<target name="compress.mac" if="isMac">
+		 <zip destfile="${eclipse.export.dir}/../COLT-mac.zip" basedir="${eclipse.export.dir}" />
+	</target>
+
+	<target name="compress.win" if="isWindows">
+		 <zip destfile="${eclipse.export.dir}/../COLT-win.zip" basedir="${eclipse.export.dir}" />
+	</target>
+
+
+</project>
