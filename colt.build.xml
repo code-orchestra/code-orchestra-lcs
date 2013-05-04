@@ -87,7 +87,7 @@
 		</exec>
 	</target>
 	
-	<target name="obfuscate.win" if="isWin">
+	<target name="obfuscate.win" if="isWindows">
 		<exec executable="${proguard.home}/bin/proguard.bat">
 			<arg value="@${proguard.config.abs.path}"/>
 			<arg value="-forceprocessing"/>

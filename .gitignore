@@ -6,4 +6,6 @@ flex_sdk/
 *.war
 *.ear
 colt.build.properties
+colt.build.properties.win
+MXMLCObfuscation.win.pro
 .DS_Store
