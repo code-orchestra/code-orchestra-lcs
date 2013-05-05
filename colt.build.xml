@@ -108,7 +108,10 @@
 	<target name="copy.examples">
 	  <mkdir dir="${eclipse.export.dir}/projects" />	 
       <copy todir="${eclipse.export.dir}/projects">
-        <fileset dir="${examples.project.home}"/>
+        <fileset dir="${examples.project.home}">
+			<exclude name=".git/**"/>
+			<exclude name=".gitignore"/>			
+        </fileset>
       </copy>
 	</target>
 
