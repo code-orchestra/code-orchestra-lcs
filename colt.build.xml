@@ -23,7 +23,7 @@
     
     <!-- Targets -->
 
-	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.info.plist,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win,copy.examples" description="Full build" />
+	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.info.plist,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win,copy.examples,compress.win" description="Full build" />
 	
 	<target name="build.flex.sdk">
   	  <ant antfile="build.xml" target="main" dir="${flex.sdk.project.home}/modules/"/>
@@ -44,10 +44,9 @@
 	</target>
 	
 	<target name="copy.additional.files">
-      <copy todir="${eclipse.export.dir}/as_libs">
-        <fileset dir="${basedir}/as_libs"/>
-      </copy>
-      <copy todir="${eclipse.export.dir}/flex_sdk">
+      <mkdir dir="${eclipse.export.dir}/lib" />
+	  <copy file="${basedir}/lib/colt.swc" todir="${eclipse.export.dir}/lib/colt.swc"/>
+	  <copy todir="${eclipse.export.dir}/flex_sdk">
         <fileset dir="${basedir}/flex_sdk"/>
       </copy>
       <copy todir="${eclipse.export.dir}/templates">
