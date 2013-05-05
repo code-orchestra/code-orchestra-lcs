@@ -137,7 +137,7 @@
          </property>
          <property
                name="windowImages"
-               value="icons/colticon.png">
+               value="icons/colticon_128.png">
          </property>
       </product>
    </extension>
