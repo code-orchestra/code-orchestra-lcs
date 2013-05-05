@@ -3,7 +3,6 @@ package codeOrchestra.lcs.project;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 
@@ -17,23 +16,19 @@ public class ProjectManager {
     return instance;
   }
   
-  public void openProject(String projectPath, IWorkbenchWindow window) throws PartInitException {
+  public boolean openProject(String projectPath, IWorkbenchWindow window) throws PartInitException {
     // Close previous project
-    LiveCodingProjectViews.closeProjectViews();
+    if (!LiveCodingProjectViews.closeProjectViews()) {
+      return false;
+    }
     
     // Clear fcsh targets
     FCSHManager.instance().clearTargets();
-    
-    /*
-    try {
-      FCSHManager.instance().deleteLivecodingCaches();
-    } catch (FCSHException e) {
-      // ignore
-    }
-    */
 
     LCSProject newProject = LCSProject.loadFrom(projectPath);
     LiveCodingProjectViews.openProjectViews(window, newProject);
+    
+    return true;
   }
 
 }

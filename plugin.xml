@@ -151,5 +151,15 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="codeOrchestra.lcs.COLTEditor"
+            default="false"
+            extensions="colt"
+            id="code-orchestra-lcs.editor1"
+            name="name">
+      </editor>
+   </extension>
 
 </plugin>

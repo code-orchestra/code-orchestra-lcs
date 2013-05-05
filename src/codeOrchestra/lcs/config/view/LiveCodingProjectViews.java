@@ -91,7 +91,11 @@ public final class LiveCodingProjectViews {
     ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool - " + project.getName() + " - " + project.getPath());
   }
   
-  public static void closeProjectViews() {
+  public static boolean closeProjectViews() {
+    if (ApplicationWorkbenchWindowAdvisor.sharedInstance == null) {
+      return false;
+    }
+    
     ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool");
     
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -103,6 +107,8 @@ public final class LiveCodingProjectViews {
             }
         }
     }
+    
+    return true;
   }
   
 }

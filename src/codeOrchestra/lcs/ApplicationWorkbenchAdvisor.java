@@ -15,6 +15,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.ProjectManager;
 import codeOrchestra.lcs.project.RecentProjects;
 import codeOrchestra.lcs.views.FCSHConsoleView;
@@ -24,6 +25,8 @@ import codeOrchestra.lcs.views.FCSHConsoleView;
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
+  public static String pathToOpenOnStartup;
+  
   private Application application;
 
   public ApplicationWorkbenchAdvisor(Application application) {
@@ -55,6 +58,16 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     IWorkbenchPartReference myView = page.findViewReference(FCSHConsoleView.ID);
     page.setPartState(myView, IWorkbenchPage.STATE_MINIMIZED);
 
+    // Open project requested
+    if (pathToOpenOnStartup != null) {
+      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      try {
+        ProjectManager.getInstance().openProject(pathToOpenOnStartup, window);
+      } catch (PartInitException e) {
+        ErrorHandler.handle(e, "Error while opening COLT project: " + pathToOpenOnStartup);
+      }      
+    }
+    
     // Open recent project
     List<String> recentProjectsPaths = RecentProjects.getRecentProjectsPaths();
     if (!recentProjectsPaths.isEmpty()) {
@@ -65,8 +78,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
         try {
           ProjectManager.getInstance().openProject(lastProjectPath, window);
         } catch (PartInitException e) {
-          // TODO: Handle nicely
-          e.printStackTrace();
+          ErrorHandler.handle(e, "Error while opening COLT project: " + lastProjectPath);
         }
       }
     }

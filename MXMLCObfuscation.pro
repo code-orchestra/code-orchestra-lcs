@@ -13,7 +13,7 @@
 -injars /Users/buildserver/git/flex-sdk-livecoding/lib/swcdepends.jar
 -injars /Users/buildserver/git/flex-sdk-livecoding/lib/swfdump.jar
 -injars /Users/buildserver/git/flex-sdk-livecoding/lib/swfutils.jar
--outjars /Users/buildserver/TMP/lcs-export/COLT/flex_sdk/liblc
+-outjars /Users/buildserver/TMP/COLT/COLT/flex_sdk/liblc
 
 -libraryjars /Users/buildserver/git/flex-sdk-livecoding/lib/batik-all-flex.jar
 -libraryjars /Users/buildserver/git/flex-sdk-livecoding/lib/commons-lang3-3.1.jar

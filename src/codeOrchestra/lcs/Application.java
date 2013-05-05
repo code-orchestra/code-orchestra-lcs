@@ -3,6 +3,7 @@ package codeOrchestra.lcs;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -37,6 +38,8 @@ public class Application implements IApplication {
         return IApplication.EXIT_OK;
       }
 
+      display.addListener(SWT.OpenDocument, new OpenDocumentEventProcessor());
+      
       // TODO: handle errors
       CodeOrchestraHttpServer.getInstance().init();
       getServerSocketThread().openSocket();
