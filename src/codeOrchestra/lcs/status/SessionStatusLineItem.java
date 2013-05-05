@@ -37,10 +37,10 @@ public class SessionStatusLineItem extends StatusLineContributionItemEx {
       @Override
       public void run() {
         if (sessionClientIds.isEmpty()) {
-          setText("No active livecoding sessions");
+          setText("No active livecoding connections");
           setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/live-coding-disable.png").createImage());
         } else {
-          setText("Active livecoding sessions: " + sessionClientIds.size());
+          setText("Active livecoding connections: " + sessionClientIds.size());
           setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/live-coding-enable.png").createImage());      
         }    
       }

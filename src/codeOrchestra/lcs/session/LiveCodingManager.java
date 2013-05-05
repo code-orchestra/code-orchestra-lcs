@@ -403,7 +403,7 @@ public class LiveCodingManager {
       
       restoreSessionState(session);
       
-      LOG.info("Started a session: broadcast ID: " + session.getBroadcastId() + ", cliend ID: " + clientId + ", client: " + session.getBasicClientInfo());
+      LOG.info("Established a connection: broadcast ID: " + session.getBroadcastId() + ", cliend ID: " + clientId + ", client: " + session.getBasicClientInfo());
     }
 
     public SessionFinisher getSessionFinisherThread(String clientId) {

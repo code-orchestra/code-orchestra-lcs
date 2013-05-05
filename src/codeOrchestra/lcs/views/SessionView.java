@@ -35,7 +35,7 @@ public class SessionView extends ViewPart {
     String clientId = SessionViewManager.getInstance().getLastClientId();
     this.session = LiveCodingManager.instance().getSession(clientId);
     
-    setPartName("Session #" + session.getSessionNumber());
+    setPartName("Connection #" + session.getSessionNumber());
     
     SessionViewManager.getInstance().reportViewCreated(clientId, this);
     
