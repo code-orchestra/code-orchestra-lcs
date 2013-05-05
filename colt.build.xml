@@ -45,7 +45,7 @@
 	
 	<target name="copy.additional.files">
       <mkdir dir="${eclipse.export.dir}/lib" />
-	  <copy file="${basedir}/lib/colt.swc" todir="${eclipse.export.dir}/lib/colt.swc"/>
+	  <copy file="${basedir}/lib/colt.swc" todir="${eclipse.export.dir}/lib"/>
 	  <copy todir="${eclipse.export.dir}/flex_sdk">
         <fileset dir="${basedir}/flex_sdk"/>
       </copy>
