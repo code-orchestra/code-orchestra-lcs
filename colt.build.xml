@@ -23,7 +23,7 @@
     
     <!-- Targets -->
 
-	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win,compress.mac,compress.win" description="Full build" />
+	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win" description="Full build" />
 	
 	<target name="build.flex.sdk">
   	  <ant antfile="build.xml" target="main" dir="${flex.sdk.project.home}/modules/"/>
