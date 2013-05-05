@@ -17,6 +17,8 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 
+import com.intellij.openapi.util.SystemInfo;
+
 import codeOrchestra.lcs.actions.ClearCachesAction;
 import codeOrchestra.lcs.actions.GoToLogsFolderAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
@@ -105,7 +107,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(saveProjectAction);
         fileMenu.add(new Separator());        
-        fileMenu.add(goToLogsFolderAction);
+
+        if (SystemInfo.isMac) {
+          fileMenu.add(goToLogsFolderAction);
+        }
+        
         fileMenu.add(clearCachesAction);
         fileMenu.add(new Separator());
         fileMenu.add(exitAction);
