@@ -1,4 +1,5 @@
 proguard.home=/Users/buildserver/Downloads/proguard4.9
+proguard.config.file=MXMLCObfuscation.pro
 eclipse.export.dir=/Users/buildserver/TMP/lcs-export/COLT
 flex.sdk.project.home=../flex-sdk-livecoding
-proguard.config.file=MXMLCObfuscation.pro
+examples.project.home=../livecoding_examples

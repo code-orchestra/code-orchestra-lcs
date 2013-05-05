@@ -23,7 +23,7 @@
     
     <!-- Targets -->
 
-	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.info.plist,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win" description="Full build" />
+	<target name="main" depends="build.flex.sdk,rename.app,rename.exe,copy.additional.files,copy.info.plist,copy.flex.sdk,clean.flex.sdk,obfuscate.mac,obfuscate.win,copy.examples" description="Full build" />
 	
 	<target name="build.flex.sdk">
   	  <ant antfile="build.xml" target="main" dir="${flex.sdk.project.home}/modules/"/>
@@ -106,5 +106,11 @@
 		 <zip destfile="${eclipse.export.dir}/../COLT-win.zip" basedir="${eclipse.export.dir}" />
 	</target>
 
+	<target name="copy.examples">
+	  <mkdir dir="${eclipse.export.dir}/projects" />	 
+      <copy todir="${eclipse.export.dir}/projects">
+        <fileset dir="${examples.project.home}"/>
+      </copy>
+	</target>
 
 </project>
