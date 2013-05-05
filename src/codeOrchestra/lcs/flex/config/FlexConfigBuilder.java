@@ -45,7 +45,7 @@ public class FlexConfigBuilder {
       }
       
       // Provided libraries (language extensions) sources
-      flexConfig.addSourcePath(PathUtils.getActionScriptLibsSourcePath());
+      flexConfig.addLibraryPath(PathUtils.getColtSWCPath());
     }
     
     // Always strict = false 
@@ -56,6 +56,7 @@ public class FlexConfigBuilder {
       // Add root module generated sources
       String outputFileName = compilerSettings.getOutputFilename().replaceFirst("\\.swf$", ".swc");
       flexConfig.addLibraryPath(project.getOutputDir().getPath() +  File.separator + outputFileName);
+      flexConfig.addLibraryPath(PathUtils.getColtSWCPath());
       flexConfig.setOutputPath(PathUtils.getIncrementalSWCPath(project));
       
       // Load root module link report file for externs for Live-Coding

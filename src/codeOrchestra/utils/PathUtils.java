@@ -21,9 +21,9 @@ public class PathUtils {
     return new File(productDir, "templates").getPath();
   }
   
-  public static String getActionScriptLibsSourcePath() {
+  public static String getColtSWCPath() {
     File productDir = getApplicationBaseDir();    
-    return new File(productDir, "as_libs" + File.separator + "source").getPath();
+    return new File(new File(productDir, "lib"), "colt.swc").getPath();
   }
   
   public static String getIncrementalSWFPath(LCSProject project, int packageId) {

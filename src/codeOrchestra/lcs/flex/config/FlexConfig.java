@@ -1,17 +1,17 @@
 package codeOrchestra.lcs.flex.config;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import codeOrchestra.lcs.LCSException;
-import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.utils.StringUtils;
 import codeOrchestra.utils.XMLUtils;
-
-import javax.xml.transform.TransformerException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Flex compiler configuration.

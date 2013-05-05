@@ -114,7 +114,6 @@ public class LCSMaker {
       flexConfig.setLibrary(true);
 
       FlexConfigBuilder.addLibraryClasses(flexConfig, currentProject.getSourceSettings().getSourcePaths());
-      FlexConfigBuilder.addLibraryClasses(flexConfig, Collections.singletonList(PathUtils.getActionScriptLibsSourcePath()));
 
       flexConfigFile.delete();
       try {
