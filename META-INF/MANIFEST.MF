@@ -7,8 +7,8 @@ Bundle-Activator: codeOrchestra.lcs.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.apache.ant,
- org.eclipse.core.databinding;bundle-version="1.4.1",
- org.eclipse.jface.databinding;bundle-version="1.6.0"
+ org.eclipse.core.databinding,
+ org.eclipse.jface.databinding
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
@@ -17,4 +17,6 @@ Bundle-ClassPath: .,
  lib/scala-library.jar,
  lib/jetty-6.1.26.jar,
  lib/jetty-util-6.1.26.jar,
- lib/servlet-api-2.5.jar
+ lib/servlet-api-2.5.jar,
+ lib/commons-io-2.4.jar
+Import-Package: org.eclipse.core.databinding

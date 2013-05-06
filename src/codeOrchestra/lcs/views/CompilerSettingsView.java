@@ -76,6 +76,10 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     return errors;
   }
   
+  public String getOutputFileName() {
+	  return outputFileNameEditor.getStringValue();
+  }
+  
   @Override
   public void createPartControl(Composite parent) {
     GridLayout layout = new GridLayout();

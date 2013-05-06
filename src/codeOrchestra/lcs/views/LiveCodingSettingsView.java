@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
@@ -39,8 +40,11 @@ import codeOrchestra.lcs.run.index.IndexHTMLGenerator;
 import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.lcs.views.elements.AirIosLaunchCustomizationDialogShell;
 import codeOrchestra.lcs.views.elements.ExtendedComposite;
+import codeOrchestra.lcs.views.elements.ViewHelper;
 import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.StringUtils;
+
+import codeOrchestra.lcs.air.AirIosIpaBuildScriptGenerator;
 
 /**
  * @author Alexander Eliseyev
@@ -80,11 +84,9 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   private Button airIosTargetButton;
   private Composite airIosComposite;
   private ExtendedComposite airIosComposite2;
-  private ExtendedComposite airIosComposite3;
   private StringFieldEditor airIosScriptEditor;
   private Button generateAirIosScriptButton;
   private Button generateAirIosCustomizeLaunchButton;
-  private Button generateAirIosPackagingSettingsButton;
   
   private AirIosLaunchCustomizationDialogShell airIosLaunchCustomizationDialogShell;
 
@@ -169,7 +171,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       }
     });
 
-    addAirControls(targetSettingsGroup);
+    //addAirControls(targetSettingsGroup);
     addAirIosControls(targetSettingsGroup);
     
     Group launcherSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
@@ -307,7 +309,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	    airIosScriptEditor = new StringFieldEditor("airScript", "", airIosComposite);
 	    airIosScriptEditor.setPreferenceStore(getPreferenceStore());
 	    generateAirIosScriptButton = new Button(targetSettingsGroup, SWT.PUSH);
-	    generateAirIosScriptButton.setText("Generate ipaBuild.sh");
+	    generateAirIosScriptButton.setText("Package && Deploy");
 	    generateAirIosScriptButton.addSelectionListener(new SelectionAdapter() {
 	      @Override
 	      public void widgetSelected(SelectionEvent e) {
@@ -319,7 +321,16 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	        // 2 - generate
 	        String scriptPath = null;
 	        try {          
-	          scriptPath = new ipaBuildScriptGenerator(currentProject, currentProject.getName()).generate();
+	          scriptPath = new AirIosIpaBuildScriptGenerator(currentProject, currentProject.getName(),window).generate();
+	          
+	          Runtime r=Runtime.getRuntime();
+	          Process p=null;
+	          try {
+	              p = r.exec(scriptPath);
+	          } catch (IOException ex) {
+	        	  ex.printStackTrace();
+	          }
+	          
 	        } catch (IOException e1) {
 	          // TODO Auto-generated catch block
 	          e1.printStackTrace();
@@ -330,41 +341,28 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	      }
 	    });
 	    	    
-	    airIosComposite2 = new ExtendedComposite(targetSettingsGroup, SWT.NONE);
-	    GridData fillHorizontalGridData1 = new GridData(GridData.FILL_HORIZONTAL);	   	    
-	    fillHorizontalGridData1.horizontalAlignment = SWT.RIGHT;
-	    fillHorizontalGridData1.horizontalSpan = 3;
-	    airIosComposite2.setLayoutData(fillHorizontalGridData1);	   
-	    generateAirIosCustomizeLaunchButton = new Button(airIosComposite2, SWT.PUSH);	   
-	    generateAirIosCustomizeLaunchButton.setText("customize launch");
-	    generateAirIosCustomizeLaunchButton.setSize(generateAirIosCustomizeLaunchButton.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+//	    airIosComposite2 = new ExtendedComposite(targetSettingsGroup, SWT.NONE);
+//	    GridData fillHorizontalGridData1 = new GridData(GridData.FILL_HORIZONTAL);	   	    
+//	    fillHorizontalGridData1.horizontalAlignment = SWT.RIGHT;
+//	    fillHorizontalGridData1.horizontalSpan = 3;
+//	    airIosComposite2.setLayoutData(fillHorizontalGridData1);	   
+//	    generateAirIosCustomizeLaunchButton = new Button(airIosComposite2, SWT.PUSH);	   
+//	    generateAirIosCustomizeLaunchButton.setText("customize launch");
+//	    generateAirIosCustomizeLaunchButton.setSize(generateAirIosCustomizeLaunchButton.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 //	    IObservableValue target2 = SWTObservables.observeSelection(generateAirIosCustomizeLaunchButton);
 //	    dbc.bindValue(target2, new HideControlObservable(generateAirIosCustomizeLaunchButton));	    
-
-	    GridData fillHorizontalGridData2 = new GridData(GridData.FILL_HORIZONTAL);	    
-	    fillHorizontalGridData2.horizontalAlignment = SWT.RIGHT;
-	    fillHorizontalGridData2.horizontalSpan = 3;
-	    airIosComposite3 = new ExtendedComposite(targetSettingsGroup, SWT.NONE);
-	    airIosComposite3.setLayoutData(fillHorizontalGridData2);	    
-	    generateAirIosPackagingSettingsButton = new Button(airIosComposite3, SWT.PUSH);
-	    generateAirIosPackagingSettingsButton.setText("packaging settings");
-	    generateAirIosPackagingSettingsButton.setSize(generateAirIosPackagingSettingsButton.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-	    
-	    airIosComposite2.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-	    airIosComposite3.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-	    	   
-	    generateAirIosCustomizeLaunchButton.addSelectionListener(new SelectionListener() {			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				airIosLaunchCustomizationDialogShell = new AirIosLaunchCustomizationDialogShell(getPreferenceStore());
-				airIosLaunchCustomizationDialogShell.show();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+//	    	   
+//	    generateAirIosCustomizeLaunchButton.addSelectionListener(new SelectionListener() {			
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				ViewHelper.setViewVisible(AirIosSettingsView.ID, true, LCSProject.getCurrentProject(), true);
+//			}
+//			
+//			@Override
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				widgetSelected(e);
+//			}
+//		});
 }  
   
   public static Display getDisplay() {
@@ -401,7 +399,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       break;
     }
 
-    airScriptEditor.load();
+    //airScriptEditor.load();
     airIosScriptEditor.load();
     webAddressEditor.load();
     flashPlayerPathEditor.load();
@@ -423,16 +421,22 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     Target target = Target.SWF;
     if (defaultTargetButton.getSelection()) {
       target = Target.SWF;      
-    } else if (webAddressTargetButton.getSelection()) {
+    } 
+    else 
+    if (webAddressTargetButton.getSelection()) {
       target = Target.WEB_ADDRESS;      
-    } else if (airTargetButton.getSelection()) {
-      target = Target.AIR;
-    } else if (airIosTargetButton.getSelection()) {
+    } 
+//    else 
+//    if (airTargetButton.getSelection()) {
+//      target = Target.AIR;
+//    } 
+    else 
+    if (airIosTargetButton.getSelection()) {
         target = Target.AIR_IOS;
     }    
     getPreferenceStore().setValue("target", target.name());    
     
-    airScriptEditor.store();
+    //airScriptEditor.store();
     airIosScriptEditor.store();
     webAddressEditor.store();
     flashPlayerPathEditor.store();
@@ -450,19 +454,41 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     webAddressEditor.setEnabled(webAddressTargetButton.getSelection(), webAddressComposite);
     generateIndexButton.setEnabled(webAddressTargetButton.getSelection());
     
-    airScriptEditor.setEnabled(airTargetButton.getSelection(), airComposite);
-    generateAirScriptButton.setEnabled(airTargetButton.getSelection());
+    //airScriptEditor.setEnabled(airTargetButton.getSelection(), airComposite);
+    //generateAirScriptButton.setEnabled(airTargetButton.getSelection());
     
     airIosScriptEditor.setEnabled(airIosTargetButton.getSelection(), airIosComposite);
     generateAirIosScriptButton.setEnabled(airIosTargetButton.getSelection());
     
-    airIosComposite2.setVisibleInSlot(airIosTargetButton.getSelection());
-    airIosComposite3.setVisibleInSlot(airIosTargetButton.getSelection());
+//    airIosComposite2.setVisibleInSlot(airIosTargetButton.getSelection());
 
     if (webAddressTargetButton.getSelection() && flashPlayerLauncherButton.getSelection()) {
       flashPlayerLauncherButton.setSelection(false);
       defaultLauncherButton.setSelection(true);
     }
+
+    LiveCodingSettingsView lcsv = (LiveCodingSettingsView) ViewHelper.getView(window,LiveCodingSettingsView.ID);
+    AirIosSettingsView aisv = (AirIosSettingsView) ViewHelper.getView(window,AirIosSettingsView.ID);
+
+    if (null!=lcsv) {	  
+    	if (!lcsv.isAirIosSelected()) {		
+    		if (null!=aisv) {
+    			aisv.getAirIosFileTree().removeFileMonitor();
+    			window.getActivePage().hideView(aisv);
+    		}
+    	} else {
+    		try {
+    				window.getActivePage().showView(AirIosSettingsView.ID,LCSProject.getCurrentProject().getName(),IWorkbenchPage.VIEW_CREATE);
+    		} catch (PartInitException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	}
+    }
+  }
+  
+  public boolean isAirIosSelected() {
+	  return airIosTargetButton.getSelection();
   }
 
   @Override
