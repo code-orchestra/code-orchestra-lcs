@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.license.CodeOrchestraLicenseDialogs;
+import codeOrchestra.lcs.license.LicenseManager;
 
 /**
  * @author Alexander Eliseyev
@@ -14,6 +15,7 @@ public class EnterSerialNumberAction extends Action {
     setText("Enter Serial Number");
     setId(ICommandIds.CMD_ENTER_SERIAL);
     setActionDefinitionId(ICommandIds.CMD_ENTER_SERIAL);
+    setEnabled(LicenseManager.getInstance().isEvaluationLicense());
   }
   
   @Override

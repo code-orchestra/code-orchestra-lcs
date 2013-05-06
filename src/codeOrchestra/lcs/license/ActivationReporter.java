@@ -28,7 +28,6 @@ public class ActivationReporter {
       System.out.println("Activation: " + postMethod.getStatusCode());
     } catch (Throwable t) {
       // ignore
-      t.printStackTrace();
     }
   }
 
