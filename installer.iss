@@ -38,6 +38,9 @@ Source: "C:\programs\COLT\COLT.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\programs\COLT\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
+[Dirs]  
+Name: "{app}"; Permissions: everyone-modify;  
+
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
