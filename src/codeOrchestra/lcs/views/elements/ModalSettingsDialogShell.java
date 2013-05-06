@@ -4,30 +4,34 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 public class ModalSettingsDialogShell implements IRelocableComponent {
 	private Shell baseDialogShell; 
 
 	public ModalSettingsDialogShell() {
+		baseConstructor();
+	}
+	
+	public void baseConstructor() {
 		Display display = Display.getDefault();
-		final Shell shell = new Shell(display, SWT.SHELL_TRIM);
-		baseDialogShell = new Shell(shell, SWT.PRIMARY_MODAL | SWT.SHEET);
+		//final Shell shell = new Shell(display, SWT.SHELL_TRIM);
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		this.baseDialogShell = new Shell(shell, SWT.PRIMARY_MODAL|SWT.SHELL_TRIM);
 		center();
 	}
 	
 	public ModalSettingsDialogShell(String title, int width, int height) {
-		this();
-		final Shell dlg = getBaseDialogShell();
-		dlg.setText(title);
-		dlg.setSize(new Point(width,height));
+		baseConstructor();
+		this.baseDialogShell.setText(title);
+		this.baseDialogShell.setSize(new Point(width,height));
 		center();
 	}
 	
 	public ModalSettingsDialogShell(String title) {
-		this();
-		final Shell dlg = getBaseDialogShell();
-		dlg.setText(title);
-		dlg.pack(true);
+		baseConstructor();
+		this.baseDialogShell.setText(title);
+		this.baseDialogShell.pack(true);
 		center();
 	}
 	
@@ -44,11 +48,11 @@ public class ModalSettingsDialogShell implements IRelocableComponent {
 	}	
 	
 	public void setVisible(boolean isVisible) {
-		getBaseDialogShell().setVisible(isVisible);
+		this.baseDialogShell.setVisible(isVisible);
 	}
 
 	public Shell getBaseDialogShell() {
-		return baseDialogShell;
+		return this.baseDialogShell;
 	}
 
 	public void setBaseDialogShell(Shell baseDialogShell) {
@@ -57,27 +61,27 @@ public class ModalSettingsDialogShell implements IRelocableComponent {
 
 	@Override
 	public void setLocation(int x, int y) {
-		getBaseDialogShell().setLocation(new Point(x,y));
+		this.baseDialogShell.setLocation(new Point(x,y));
 	}
 
 	@Override
 	public int getLocationX() {
-		return getBaseDialogShell().getLocation().x;
+		return this.baseDialogShell.getLocation().x;
 	}
 
 	@Override
 	public int getLocationY() {
-		return getBaseDialogShell().getLocation().y;
+		return this.baseDialogShell.getLocation().y;
 	}
 
 	@Override
 	public int getWidth() {
-		return getBaseDialogShell().getSize().x;
+		return this.baseDialogShell.getSize().x;
 	}
 
 	@Override
 	public int getHeight() {		
-		return getBaseDialogShell().getSize().y;
+		return this.baseDialogShell.getSize().y;
 	}
 
 	

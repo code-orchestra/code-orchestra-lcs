@@ -1,5 +1,7 @@
 package codeOrchestra.lcs.project;
 
+import java.io.File;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -7,6 +9,15 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class CompilerSettings extends ProjectSettingsPart {
 
+	public static File getOutputFile() {
+		LCSProject project = LCSProject.getCurrentProject();
+		CompilerSettings compilerSettings = project.getCompilerSettings();
+		String outputFileName = compilerSettings.getOutputFilename();
+		String outputFilePath = project.getOutputDir().getAbsolutePath()+File.separator+outputFileName;
+		File outputFile = new File(outputFilePath);
+		return outputFile;
+	}
+	
 	public CompilerSettings(IPreferenceStore preferenceStore) {
 		super(preferenceStore);
 	}	
@@ -34,6 +45,10 @@ public class CompilerSettings extends ProjectSettingsPart {
 	public String getMainClass() {
 	  return getPreferenceStore().getString("mainClass");
 	}
+	
+	public String getAirScript() {
+		  return getPreferenceStore().getString("airScript");
+		}
 	
 	public String getOutputFilename() {
 	  return getPreferenceStore().getString("outputFileName");
