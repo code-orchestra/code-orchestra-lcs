@@ -24,7 +24,7 @@
       <macosx icon="/code-orchestra-lcs/icons/colticon.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/code-orchestra-lcs/icons/favicon.ico"/>
+         <ico path="/code-orchestra-lcs/icons/newicon.ico"/>
          <bmp/>
       </win>
    </launcher>
