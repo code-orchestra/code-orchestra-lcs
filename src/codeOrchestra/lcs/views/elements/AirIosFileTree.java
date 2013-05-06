@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Group;
 
 import scala.actors.threadpool.Arrays;
 
+import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.views.elements.fileTree.*;
 
@@ -87,6 +88,20 @@ public class AirIosFileTree {
 
 		}
 	}
+	
+	private void lockOutputFile() {
+		File outputFile = CompilerSettings.getOutputFile();
+		List<File> fsFileObjects = fileTreeContentProvider.getElementsRecursive();
+		for (Object fsFileObject : fsFileObjects) {
+			if (File.class.isAssignableFrom(fsFileObject.getClass())) {
+				File currFsFile = (File) fsFileObject;
+				if (currFsFile.getAbsolutePath().equals(outputFile.getAbsolutePath())) {
+					checkboxTreeViewer.setChecked(currFsFile, true);
+				}
+			}
+		}
+
+	}
 
 	protected void createContents(Composite parent) {
 		// Create the tree viewer to display the file tree
@@ -112,7 +127,8 @@ public class AirIosFileTree {
 				public void reloadTree() {
 					Display.getDefault().asyncExec(new Runnable() {
 					    public void run() {
-					checkboxTreeViewer.refresh();
+					    	checkboxTreeViewer.refresh();
+					    	lockOutputFile();
 					    }
 					});
 				}
@@ -175,9 +191,14 @@ public class AirIosFileTree {
 		checkboxTreeViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				// If the item is checked . . .
+				Object element = event.getElement();
 				if (event.getChecked()) {
 					// . . . check all its children
-					checkboxTreeViewer.setSubtreeChecked(event.getElement(), true);
+					checkboxTreeViewer.setSubtreeChecked(element, true);
+				}
+				File outputFile = CompilerSettings.getOutputFile();
+				if (((File)element).getAbsolutePath().equals(outputFile.getAbsolutePath())) {
+					checkboxTreeViewer.setChecked(element, true);
 				}
 			}
 		});
@@ -185,8 +206,10 @@ public class AirIosFileTree {
 	
 	public void removeFileMonitor() {
 		try {
-			monitor.stop();
-			monitor = null;
+			if (null!=monitor) {
+				monitor.stop();
+				monitor = null;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

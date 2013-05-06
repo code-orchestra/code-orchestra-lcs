@@ -106,6 +106,7 @@ public class AirIosLaunchCustomizationDialogShell extends ModalSettingsDialogShe
 	    	  savePart();
 	    	  AirIosLaunchCustomizationDialogShell.this.submitted=true;
 	    	  runGeneration();
+          	  airIosFileTree.removeFileMonitor();
 	    	  AirIosLaunchCustomizationDialogShell.this.setVisible(false);
 	      }
 	    });
@@ -118,6 +119,7 @@ public class AirIosLaunchCustomizationDialogShell extends ModalSettingsDialogShe
 	      public void widgetSelected(SelectionEvent e) {
 	          savePart();
 	    	  AirIosLaunchCustomizationDialogShell.this.submitted=false;
+          	  airIosFileTree.removeFileMonitor();
 	    	  AirIosLaunchCustomizationDialogShell.this.setVisible(false);
 	      }
 	    });

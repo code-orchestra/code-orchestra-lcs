@@ -11,6 +11,8 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 
+import codeOrchestra.lcs.project.CompilerSettings;
+
 /**
  * This class provides the labels for the file tree
  */
@@ -83,6 +85,12 @@ public class FileTreeLabelProvider implements ILabelProvider {
    * @return String
    */
   public String getText(Object arg0) {
+	String postfix = "";
+	File outputFile = CompilerSettings.getOutputFile();
+	if (((File) arg0).getAbsolutePath().equals(outputFile.getAbsolutePath())) {
+		postfix = " (required)";
+	}
+	
     // Get the name of the file
     String text = ((File) arg0).getName();
 
@@ -90,6 +98,8 @@ public class FileTreeLabelProvider implements ILabelProvider {
     if (text.length() == 0) {
       text = ((File) arg0).getPath();
     }
+    
+    text+=postfix;
 
     // Check the case settings before returning the text
     return preserveCase ? text : text.toUpperCase();

@@ -2,10 +2,14 @@ package codeOrchestra.lcs.views.elements.fileTree;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
+import codeOrchestra.lcs.project.CompilerSettings;
+import codeOrchestra.lcs.project.LCSProject;
 
 public class FileTreeContentProvider implements ITreeContentProvider {
 
@@ -67,8 +71,25 @@ public class FileTreeContentProvider implements ITreeContentProvider {
 			// the root nodes in the file system
 			return File.listRoots();
 		} else {
-			return root.listFiles();
+			File outputFile = CompilerSettings.getOutputFile();
+			
+			Object[] fileObjects = root.listFiles();
+			
+			if (!outputFile.exists()) {
+				Object[] newFileObjects = appendElementToArray(fileObjects, outputFile);
+				fileObjects = newFileObjects;
+			}
+			
+			return fileObjects;
 		}
+	}
+	
+	//http://stackoverflow.com/questions/2843366/how-to-add-new-elements-to-an-array
+	static <T> T[] appendElementToArray(T[] arr, T element) {
+	    final int N = arr.length;
+	    arr = Arrays.copyOf(arr, N + 1);
+	    arr[N] = element;
+	    return arr;
 	}
 	
 	public List<File> getElementsRecursive() {
