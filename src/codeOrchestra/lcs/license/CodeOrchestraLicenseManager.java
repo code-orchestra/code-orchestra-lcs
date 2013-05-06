@@ -47,6 +47,8 @@ public class CodeOrchestraLicenseManager {
       throw new IllegalArgumentException("Invalid serial number");
     }
 
+    new ActivationReporter(serialNumber).report();
+    
     preferences.put(SERIAL_NUMBER_KEY, serialNumber);
 
     try {
