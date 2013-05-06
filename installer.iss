@@ -39,7 +39,7 @@ Source: "C:\programs\COLT\*"; DestDir: "{app}"; Flags: ignoreversion recursesubd
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]  
-Name: "{app}"; Permissions: everyone-modify;  
+Name: "{app}"; Permissions: everyone-modify;
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

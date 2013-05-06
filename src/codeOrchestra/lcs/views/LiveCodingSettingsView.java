@@ -204,7 +204,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     if (SystemInfo.isMac) {
       flashPlayerPathEditor = new DirectoryFieldEditorEx("flashPlayerPath", "", flashPlayerPathComposite);
     } else {
-      flashPlayerPathEditor = new FileFieldEditor("mainClass", "Main class:", flashPlayerPathComposite);
+      flashPlayerPathEditor = new FileFieldEditor("flashPlayerPath", "", flashPlayerPathComposite);
       ((FileFieldEditor) flashPlayerPathEditor).setFileExtensions(new String[] { "*.exe" });
     }
     flashPlayerPathEditor.setPreferenceStore(getPreferenceStore());
