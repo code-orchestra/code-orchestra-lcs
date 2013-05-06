@@ -125,7 +125,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         projectToolBar.add(newProjectAction);
         projectToolBar.add(openProjectAction);
         projectToolBar.add(saveProjectAction);        
-        projectToolBar.add(exitAction);
         coolBar.add(new ToolBarContributionItem(projectToolBar, "project"));
                 
         IToolBarManager runToolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
