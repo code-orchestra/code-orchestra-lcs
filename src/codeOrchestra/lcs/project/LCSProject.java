@@ -3,10 +3,6 @@ package codeOrchestra.lcs.project;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-
 import codeOrchestra.actionScript.compiler.fcsh.FSCHCompilerKind;
 import codeOrchestra.http.CodeOrchestraHttpServer;
 
@@ -135,6 +131,7 @@ public class LCSProject {
   private void initDefaultValues() {
     preferenceStore.setValue("useDefaultSDKConfiguration", true);
     preferenceStore.setValue("clearMessages", true);
+    preferenceStore.setValue("disconnectOnTimeout", true);
   }
   
   public void save() {

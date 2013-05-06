@@ -474,7 +474,9 @@ public class LiveCodingManager {
         }
 
         if (lastPong < lastPing) {
-          stopSession(liveCodingSession);
+          if (LCSProject.getCurrentProject().getLiveCodingSettings().disconnectOnTimeout()) {
+            stopSession(liveCodingSession);
+          }
         }
       }
     }

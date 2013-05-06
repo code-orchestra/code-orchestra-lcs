@@ -64,6 +64,8 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   private BooleanFieldEditor startSessionPausedEditor;
   private BooleanFieldEditor makeGettersSettersLiveEditor;
   private StringFieldEditor maxLoopIterationsEditor;
+  private BooleanFieldEditor clearMessagesEditor;
+  private BooleanFieldEditor disconnectOnTimeoutEditor;
 
   private Button defaultLauncherButton;
   private Button flashPlayerLauncherButton;
@@ -94,8 +96,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   private AirIosLaunchCustomizationDialogShell airIosLaunchCustomizationDialogShell;
 
   private IWorkbenchWindow window;
-
-  private BooleanFieldEditor clearMessagesEditor;
 
   @Override
   public void init(IViewSite site) throws PartInitException {
@@ -262,6 +262,13 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     clearMessagesLayoutData.horizontalSpan = 2;
     clearMessagesComposite.setLayoutData(clearMessagesLayoutData);
     
+    Composite diconnectOnTimeoutComposite = new Composite(parent, SWT.NONE);
+    disconnectOnTimeoutEditor = new BooleanFieldEditor("disconnectOnTimeout", "Disconnect on ping timeout", diconnectOnTimeoutComposite);
+    disconnectOnTimeoutEditor.setPreferenceStore(getPreferenceStore());
+    GridData diconnectOnTimeoutLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
+    diconnectOnTimeoutLayoutData.horizontalSpan = 2;
+    diconnectOnTimeoutComposite.setLayoutData(diconnectOnTimeoutLayoutData);
+    
     reset();
     updateUI();
   }
@@ -406,6 +413,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     makeGettersSettersLiveEditor.load();
     maxLoopIterationsEditor.load();
     clearMessagesEditor.load();
+    disconnectOnTimeoutEditor.load();
 
     if (StringUtils.isEmpty(maxLoopIterationsEditor.getStringValue())) {
       maxLoopIterationsEditor.setStringValue("10000");
@@ -443,6 +451,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     makeGettersSettersLiveEditor.store();
     maxLoopIterationsEditor.store();
     clearMessagesEditor.store();
+    disconnectOnTimeoutEditor.store();
   }
 
   private void updateUI() {
