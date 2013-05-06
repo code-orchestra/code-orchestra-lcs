@@ -18,6 +18,8 @@ public class StringUtils {
       return combine(s, t);
     }
   }
+
+  public static final String EMPTY = "";
   
   public static String reverse(String str) {
     if (str == null) {

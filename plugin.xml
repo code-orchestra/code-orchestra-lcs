@@ -120,6 +120,11 @@
             id="LCS.startPlus"
             name="Run again">
       </command>
+      <command
+            description="Enter Serial Number"
+            id="LCS.enterSerial"
+            name="Enter Serial Number">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">

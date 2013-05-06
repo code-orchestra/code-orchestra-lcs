@@ -20,6 +20,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.intellij.openapi.util.SystemInfo;
 
 import codeOrchestra.lcs.actions.ClearCachesAction;
+import codeOrchestra.lcs.actions.EnterSerialNumberAction;
 import codeOrchestra.lcs.actions.GoToLogsFolderAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
@@ -46,6 +47,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private ClearCachesAction clearCachesAction;
     private GoToLogsFolderAction goToLogsFolderAction;
     private StartPlusAction startPlusAction;
+    private EnterSerialNumberAction enterSerialAction;
     
     private StartSessionAction startSessionAction;
 
@@ -87,6 +89,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         startSessionAction = new StartSessionAction(window);
         register(startSessionAction);
+        
+        enterSerialAction = new EnterSerialNumberAction();
+        register(enterSerialAction);
     }
     
     protected void fillMenuBar(IMenuManager menuBar) {
@@ -117,6 +122,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(exitAction);
         
         // Help
+        helpMenu.add(enterSerialAction);        
+        helpMenu.add(new Separator());
         helpMenu.add(aboutAction);
     }
     

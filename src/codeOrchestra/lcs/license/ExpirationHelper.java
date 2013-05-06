@@ -1,22 +1,33 @@
 package codeOrchestra.lcs.license;
 
-import java.util.Date;
+/**
+ * @author Alexander Eliseyev
+ */
+public final class ExpirationHelper {
 
-public class ExpirationHelper {
+  public static ExpirationStrategy getExpirationStrategy() {
+    return expirationStrategy;
+  }
 
-  private static final Date EXPIRATION_DATE = new Date(2013 - 1900, 4, 15);
-  
-  private static boolean canExpire = true;
-  
-  public static boolean hasExpired() {
-    if (!canExpire) {
-      return false;
+  private static final ExpirationStrategy expirationStrategy = new CalendarUsageDayExpirationStrategy();
+
+  public static int getDaysInUse() {
+    return expirationStrategy.getDaysInUse();
+  }
+
+  public static int getExpirationPeriod() {
+    return expirationStrategy.getExpirationPeriod();
+  }
+
+  public static int getDaysLeft() {
+    if (hasExpired()) {
+      throw new IllegalStateException("Expiration period is over");
     }
-    return new Date().after(EXPIRATION_DATE);
+    return getExpirationPeriod() - getDaysInUse() + 1;
   }
-  
-  public static String getExpirationMessage() {
-    return canExpire ?  "Your copy of COLT will expire on " + EXPIRATION_DATE.toLocaleString() : "";
+
+  public static boolean hasExpired() {
+    return getDaysInUse() > getExpirationPeriod();
   }
-  
+
 }

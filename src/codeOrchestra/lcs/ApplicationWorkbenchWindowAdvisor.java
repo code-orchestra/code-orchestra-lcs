@@ -6,8 +6,6 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import codeOrchestra.lcs.license.ExpirationHelper;
-
 /**
  * @author Alexander Eliseyev
  */
@@ -38,12 +36,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void postWindowCreate() {
         super.postWindowCreate();
         configurer = getWindowConfigurer();
-        configurer.getActionBarConfigurer().getStatusLineManager().setMessage(ExpirationHelper.getExpirationMessage());
     }
 
     public void setTitle(String title) {
       configurer.setTitle(title);
-      configurer.getActionBarConfigurer().getStatusLineManager().setMessage(ExpirationHelper.getExpirationMessage());
     }
     
 }

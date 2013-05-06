@@ -2,7 +2,6 @@ package codeOrchestra.lcs;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
@@ -10,15 +9,21 @@ import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 import codeOrchestra.http.CodeOrchestraHttpServer;
-import codeOrchestra.lcs.license.ExpirationHelper;
+import codeOrchestra.lcs.license.LicenseManager;
 
 /**
  * @author Alexander Eliseyev
  */
 public class Application implements IApplication {
 
+  public static Application INSTANCE = new Application(); 
+  
   private LoggerServerSocketThread serverSocketThread = new LoggerServerSocketThread();
 
+  public Application() {
+    INSTANCE = this;
+  }
+  
   /*
    * (non-Javadoc)
    * 
@@ -29,6 +34,13 @@ public class Application implements IApplication {
     final Display display = PlatformUI.createDisplay();
     try {
 
+      
+      Object licenseReturnCode = LicenseManager.getInstance().interceptStart();
+      if (licenseReturnCode != null) {
+        return licenseReturnCode;
+      }
+      
+      /*
       if (ExpirationHelper.hasExpired()) {
         display.syncExec(new Runnable() {
           public void run() {
@@ -37,6 +49,7 @@ public class Application implements IApplication {
         });
         return IApplication.EXIT_OK;
       }
+      */
 
       display.addListener(SWT.OpenDocument, new OpenDocumentEventProcessor());
       
