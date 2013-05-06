@@ -3,6 +3,10 @@ package codeOrchestra.lcs.run;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+
 import jetbrains.mps.execution.api.commands.ProcessHandlerBuilder;
 
 import codeOrchestra.actionScript.run.BrowserUtil;
@@ -11,6 +15,8 @@ import codeOrchestra.lcs.air.ipaBuildScriptGenerator;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
+import codeOrchestra.lcs.views.LiveCodingSettingsView;
+import codeOrchestra.lcs.views.elements.ViewHelper;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.ProcessHandler;
@@ -26,8 +32,9 @@ public class LiveLauncher {
     CompilerSettings compilerSettings = project.getCompilerSettings();
     Target launchTarget = liveCodingSettings.getLaunchTarget();
 
-    if (launchTarget == Target.AIR) {
-      return new ProcessHandlerBuilder().append(protect(ipaBuildScriptGenerator.getSctiptPath(project).getPath())).build(project.getOutputDir());
+    if (launchTarget == Target.AIR_IOS) {
+        	String scriptPath = compilerSettings.getAirScript();
+        	return new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir());
     }
     
     LauncherType launcherType = liveCodingSettings.getLauncherType();    

@@ -49,7 +49,6 @@ public class AirIosLaunchCustomizationDialogShell extends ModalSettingsDialogShe
 	
 	public void runGeneration() {
         if (submitted) {
-        	savePart();
         	 // 1 - save
 	        LCSProject currentProject = LCSProject.getCurrentProject();
 	        LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
@@ -58,16 +57,7 @@ public class AirIosLaunchCustomizationDialogShell extends ModalSettingsDialogShe
 	        // 2 - generate
 	        String scriptPath = null;
 	        try {          
-	          scriptPath = new AirIosIpaBuildScriptGenerator(currentProject, currentProject.getName(),window).generate(airIosOptions,airIosFileTree);
-	          
-	          Runtime r=Runtime.getRuntime();
-	          Process p=null;
-	          try {
-	              p = r.exec(scriptPath);
-	          } catch (IOException ex) {
-	        	  ex.printStackTrace();
-	          }
-	          
+	          scriptPath = new AirIosIpaBuildScriptGenerator(currentProject, currentProject.getName(),window).generate(airIosOptions,airIosFileTree);  
 	        } catch (IOException e1) {
 	          // TODO Auto-generated catch block
 	          e1.printStackTrace();
@@ -113,6 +103,7 @@ public class AirIosLaunchCustomizationDialogShell extends ModalSettingsDialogShe
 	    ok.addSelectionListener(new SelectionAdapter() {
 	      @Override
 	      public void widgetSelected(SelectionEvent e) {
+	    	  savePart();
 	    	  AirIosLaunchCustomizationDialogShell.this.submitted=true;
 	    	  runGeneration();
 	    	  AirIosLaunchCustomizationDialogShell.this.setVisible(false);
@@ -125,6 +116,7 @@ public class AirIosLaunchCustomizationDialogShell extends ModalSettingsDialogShe
 	    cancel.addSelectionListener(new SelectionAdapter() {
 	      @Override
 	      public void widgetSelected(SelectionEvent e) {
+	          savePart();
 	    	  AirIosLaunchCustomizationDialogShell.this.submitted=false;
 	    	  AirIosLaunchCustomizationDialogShell.this.setVisible(false);
 	      }

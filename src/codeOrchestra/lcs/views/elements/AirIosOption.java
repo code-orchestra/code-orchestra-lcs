@@ -48,7 +48,7 @@ public class AirIosOption {
 		if (widgetType.equals("file")||widgetType.equals("directory")) {
 
 			Button btn = new Button(getParentComponent(), SWT.PUSH);
-			btn.setText("locate");
+			btn.setText("Browse...");
 			btn.setSize(btn.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			btn.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {

@@ -305,6 +305,11 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   
   public void setAirIosScriptEditorValue(String value) {
 	  airIosScriptEditor.setStringValue(value);
+	  airIosScriptEditor.store();
+  }
+  
+  public String getAirIosScriptEditorValue() {
+	  return airIosScriptEditor.getStringValue();
   }
   
   private void addAirIosControls(Group targetSettingsGroup) {
