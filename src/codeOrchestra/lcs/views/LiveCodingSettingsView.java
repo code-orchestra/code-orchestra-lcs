@@ -9,7 +9,9 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -43,8 +45,8 @@ import codeOrchestra.lcs.views.elements.ExtendedComposite;
 import codeOrchestra.lcs.views.elements.ViewHelper;
 import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.StringUtils;
-
 import codeOrchestra.lcs.air.AirIosIpaBuildScriptGenerator;
+import com.intellij.openapi.util.SystemInfo;
 
 /**
  * @author Alexander Eliseyev
@@ -55,10 +57,9 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   
   private DataBindingContext dbc = new DataBindingContext();
 
-  Group targetSettingsGroup;
-  
-  private DirectoryFieldEditorEx flashPlayerPathEditor;
-  private StringFieldEditor webAddressEditor;  
+  private StringButtonFieldEditor flashPlayerPathEditor;
+  private StringFieldEditor webAddressEditor;
+
   private RadioGroupFieldEditor liveMethodsGroupEditor;
   private BooleanFieldEditor startSessionPausedEditor;
   private BooleanFieldEditor makeGettersSettersLiveEditor;
@@ -87,6 +88,8 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   private StringFieldEditor airIosScriptEditor;
   private Button generateAirIosScriptButton;
   private Button generateAirIosCustomizeLaunchButton;
+
+  private Group targetSettingsGroup;
   
   private AirIosLaunchCustomizationDialogShell airIosLaunchCustomizationDialogShell;
 
@@ -197,7 +200,13 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     flashPlayerLauncherButton.setText("Flash Player");
     flashPlayerPathComposite = new Composite(launcherSettingsGroup, SWT.NONE);
     flashPlayerPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-    flashPlayerPathEditor = new DirectoryFieldEditorEx("flashPlayerPath", "", flashPlayerPathComposite);
+    
+    if (SystemInfo.isMac) {
+      flashPlayerPathEditor = new DirectoryFieldEditorEx("flashPlayerPath", "", flashPlayerPathComposite);
+    } else {
+      flashPlayerPathEditor = new FileFieldEditor("mainClass", "Main class:", flashPlayerPathComposite);
+      ((FileFieldEditor) flashPlayerPathEditor).setFileExtensions(new String[] { "*.exe" });
+    }
     flashPlayerPathEditor.setPreferenceStore(getPreferenceStore());
 
     Group liveSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
@@ -214,7 +223,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     Composite liveMethodsComposite = new Composite(liveSettingsGroup, SWT.NONE);
     String[][] liveMethodOptions = new String[][] { { "Annotated with [Live]", "annotated" }, { "All the methods", "all" } };
     liveMethodsGroupEditor = new RadioGroupFieldEditor("liveMethods", "", 1, liveMethodOptions, liveMethodsComposite);
-//    liveMethodsGroupEditor.setEnabled(false, liveMethodsComposite); // TODO: uncomment for Release version
     liveMethodsGroupEditor.setPreferenceStore(getPreferenceStore());
 
     Label startSessionPausedLabel = new Label(liveSettingsGroup, SWT.NONE);
