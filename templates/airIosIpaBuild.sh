@@ -1,7 +1,6 @@
 #!/bin/bash
 
-ACOMPC="{FLEX_SDK}/bin/acompc"
-ADT="{FLEX_SDK}/bin/adt"
+ADT="{air-sdk}/bin/adt"
 
 PROV="{provisioning-profile}"
 CER="{keystore}"

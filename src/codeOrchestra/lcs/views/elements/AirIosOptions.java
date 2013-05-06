@@ -15,6 +15,7 @@ import scala.actors.threadpool.Arrays;
 
 public class AirIosOptions {
 	private String[][] optionSources = new String[][] {
+			new String[]{"AIR SDK","air-sdk",null,"directory"},
 			of("provisioning-profile"),
 			of("keystore"),
 			op("storepass")
