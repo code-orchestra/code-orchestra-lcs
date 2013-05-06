@@ -301,7 +301,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	        airScriptEditor.setStringValue(scriptPath);
 	      }
 	    });
-
   }
   
   private void addAirIosControls(Group targetSettingsGroup) {
@@ -371,6 +370,10 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 //				widgetSelected(e);
 //			}
 //		});
+	    
+	    if (SystemInfo.isWindows) {
+	    	airIosTargetButton.setEnabled(false);
+	    }
 }  
   
   public static Display getDisplay() {
