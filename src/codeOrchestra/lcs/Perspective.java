@@ -6,7 +6,6 @@ import org.eclipse.ui.IPerspectiveFactory;
 
 import codeOrchestra.lcs.messages.MessagesManager;
 import codeOrchestra.lcs.session.SessionViewManager;
-import codeOrchestra.lcs.views.AirIosSettingsView;
 import codeOrchestra.lcs.views.CompilerSettingsView;
 import codeOrchestra.lcs.views.FCSHConsoleView;
 import codeOrchestra.lcs.views.LiveCodingSettingsView;
@@ -36,13 +35,11 @@ public class Perspective implements IPerspectiveFactory {
 		liveCodingFolder.addPlaceholder(LiveCodingSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(CompilerSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(SessionView.ID + ":*");
-		liveCodingFolder.addPlaceholder(AirIosSettingsView.ID + ":*");
 		SessionViewManager.init(layout, liveCodingFolder);
 
 		layout.getViewLayout(SourceSettingsView.ID).setCloseable(false);
 		layout.getViewLayout(LiveCodingSettingsView.ID).setCloseable(false);
 		layout.getViewLayout(CompilerSettingsView.ID).setCloseable(false);
-		layout.getViewLayout(AirIosSettingsView.ID).setCloseable(false);
 		
 		// Messages
     IFolderLayout messagesFolder = layout.createFolder("messages", IPageLayout.LEFT, 0.40f, editorArea);

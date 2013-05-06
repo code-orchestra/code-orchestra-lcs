@@ -303,6 +303,10 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	    });
   }
   
+  public void setAirIosScriptEditorValue(String value) {
+	  airIosScriptEditor.setStringValue(value);
+  }
+  
   private void addAirIosControls(Group targetSettingsGroup) {
 	    airIosTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
 	    airIosTargetButton.setText("AIR (iOS):");
@@ -316,35 +320,13 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	    airIosScriptEditor = new StringFieldEditor("airScript", "", airIosComposite);
 	    airIosScriptEditor.setPreferenceStore(getPreferenceStore());
 	    generateAirIosScriptButton = new Button(targetSettingsGroup, SWT.PUSH);
-	    generateAirIosScriptButton.setText("Package && Deploy");
+	    generateAirIosScriptButton.setText("Generate Script");
 	    generateAirIosScriptButton.addSelectionListener(new SelectionAdapter() {
 	      @Override
 	      public void widgetSelected(SelectionEvent e) {
-	        // 1 - save
-	        LCSProject currentProject = LCSProject.getCurrentProject();
-	        LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
-	        currentProject.save();
-
-	        // 2 - generate
-	        String scriptPath = null;
-	        try {          
-	          scriptPath = new AirIosIpaBuildScriptGenerator(currentProject, currentProject.getName(),window).generate();
-	          
-	          Runtime r=Runtime.getRuntime();
-	          Process p=null;
-	          try {
-	              p = r.exec(scriptPath);
-	          } catch (IOException ex) {
-	        	  ex.printStackTrace();
-	          }
-	          
-	        } catch (IOException e1) {
-	          // TODO Auto-generated catch block
-	          e1.printStackTrace();
-	        }
 	        
-	        // 3 - update address
-	        airIosScriptEditor.setStringValue(scriptPath);
+	        AirIosLaunchCustomizationDialogShell dlg = new AirIosLaunchCustomizationDialogShell(window,getPreferenceStore());
+	        dlg.show();
 	      }
 	    });
 	    	    
@@ -478,24 +460,24 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       defaultLauncherButton.setSelection(true);
     }
 
-    LiveCodingSettingsView lcsv = (LiveCodingSettingsView) ViewHelper.getView(window,LiveCodingSettingsView.ID);
-    AirIosSettingsView aisv = (AirIosSettingsView) ViewHelper.getView(window,AirIosSettingsView.ID);
-
-    if (null!=lcsv) {	  
-    	if (!lcsv.isAirIosSelected()) {		
-    		if (null!=aisv) {
-    			aisv.getAirIosFileTree().removeFileMonitor();
-    			window.getActivePage().hideView(aisv);
-    		}
-    	} else {
-    		try {
-    				window.getActivePage().showView(AirIosSettingsView.ID,LCSProject.getCurrentProject().getName(),IWorkbenchPage.VIEW_CREATE);
-    		} catch (PartInitException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
-    }
+//    LiveCodingSettingsView lcsv = (LiveCodingSettingsView) ViewHelper.getView(window,LiveCodingSettingsView.ID);
+//    AirIosSettingsView aisv = (AirIosSettingsView) ViewHelper.getView(window,AirIosSettingsView.ID);
+//
+//    if (null!=lcsv) {	  
+//    	if (!lcsv.isAirIosSelected()) {		
+//    		if (null!=aisv) {
+//    			aisv.getAirIosFileTree().removeFileMonitor();
+//    			window.getActivePage().hideView(aisv);
+//    		}
+//    	} else {
+//    		try {
+//    				window.getActivePage().showView(AirIosSettingsView.ID,LCSProject.getCurrentProject().getName(),IWorkbenchPage.VIEW_CREATE);
+//    		} catch (PartInitException e) {
+//    			// TODO Auto-generated catch block
+//    			e.printStackTrace();
+//    		}
+//    	}
+//    }
   }
   
   public boolean isAirIosSelected() {
