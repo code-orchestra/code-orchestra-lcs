@@ -53,15 +53,12 @@ public class StartSessionAction extends Action {
     try {
       // Save project
       final LCSProject currentProject = LCSProject.getCurrentProject();
-      LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
-      currentProject.save();
-
-      // Validate project
-      if (!LiveCodingProjectViews.validateProjectViewsState(window, currentProject)) {
+      if (!LiveCodingProjectViews.saveProjectViewsState(window, currentProject)) {
         setEnabled(true);
         return;
       }
-      
+      currentProject.save();
+
       // Clear messages
       if (currentProject.getLiveCodingSettings().clearMessagesOnSessionStart()) {
         MessagesManager.getInstance().clear();

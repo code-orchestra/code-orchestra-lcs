@@ -3,7 +3,10 @@ package codeOrchestra.actionScript.compiler.fcsh.console.command;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
+import codeOrchestra.lcs.project.CompilerSettings;
+import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.utils.ThreadUtils;
+
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessListener;
@@ -17,7 +20,6 @@ public class FCSHCommandRunnable implements Runnable  {
   private static final Logger LOG = Logger.getLogger("FCSHProcessHandler");
   
   private static final int TEXT_RECIEVE_SLEEP_TIMEOUT = 50;
-  private static final int COMMAND_EXECUTE_TIMEOUT = 30000;
 
   private FCSHManager fcshManager;
   private CommandCallback commandCallback;
@@ -51,7 +53,8 @@ public class FCSHCommandRunnable implements Runnable  {
           return;
         }
 
-        int timeout = COMMAND_EXECUTE_TIMEOUT;
+        CompilerSettings compilerSettings = LCSProject.getCurrentProject().getCompilerSettings();        
+        long timeout = compilerSettings.interruptCompilationByTimeout() ? compilerSettings.getCompilationTimeout() * 1000 : Long.MAX_VALUE;
         while (true) {
           // Sleep a bit
           ThreadUtils.sleep(TEXT_RECIEVE_SLEEP_TIMEOUT);

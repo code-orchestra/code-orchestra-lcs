@@ -48,12 +48,15 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private BooleanFieldEditor compilerStrictEditor;  
   private StringFieldEditor localeOptionsEditor;
   private StringFieldEditor compilerOptionsEditor;
+  private BooleanFieldEditor compilationTimeoutEditor;
+  private StringFieldEditor compilationTimeoutValueEditor;
 
   // Containers
 
   private Composite customCompilerConfigEditorComposite;
   private Composite targetPlayerComposite;
   private Composite localeOptionsEditorComposite;
+  private Composite compilationTimeoutValueComposite;
 
   // Validation controls
 
@@ -71,6 +74,18 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     String flexSDKPath = flexSDKPathEditor.getStringValue();
     if (StringUtils.isEmpty(flexSDKPath) || !new File(flexSDKPath).exists()) {
       errors.add("Invalid Flex SDK path " + flexSDKPath);
+    }
+    
+    if (compilationTimeoutEditor.getBooleanValue()) {
+      String timeoutStr = compilationTimeoutValueEditor.getStringValue();
+      try {
+        int timeout = Integer.parseInt(timeoutStr);
+        if (timeout < 1) {
+          errors.add("Compilation timeout must be positive");
+        }
+      } catch (NumberFormatException e) {
+        errors.add("Compilation timeout must have numeric");        
+      }
     }
     
     return errors;
@@ -155,7 +170,6 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     Composite outputFileComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     outputFileComposite.setLayout(new GridLayout());
     GridData outputFileCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
-//    outputFileCompositeGridData.horizontalIndent = 5;
     outputFileComposite.setLayoutData(outputFileCompositeGridData);
 
     outputFileNameEditor = new StringFieldEditor("outputFileName", " Output file name:", outputFileComposite);
@@ -201,6 +215,27 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     compilerStrictEditor = new BooleanFieldEditor("compilerStrict", "Strict mode", strictModeComposite);
     compilerStrictEditor.setPreferenceStore(getPreferenceStore());
     strictModeComposite.setLayout(new GridLayout());
+
+    Composite compilationTimeoutComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
+    GridData compilationTimeoutCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+    compilationTimeoutCompositeGridData.horizontalIndent = 10;
+    compilationTimeoutComposite.setLayoutData(compilationTimeoutCompositeGridData);
+    compilationTimeoutEditor = new BooleanFieldEditor("compilationTimeout", "Interrupt compilation by timeout (seconds):", compilationTimeoutComposite);
+    compilationTimeoutEditor.setPreferenceStore(getPreferenceStore());
+    compilationTimeoutEditor.setPropertyChangeListener(new IPropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent event) {
+        updateUI();
+      }
+    });
+    compilationTimeoutValueComposite = new Composite(compilationTimeoutComposite, SWT.NONE);
+    compilationTimeoutValueComposite.setLayout(new GridLayout());
+    GridData compilationTimeoutValueCompositeLayoutData = new GridData(SWT.LEFT, SWT.BEGINNING, true, false);
+    compilationTimeoutValueCompositeLayoutData.widthHint = 50;
+    compilationTimeoutValueComposite.setLayoutData(compilationTimeoutValueCompositeLayoutData);
+    compilationTimeoutValueEditor = new StringFieldEditor("compilationTimeoutValue", "", compilationTimeoutValueComposite);
+    compilationTimeoutValueEditor.setPreferenceStore(getPreferenceStore());
+    compilationTimeoutComposite.setLayout(new GridLayout(compilationTimeoutValueEditor.getNumberOfControls() + 1, false));
 
     Composite compilerOptionsEditorComposite = new Composite(parent, SWT.NONE);
     compilerOptionsEditorComposite.setLayout(new GridLayout());
@@ -269,18 +304,13 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
       outputFileNameEditor.setStringValue(LCSProject.getCurrentProject().getName() + ".swf");
     }
 
-    /*
-    outputPathEditor.load();
-    if (StringUtils.isEmpty(outputPathEditor.getStringValue())) {
-      outputPathEditor.setStringValue(LCSProject.getCurrentProject().getOutputDir().getAbsolutePath());
-    }
-    */
-
     useFrameworkAsRSLEditor.load();
     nonDefaultLocaleEditor.load();
     compilerStrictEditor.load();
+    compilationTimeoutEditor.load();
     localeOptionsEditor.load();
     compilerOptionsEditor.load();
+    compilationTimeoutValueEditor.load();
   }
 
   @Override
@@ -292,18 +322,20 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customSDKBooleanEditor.store();
     customCompilerConfigEditor.store();
     outputFileNameEditor.store();
-//    outputPathEditor.store();
     targetPlayerEditor.store();
     useFrameworkAsRSLEditor.store();
     nonDefaultLocaleEditor.store();
     compilerStrictEditor.store();
+    compilationTimeoutEditor.store();
     localeOptionsEditor.store();
     compilerOptionsEditor.store();
+    compilationTimeoutValueEditor.store();
   }
 
   private void updateUI() {
     customCompilerConfigEditor.setEnabled(customSDKBooleanEditor.getBooleanValue(), customCompilerConfigEditorComposite);
     localeOptionsEditor.setEnabled(nonDefaultLocaleEditor.getBooleanValue(), localeOptionsEditorComposite);
+    compilationTimeoutValueEditor.setEnabled(compilationTimeoutEditor.getBooleanValue(), compilationTimeoutValueComposite);
   }
 
   @Override

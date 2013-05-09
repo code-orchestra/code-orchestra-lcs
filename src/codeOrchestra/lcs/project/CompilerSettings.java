@@ -22,6 +22,14 @@ public class CompilerSettings extends ProjectSettingsPart {
 		super(preferenceStore);
 	}	
 	
+	public boolean interruptCompilationByTimeout() {
+	  return getPreferenceStore().getBoolean("compilationTimeout");	  
+	}
+	
+	public int getCompilationTimeout() {
+    return getPreferenceStore().getInt("compilationTimeoutValue");   
+  }
+	
 	public String getFlexSDKPath() {
 	  return getPreferenceStore().getString("flexSDKPath");
 	}

@@ -132,6 +132,7 @@ public class LCSProject {
     preferenceStore.setValue("useDefaultSDKConfiguration", true);
     preferenceStore.setValue("clearMessages", true);
     preferenceStore.setValue("disconnectOnTimeout", true);
+    preferenceStore.setValue("compilationTimeoutValue", "30");
   }
   
   public void save() {

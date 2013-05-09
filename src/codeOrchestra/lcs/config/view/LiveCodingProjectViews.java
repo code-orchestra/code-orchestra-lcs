@@ -9,18 +9,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.lcs.ApplicationWorkbenchWindowAdvisor;
 import codeOrchestra.lcs.project.LCSProject;
-import codeOrchestra.lcs.views.FCSHConsoleView;
 import codeOrchestra.lcs.views.LiveCodingProjectPartView;
-import codeOrchestra.lcs.views.LiveCodingSettingsView;
-import codeOrchestra.lcs.views.elements.AirIosOptions;
-import codeOrchestra.lcs.views.elements.ViewHelper;
 
 /**
  * @author Alexander Eliseyev
@@ -39,7 +34,7 @@ public final class LiveCodingProjectViews {
   }
   
   @SuppressWarnings("unchecked")
-  public static boolean validateProjectViewsState(IWorkbenchWindow window, LCSProject project) {
+  private static boolean validateProjectViewsState(IWorkbenchWindow window, LCSProject project) {
     List<String> errors = new ArrayList<String>();
     
     IViewReference[] viewReferences = window.getActivePage().getViewReferences();
@@ -62,7 +57,7 @@ public final class LiveCodingProjectViews {
         sb.append(errorMessage).append("\n");
       }
       
-      MessageDialog.openError(window.getShell(), "Invalid settings", "Can't start a livecoding session due to invalid settings:\n\n" + sb.toString());
+      MessageDialog.openError(window.getShell(), "Invalid settings", "Can't save the project due to invalid settings:\n\n" + sb.toString());
       
       return false;
     }
@@ -70,7 +65,11 @@ public final class LiveCodingProjectViews {
     return true;
   }
   
-  public static void saveProjectViewsState(IWorkbenchWindow window, LCSProject project) {
+  public static boolean saveProjectViewsState(IWorkbenchWindow window, LCSProject project) {
+    if (!validateProjectViewsState(window, project)) {
+      return false;
+    }
+    
     IViewReference[] viewReferences = window.getActivePage().getViewReferences();
     for (String viewId : lcpViewIDs) {      
       for (int i = 0; i < viewReferences.length; i++) {
@@ -84,6 +83,8 @@ public final class LiveCodingProjectViews {
         }
       }
     }
+    
+    return true;
   }
   
   public static void openProjectViews(IWorkbenchWindow window, LCSProject project) throws PartInitException {
