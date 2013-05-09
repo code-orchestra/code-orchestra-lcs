@@ -84,7 +84,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
           errors.add("Compilation timeout must be positive");
         }
       } catch (NumberFormatException e) {
-        errors.add("Compilation timeout must have numeric");        
+        errors.add("Compilation timeout must have numeric value");        
       }
     }
     
