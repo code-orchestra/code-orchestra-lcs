@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.serialNumber.validation;
+package codeOrchestra.lcs.macAddress;
 
 /**
  * @author Alexander Eliseyev

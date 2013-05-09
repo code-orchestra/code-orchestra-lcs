@@ -5,7 +5,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
-import codeOrchestra.lcs.serialNumber.validation.SerialValidator;
+import codeOrchestra.lcs.macAddress.SystemCheck;
 
 /**
  * @author Alexander Eliseyev
@@ -33,7 +33,7 @@ public class CodeOrchestraLicenseDialogs {
     
     String serialNumber = inputDialog.getValue();
     if (serialNumber != null) {
-      if (SerialValidator.getInstance().isValidSerialNumber(serialNumber)) {
+      if (SystemCheck.getInstance().isValidMACAddress(serialNumber)) {
         MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Serial number", "Thank you for choosing the Code Orchestra Livecoding Tool!");
         CodeOrchestraLicenseManager.registerProduct(serialNumber);
         return true;

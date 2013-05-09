@@ -4,7 +4,7 @@ package codeOrchestra.lcs.license;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import codeOrchestra.lcs.serialNumber.validation.SerialValidator;
+import codeOrchestra.lcs.macAddress.SystemCheck;
 import codeOrchestra.utils.StringUtils;
 
 /**
@@ -37,13 +37,13 @@ public class CodeOrchestraLicenseManager {
   }
 
   public static boolean isLicenseValid() {
-    return SerialValidator.getInstance().isValidSerialNumber(getSerialNumber());
+    return SystemCheck.getInstance().isValidMACAddress(getSerialNumber());
   }
 
   public static void registerProduct(String serialNumber) {
     // This is a bit paranoid, as the serial number must be checked before handing it over here,
     // but hey, you never know.
-    if (!SerialValidator.getInstance().isValidSerialNumber(serialNumber)) {
+    if (!SystemCheck.getInstance().isValidMACAddress(serialNumber)) {
       throw new IllegalArgumentException("Invalid serial number");
     }
 
