@@ -38,8 +38,7 @@ public class FCSHLauncher extends JavaLauncher {
     programParameters.append(" -Duser.language=en");
     programParameters.append(" -Duser.country=US");
     programParameters.append(" -Djava.awt.headless=true");
-    programParameters.append(" -Xms512m -Xmx512m");
-
+    
     // Tracing parameters
     programParameters.append(" -DcodeOrchestra.trace.host=" + LocalhostUtil.getLocalhostIp());
     programParameters.append(" -DcodeOrchestra.trace.port=" + LoggerServerSocketThread.LOGGING_PORT);
@@ -59,7 +58,7 @@ public class FCSHLauncher extends JavaLauncher {
     setProgramParameter(programParameters.toString());
     
     StringBuilder jvmParameters = new StringBuilder();
-    jvmParameters.append("-Xmx384m -Dsun.io.useCanonCaches=false ");
+    jvmParameters.append("-Xms512m -Xmx512m -Dsun.io.useCanonCaches=false ");
 
     
     if (PROFILING_ON) {
