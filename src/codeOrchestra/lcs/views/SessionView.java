@@ -85,37 +85,37 @@ public class SessionView extends ViewPart {
     Label playerVersionLabel = new Label(targetSettingsGroup, SWT.NONE);
     playerVersionLabel.setText("Player version:");
     Label playerVersionValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    playerVersionValueLabel.setText(clientInfo.get("V"));
+    playerVersionValueLabel.setText(protect(clientInfo.get("V")));
     
     Label playerTypeLabel = new Label(targetSettingsGroup, SWT.NONE);
     playerTypeLabel.setText("Player type:");
     Label playerTypeValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    playerTypeValueLabel.setText(clientInfo.get("PT"));
+    playerTypeValueLabel.setText(protect(clientInfo.get("PT")));
     
     Label manufacturerLabel = new Label(targetSettingsGroup, SWT.NONE);
     manufacturerLabel.setText("Manufacturer:");
     Label manufacturerValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    manufacturerValueLabel.setText(clientInfo.get("M"));
+    manufacturerValueLabel.setText(protect(clientInfo.get("M")));
     
     Label osLabel = new Label(targetSettingsGroup, SWT.NONE);
     osLabel.setText("Operation system:");
     Label osValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    osValueLabel.setText(clientInfo.get("OS"));
+    osValueLabel.setText(protect(clientInfo.get("OS")));
         
     Label architectureLabel = new Label(targetSettingsGroup, SWT.NONE);
     architectureLabel.setText("System architecture:");
     Label architectureValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    architectureValueLabel.setText(clientInfo.get("ARCH"));
+    architectureValueLabel.setText(protect(clientInfo.get("ARCH")));
     
     Label languageLabel = new Label(targetSettingsGroup, SWT.NONE);
     languageLabel.setText("Language:");
     Label languageValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    languageValueLabel.setText(clientInfo.get("L"));
+    languageValueLabel.setText(protect(clientInfo.get("L")));
     
     Label resolutionLabel = new Label(targetSettingsGroup, SWT.NONE);
     resolutionLabel.setText("Resolution:");
     Label resolutionValueLabel = new Label(targetSettingsGroup, SWT.NONE);
-    resolutionValueLabel.setText(clientInfo.get("R"));
+    resolutionValueLabel.setText(protect(clientInfo.get("R")));
     
     Composite messagesComposite = new Composite(parent, SWT.NONE);
     GridData messagesCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -131,6 +131,10 @@ public class SessionView extends ViewPart {
     messagesTable = new MessagesTable(messagesComposite, SWT.NONE); 
   }
 
+  private String protect(String str) {
+    return str == null ? "Unknown" : str;
+  }
+  
   public void addMessage(final String source, final Level level, final String message, final long timestamp, final String stackTrace) {
     messagesTable.addMessage(source, level, message, timestamp, stackTrace);
   }
