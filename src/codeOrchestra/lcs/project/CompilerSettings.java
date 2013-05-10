@@ -1,8 +1,12 @@
 package codeOrchestra.lcs.project;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -21,6 +25,23 @@ public class CompilerSettings extends ProjectSettingsPart {
 	public CompilerSettings(IPreferenceStore preferenceStore) {
 		super(preferenceStore);
 	}	
+	
+	public List<String> getExcludedClasses() {
+	  List<String> excludedClasses = new ArrayList<String>();
+	  
+	  String excludedClassesStr = getPreferenceStore().getString("excludedClasses");    
+    if (excludedClassesStr != null) {
+      String[] split = excludedClassesStr.split("\\|");
+      for (int i = 0; i < split.length; i++) {
+        String fqName = split[i].trim();
+        if (StringUtils.isNotEmpty(fqName) && !excludedClasses.contains(fqName)) {
+          excludedClasses.add(fqName);
+        }
+      }
+    }
+	  
+	  return excludedClasses;
+	}
 	
 	public boolean interruptCompilationByTimeout() {
 	  return getPreferenceStore().getBoolean("compilationTimeout");	  

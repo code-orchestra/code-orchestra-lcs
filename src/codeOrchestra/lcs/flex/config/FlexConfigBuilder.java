@@ -61,7 +61,7 @@ public class FlexConfigBuilder {
       
       // Load root module link report file for externs for Live-Coding
       // incremental module
-      flexConfig.setLoadExternsFilePath(getLinkReportFilePath());
+      flexConfig.setLoadExternsFilePath(project.getLinkReportFile().getPath());
 
       // CO-4487 - compiler shenanigans for incremental mode      
       flexConfig.setVerifyDigests(false);
@@ -115,7 +115,7 @@ public class FlexConfigBuilder {
     if (incrementalCompilation) {
       flexConfig.setLinkReportFilePath(null);      
     } else {
-      flexConfig.setLinkReportFilePath(getLinkReportFilePath());
+      flexConfig.setLinkReportFilePath(project.getLinkReportFile().getPath());
     }
 
     // Output path
@@ -160,6 +160,9 @@ public class FlexConfigBuilder {
   }
 
   public static void addLibraryClasses(FlexConfig flexConfig, List<String> sourcePaths) {
+    CompilerSettings compilerSettings = LCSProject.getCurrentProject().getCompilerSettings();
+    List<String> excludedClasses = compilerSettings.getExcludedClasses();
+    
     for (String sourcePath : sourcePaths) {
       File sourceDir = new File(sourcePath);
       if (!sourceDir.exists() || !sourceDir.isDirectory()) {
@@ -186,16 +189,12 @@ public class FlexConfigBuilder {
         if (!StringUtils.isEmpty(relativePath)) {
           String fqName = NameUtil.namespaceFromPath(relativePath);
           
-          if (!IgnoredSources.isIgnoredTrait(fqName)) {
+          if (!IgnoredSources.isIgnoredTrait(fqName) && !excludedClasses.contains(fqName)) {
             flexConfig.addClass(fqName);
           }
         }
       }
     }
-  }
-
-  private String getLinkReportFilePath() {
-    return new File(project.getOutputDir(), "link-report.xml").getPath();
   }
 
 }

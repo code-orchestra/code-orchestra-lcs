@@ -30,6 +30,8 @@ public class LCSMaker {
   private boolean isIncremental;
   private List<SourceFile> changedFiles;
   private boolean assetMode;
+  
+  private boolean skipSecondPhase;
 
   public LCSMaker(boolean isIncremental) {
     this.isIncremental = isIncremental;
@@ -43,6 +45,10 @@ public class LCSMaker {
     this(true);
     this.changedFiles = changedFilesSnapshot;
     this.assetMode = assetMode;
+  }
+  
+  public void setSkipSecondPhase(boolean skipSecondPhase) {
+    this.skipSecondPhase = skipSecondPhase;
   }
 
   public boolean make() throws MakeException {
@@ -106,7 +112,7 @@ public class LCSMaker {
     }
 
     // Base compilation second phase
-    if (!isIncremental) {
+    if (!isIncremental && !skipSecondPhase) {
       compilerKind = FSCHCompilerKind.BASE_COMPC;
 
       flexConfig.setOutputPath(flexConfig.getOutputPath().replaceFirst("\\.swf$", ".swc"));

@@ -88,6 +88,10 @@ public class LCSProject {
     return incrementalSourcesDir;
   }
 
+  public File getLinkReportFile() {
+    return new File(getOutputDir(), "link-report.xml");
+  }
+  
   public File getOutputDir() {
     return new File(getBaseDir(), "colt_output");
   }

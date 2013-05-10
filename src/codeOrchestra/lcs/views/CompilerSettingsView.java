@@ -12,8 +12,11 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -23,6 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import codeOrchestra.lcs.flex.FlexSDKManager;
 import codeOrchestra.lcs.flex.FlexSDKNotPresentException;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
+import codeOrchestra.lcs.flex.usedCode.ExcludeClassesDialogShell;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.utils.StringUtils;
@@ -45,7 +49,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private ComboFieldEditor targetPlayerEditor;
   private BooleanFieldEditor useFrameworkAsRSLEditor;
   private BooleanFieldEditor nonDefaultLocaleEditor;
-  private BooleanFieldEditor compilerStrictEditor;  
+  private BooleanFieldEditor compilerStrictEditor;
   private StringFieldEditor localeOptionsEditor;
   private StringFieldEditor compilerOptionsEditor;
   private BooleanFieldEditor compilationTimeoutEditor;
@@ -61,21 +65,21 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   // Validation controls
 
   private Label targetPlayerErrorLabel;
-
+  
   @Override
   public List<String> validate() {
     List<String> errors = new ArrayList<String>();
-    
+
     String mainClassPath = mainClassEditor.getStringValue();
     if (StringUtils.isEmpty(mainClassPath) || !new File(mainClassPath).exists()) {
       errors.add("Invalid main class path " + mainClassPath);
     }
-    
+
     String flexSDKPath = flexSDKPathEditor.getStringValue();
     if (StringUtils.isEmpty(flexSDKPath) || !new File(flexSDKPath).exists()) {
       errors.add("Invalid Flex SDK path " + flexSDKPath);
     }
-    
+
     if (compilationTimeoutEditor.getBooleanValue()) {
       String timeoutStr = compilationTimeoutValueEditor.getStringValue();
       try {
@@ -84,17 +88,17 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
           errors.add("Compilation timeout must be positive");
         }
       } catch (NumberFormatException e) {
-        errors.add("Compilation timeout must have numeric value");        
+        errors.add("Compilation timeout must have numeric value");
       }
     }
-    
+
     return errors;
   }
-  
+
   public String getOutputFileName() {
-	  return outputFileNameEditor.getStringValue();
+    return outputFileNameEditor.getStringValue();
   }
-  
+
   @Override
   public void createPartControl(Composite parent) {
     GridLayout layout = new GridLayout();
@@ -207,7 +211,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     localeOptionsEditor = new StringFieldEditor("localeOptions", "", localeOptionsEditorComposite);
     localeOptionsEditor.setPreferenceStore(getPreferenceStore());
     nonDefaultLocaleComposite.setLayout(new GridLayout(nonDefaultLocaleEditor.getNumberOfControls() + 1, false));
-    
+
     Composite strictModeComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     GridData strictModeCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
     strictModeCompositeGridData.horizontalIndent = 10;
@@ -242,6 +246,16 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     compilerOptionsEditorComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
     compilerOptionsEditor = new StringFieldEditor("compilerOptions", "Additional compiler options:", compilerOptionsEditorComposite);
     compilerOptionsEditor.setPreferenceStore(getPreferenceStore());
+
+    Button button = new Button(parent, SWT.PUSH);
+    button.setText("Exclude classes...");
+    button.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        ExcludeClassesDialogShell excludeClassesDialogShell = new ExcludeClassesDialogShell(getPreferenceStore());
+        excludeClassesDialogShell.show();
+      }
+    });
 
     reset();
     createTargetPlayerEditor(true);
