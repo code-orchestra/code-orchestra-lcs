@@ -22,7 +22,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 
+import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.flex.FlexSDKManager;
 import codeOrchestra.lcs.flex.FlexSDKNotPresentException;
 import codeOrchestra.lcs.flex.FlexSDKSettings;
@@ -65,6 +69,14 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   // Validation controls
 
   private Label targetPlayerErrorLabel;
+
+  protected IWorkbenchWindow window;
+  
+  @Override
+  public void init(IViewSite site) throws PartInitException {
+    super.init(site);
+    this.window = site.getWorkbenchWindow();
+  }
   
   @Override
   public List<String> validate() {
@@ -252,6 +264,9 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     button.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
+        final LCSProject currentProject = LCSProject.getCurrentProject();
+        LiveCodingProjectViews.saveProjectViewsState(window, currentProject);
+        
         ExcludeClassesDialogShell excludeClassesDialogShell = new ExcludeClassesDialogShell(getPreferenceStore());
         excludeClassesDialogShell.show();
       }

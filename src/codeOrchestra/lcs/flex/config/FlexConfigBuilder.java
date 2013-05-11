@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import codeOrchestra.lcs.LCSException;
+import codeOrchestra.lcs.flex.usedCode.LinkReportReader;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveCodingAnnotation;
@@ -189,7 +190,9 @@ public class FlexConfigBuilder {
         if (!StringUtils.isEmpty(relativePath)) {
           String fqName = NameUtil.namespaceFromPath(relativePath);
           
-          if (!IgnoredSources.isIgnoredTrait(fqName) && !excludedClasses.contains(fqName)) {
+          List<String> usedClassesFqNames = new LinkReportReader(LCSProject.getCurrentProject().getLinkReportFile()).fetchUsedClassesFqNames();
+          
+          if (usedClassesFqNames.contains(fqName) && !IgnoredSources.isIgnoredTrait(fqName) && !excludedClasses.contains(fqName)) {
             flexConfig.addClass(fqName);
           }
         }
