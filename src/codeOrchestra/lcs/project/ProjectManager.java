@@ -3,7 +3,6 @@ package codeOrchestra.lcs.project;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 
 /**
@@ -22,9 +21,6 @@ public class ProjectManager {
       return false;
     }
     
-    // Clear fcsh targets
-    FCSHManager.instance().clearTargets();
-
     LCSProject newProject = LCSProject.loadFrom(projectPath);
     LiveCodingProjectViews.openProjectViews(window, newProject);
     

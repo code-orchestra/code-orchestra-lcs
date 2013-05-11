@@ -3,6 +3,9 @@ package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.AbstractCommandCallback;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandOutput;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class LivecodingCachesDeleteCommand extends AbstractCommandCallback {
 
   @Override

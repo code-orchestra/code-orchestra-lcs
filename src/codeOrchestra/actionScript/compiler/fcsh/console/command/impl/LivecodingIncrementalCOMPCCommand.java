@@ -2,8 +2,6 @@ package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
 import java.util.List;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
-
 /**
  * @author Alexander Eliseyev
  */
@@ -11,8 +9,8 @@ public class LivecodingIncrementalCOMPCCommand extends AbstractCompileWithArgume
 
   public static final String EXECUTABLE_NAME = "lcicompc";
   
-    public LivecodingIncrementalCOMPCCommand(FCSHManager fcshManager, List<String> arguments) {
-    super(fcshManager, arguments);
+    public LivecodingIncrementalCOMPCCommand(List<String> arguments) {
+    super(arguments);
   }
 
   @Override

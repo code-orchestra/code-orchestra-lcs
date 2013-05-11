@@ -2,7 +2,6 @@ package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
 import java.util.List;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandOutput;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.utils.StringUtils;
@@ -14,11 +13,9 @@ public abstract class AbstractCompileWithArgumentsCommandCallback extends Abstra
 
   public static final String  ASSIGNED_TOKEN = " Assigned ";
 
-  private FCSHManager fcshManager;
   private List<String> arguments;
 
-  public AbstractCompileWithArgumentsCommandCallback(FCSHManager fcshManager, List<String> arguments) {
-    this.fcshManager = fcshManager;
+  public AbstractCompileWithArgumentsCommandCallback(List<String> arguments) {
     this.arguments = arguments;
   }
 
@@ -58,11 +55,6 @@ public abstract class AbstractCompileWithArgumentsCommandCallback extends Abstra
 
     // Get the compilation result
     CompilationResult compilationResult = getCompilationResult(response);
-
-    // Register the compiler target if the compilation went ok
-    if (compilationResult.isOk()) {
-      fcshManager.registerCompileTarget(getExecutableName(), arguments, targetId);
-    }
 
     return compilationResult;
   }

@@ -1,7 +1,5 @@
 package codeOrchestra.actionScript.compiler.fcsh.console.command.impl;
 
-import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
-
 import java.util.List;
 
 /**
@@ -11,8 +9,8 @@ public class LivecodingBaseMXMLCCommand extends AbstractCompileWithArgumentsComm
 
   public static final String EXECUTABLE_NAME = "lcmxmlc";
 
-  public LivecodingBaseMXMLCCommand(FCSHManager fcshManager, List<String> arguments) {
-    super(fcshManager, arguments);
+  public LivecodingBaseMXMLCCommand(List<String> arguments) {
+    super(arguments);
   }
 
   @Override

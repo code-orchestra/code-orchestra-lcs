@@ -1,7 +1,6 @@
 package codeOrchestra.lcs.make;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
 import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
@@ -20,7 +19,6 @@ import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.sources.SourceFile;
-import codeOrchestra.utils.PathUtils;
 
 public class LCSMaker {
 
@@ -127,8 +125,6 @@ public class LCSMaker {
       } catch (LCSException e) {
         throw new MakeException("Can't save a flex config", e);
       }
-
-      FCSHManager.instance().clearTargets();
 
       flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
       if (!doCompile(flexSDKRunner)) {
