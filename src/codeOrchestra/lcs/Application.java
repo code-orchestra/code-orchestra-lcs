@@ -17,6 +17,7 @@ import codeOrchestra.lcs.license.LicenseManager;
 public class Application implements IApplication {
 
   public static Application INSTANCE = new Application(); 
+  public Display display;
   
   private LoggerServerSocketThread serverSocketThread = new LoggerServerSocketThread();
 
@@ -31,7 +32,7 @@ public class Application implements IApplication {
    * IApplicationContext)
    */
   public Object start(IApplicationContext context) {
-    final Display display = PlatformUI.createDisplay();
+    display = PlatformUI.createDisplay();
     try {
 
       
@@ -96,4 +97,14 @@ public class Application implements IApplication {
   public void setServerSocketThread(LoggerServerSocketThread serverSocketThread) {
     this.serverSocketThread = serverSocketThread;
   }
+
+public Display getDisplay() {
+	return display;
+}
+
+public void setDisplay(Display display) {
+	this.display = display;
+}
+  
+  
 }

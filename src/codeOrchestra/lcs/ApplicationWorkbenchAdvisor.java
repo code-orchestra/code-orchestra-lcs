@@ -3,8 +3,10 @@ package codeOrchestra.lcs;
 import java.io.File;
 import java.util.List;
 
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -14,6 +16,7 @@ import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.Workbench;
 
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.ProjectManager;
@@ -25,63 +28,86 @@ import codeOrchestra.lcs.views.FCSHConsoleView;
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
-  public static String pathToOpenOnStartup;
-  
-  private Application application;
+	public static String pathToOpenOnStartup;
 
-  public ApplicationWorkbenchAdvisor(Application application) {
-    this.application = application;
-  }
+	private Application application;
 
-  public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
-    return new ApplicationWorkbenchWindowAdvisor(configurer);
-  }
+	public ApplicationWorkbenchAdvisor(Application application) {
+		this.application = application;
+	}
 
-  public String getInitialWindowPerspectiveId() {
-    return Perspective.ID;
-  }
+	public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+		return new ApplicationWorkbenchWindowAdvisor(configurer);
+	}
 
-  @Override
-  public void initialize(IWorkbenchConfigurer configurer) {
-    super.initialize(configurer);
+	public String getInitialWindowPerspectiveId() {
+		return Perspective.ID;
+	}
 
-    Throwable socketInitException = application.getServerSocketThread().getSocketInitException();
-    if (socketInitException != null) {
-      MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "Can't init tracing socket: " + socketInitException);
-    }
-  }
+	@Override
+	public void initialize(IWorkbenchConfigurer configurer) {
+		super.initialize(configurer);
 
-  @Override
-  public void postStartup() {
-    // Hide FCSH console
-    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IWorkbenchPartReference myView = page.findViewReference(FCSHConsoleView.ID);
-    page.setPartState(myView, IWorkbenchPage.STATE_MINIMIZED);
+		Throwable socketInitException = application.getServerSocketThread().getSocketInitException();
+		if (socketInitException != null) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "Can't init tracing socket: " + socketInitException);
+		}
+	}
 
-    // Open project requested
-    if (pathToOpenOnStartup != null) {
-      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      try {
-        ProjectManager.getInstance().openProject(pathToOpenOnStartup, window);
-      } catch (PartInitException e) {
-        ErrorHandler.handle(e, "Error while opening COLT project: " + pathToOpenOnStartup);
-      }      
-    }
-    
-    // Open recent project
-    List<String> recentProjectsPaths = RecentProjects.getRecentProjectsPaths();
-    if (!recentProjectsPaths.isEmpty()) {
-      String lastProjectPath = recentProjectsPaths.get(0);
+	@Override
+	public void postStartup() {
+		Display display = application.getDisplay();
+		//Display display = PlatformUI.getWorkbench().getDisplay(); 
+		Runnable runnable = new Runnable() {
+			@SuppressWarnings("restriction")
+			@Override
+			public void run() {
+				IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+				IWorkbenchPage page = null;
+				while (true) {
+					if (workbenchWindows.length==0) {
+						try {
+							Thread.sleep(500);
+							continue;
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					page = workbenchWindows[0].getActivePage();
+					// Hide FCSH console
+					IWorkbenchPartReference myView = page.findViewReference(FCSHConsoleView.ID);
+					//page.setPartState(myView, IWorkbenchPage.STATE_MINIMIZED);
 
-      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      if (new File(lastProjectPath).exists()) {
-        try {
-          ProjectManager.getInstance().openProject(lastProjectPath, window);
-        } catch (PartInitException e) {
-          ErrorHandler.handle(e, "Error while opening COLT project: " + lastProjectPath);
-        }
-      }
-    }
-  }
+					// Open project requested
+					if (pathToOpenOnStartup != null) {
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						try {
+							ProjectManager.getInstance().openProject(pathToOpenOnStartup, window);
+						} catch (PartInitException e) {
+							ErrorHandler.handle(e, "Error while opening COLT project: " + pathToOpenOnStartup);
+						}      
+					}
+
+					// Open recent project
+					List<String> recentProjectsPaths = RecentProjects.getRecentProjectsPaths();
+					if (!recentProjectsPaths.isEmpty()) {
+						String lastProjectPath = recentProjectsPaths.get(0);
+
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						if (new File(lastProjectPath).exists()) {
+							try {
+								ProjectManager.getInstance().openProject(lastProjectPath, window);
+							} catch (PartInitException e) {
+								ErrorHandler.handle(e, "Error while opening COLT project: " + lastProjectPath);
+							}
+						}
+					}
+					break;
+				}
+			}
+		};
+		display.asyncExec(runnable);
+	}
 
 }

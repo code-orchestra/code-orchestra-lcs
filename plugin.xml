@@ -156,5 +156,25 @@
             name="name">
       </editor>
    </extension>
+   <extension
+         id="product43compat"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="code-orchestra-lcs.application"
+            name="product43compat">
+      </product>
+   </extension>
+   <extension
+         id="product43compatWithPlugins"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="code-orchestra-lcs.application"
+            name="product43compatWithPlugins">
+         <property
+               name="appName"
+               value="product43compatWithPlugins">
+         </property>
+      </product>
+   </extension>
 
 </plugin>

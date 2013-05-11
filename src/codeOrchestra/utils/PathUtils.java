@@ -53,18 +53,25 @@ public class PathUtils {
     String installLocation = Platform.getInstallLocation().getURL().getPath();
     String productLocationURL = Platform.getProduct().getDefiningBundle().getLocation();
     
-    String relativePath = productLocationURL.replace("initial@reference:file:", "");
-
-    File productDir = new File(installLocation);
-    int parentMarksCount = StringUtils.countMatches(relativePath, "..");
-    for (int i = 0; i < parentMarksCount; i++) {
-      productDir = productDir.getParentFile();
+    String relativePath = productLocationURL;
+    
+    if (relativePath.contains("initial@")) {
+    	relativePath = relativePath.replace("initial@reference:file:", "");
+	    File productDir = new File(installLocation);
+	    int parentMarksCount = StringUtils.countMatches(relativePath, "..");
+	    for (int i = 0; i < parentMarksCount; i++) {
+	      productDir = productDir.getParentFile();
+	    }
+	
+	    if (parentMarksCount > 0) {
+	      relativePath = relativePath.substring(StringUtils.lastIndexOf(relativePath, "..") + 3);
+	    }
+	    return new File(productDir, relativePath);
+    } else {
+    	relativePath = relativePath.replace("reference:file:", "");
+    	return new File(relativePath);
     }
-
-    if (parentMarksCount > 0) {
-      relativePath = relativePath.substring(StringUtils.lastIndexOf(relativePath, "..") + 3);
-    }
-    return new File(productDir, relativePath);
+    
   }
 
 }
