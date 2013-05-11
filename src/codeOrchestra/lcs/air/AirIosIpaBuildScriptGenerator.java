@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.intellij.openapi.util.SystemInfo;
+
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.views.CompilerSettingsView;
 import codeOrchestra.lcs.views.elements.AirIosFileTree;
@@ -56,7 +58,7 @@ public class AirIosIpaBuildScriptGenerator {
 
 	public String generate(AirIosOptions aioParent,AirIosFileTree fileTree) throws IOException {
 		File targetScriptFile = getSctiptPath(project);
-		File templateFile = new File(PathUtils.getTemplaesDir(), "airIosIpaBuild.sh");
+		File templateFile = new File(PathUtils.getTemplaesDir(), getScriptFileName());
 
 		File targetDescScriptFile = getDescScriptPath(project);
 		File templateDescFile = new File(PathUtils.getTemplaesDir(), "AppName-app.xml");
@@ -65,7 +67,11 @@ public class AirIosIpaBuildScriptGenerator {
 		replacements.put("{FLEX_SDK}", project.getCompilerSettings().getFlexSDKPath());
 		replacements.put("{APPNAME}", appName);
 		replacements.put("{PROJECT_DIR}", project.getBaseDir().getAbsolutePath());
-		replacements.put("{OUTPUT_DIR}", project.getOutputDir().getAbsolutePath());
+		String outputDirPath =  project.getOutputDir().getAbsolutePath();
+		if (SystemInfo.isWindows && !outputDirPath.endsWith(File.separator)) {
+			outputDirPath+=File.separator;
+		}
+		replacements.put("{OUTPUT_DIR}",outputDirPath);
 
 		LCSProject currProject = LCSProject.getCurrentProject();
 		File outputDir = currProject.getOutputDir();
@@ -137,9 +143,19 @@ public class AirIosIpaBuildScriptGenerator {
 
 		return targetScriptFile.getPath();
 	}
+	
+	public static String getScriptFileName() {
+		String templateFileName;   
+	    if (SystemInfo.isWindows) {
+	    	templateFileName="airIosIpaBuild.bat";
+	    } else {
+			templateFileName="airIosIpaBuild.sh";
+		}
+	    return templateFileName;
+	}
 
 	public static File getSctiptPath(LCSProject project) {
-		return new File(project.getOutputDir(), "airIosIpaBuild.sh");
+		return new File(project.getOutputDir(), getScriptFileName());
 	}
 
 	public File getDescScriptPath(LCSProject project) {

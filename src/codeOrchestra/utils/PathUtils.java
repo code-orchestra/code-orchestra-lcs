@@ -39,6 +39,7 @@ public class PathUtils {
   }
   
   public static File getApplicationBaseDir() {
+	//TODO: not working on Windows, if "C:/flex_sdk" directory exist!
     // Try the bundle path (deployed product)
     File dir = Platform.getProduct().getDefiningBundle().getDataFile("tmp").getParentFile();
     while ((dir = dir.getParentFile()) != null) {

@@ -280,10 +280,6 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 	        dlg.show();
 	      }
 	    });
-	    
-	    if (SystemInfo.isWindows) {
-	    	airIosTargetButton.setEnabled(false);
-	    }
 }  
   
   public static Display getDisplay() {
