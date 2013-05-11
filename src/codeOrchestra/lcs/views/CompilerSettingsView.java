@@ -238,7 +238,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     GridData excludeUnusedCodeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
     excludeUnusedCodeGridData.horizontalIndent = 10;
     excludeUnusedCodeComposite.setLayoutData(excludeUnusedCodeGridData);
-    excludeUnusedCodeEditor = new BooleanFieldEditor("excludeUnusedCode", "Exclude unused code from incremental compilation linking", strictModeComposite);
+    excludeUnusedCodeEditor = new BooleanFieldEditor("excludeUnusedCode", "Exclude unused code from incremental compilation linking", excludeUnusedCodeComposite);
     excludeUnusedCodeEditor.setPreferenceStore(getPreferenceStore());
     excludeUnusedCodeComposite.setLayout(new GridLayout());
 

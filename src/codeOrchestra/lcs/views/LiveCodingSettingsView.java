@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
+import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
 import codeOrchestra.lcs.run.Target;
@@ -117,7 +118,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     });
 
     webAddressTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
-    webAddressTargetButton.setText("Web Address:");
+    webAddressTargetButton.setText("HTTP-shared to local network:");
     webAddressTargetButton.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
         updateUI();
@@ -141,8 +142,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
         try {
           new IndexHTMLGenerator(currentProject).generate();
         } catch (IOException e1) {
-          // TODO: handle nicely
-          e1.printStackTrace();
+          ErrorHandler.handle(e1, "Error while generating index.html");
         }
 
         // 3 - update address

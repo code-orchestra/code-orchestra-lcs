@@ -2,6 +2,8 @@ package codeOrchestra.lcs.flex.usedCode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -27,6 +29,7 @@ import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.ProjectPreferenceStore;
 import codeOrchestra.lcs.views.elements.ModalSettingsDialogShell;
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -87,14 +90,21 @@ public class ExcludeClassesDialogShell extends ModalSettingsDialogShell {
           List<String> allClassesFqNames = new VisibleClassesCollector(currentProject).getVisibleSourceClassesFqNames();          
           monitor.worked(90);
           
+          
           // Fill the text area
           for (final String fqName : allClassesFqNames) {
             if (!usedClassesFqNames.contains(fqName)) {
               Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                  excludedClassesTextArea.append(fqName);
-                  excludedClassesTextArea.append("\n");
+                  List<String> excludedClassesInUI = getCurrentExcludedClassesFromUI();
+                  
+                  if (!excludedClassesInUI.contains(fqName)) {
+                    excludedClassesTextArea.append(fqName);
+                    excludedClassesTextArea.append("\n");                    
+                  }          
+                  
+                  resort();
                 }
               });                
             }
@@ -128,6 +138,33 @@ public class ExcludeClassesDialogShell extends ModalSettingsDialogShell {
         excludedClassesTextArea.append("\n");
       }
     }
+  }
+  
+  private void resort() {
+    List<String> currentExcludedClassesFromUI = getCurrentExcludedClassesFromUI();
+    Collections.sort(currentExcludedClassesFromUI);
+    
+    excludedClassesTextArea.setText(StringUtils.EMPTY);
+    
+    for (String excludedClass : currentExcludedClassesFromUI) {
+      excludedClassesTextArea.append(excludedClass);
+      excludedClassesTextArea.append("\n");
+    }
+  }
+  
+  private List<String> getCurrentExcludedClassesFromUI() {
+    List<String> result = new ArrayList<String>();
+    
+    StringTokenizer stringTokenizer = new StringTokenizer(excludedClassesTextArea.getText());
+
+    while (stringTokenizer.hasMoreTokens()) {
+      String excludedClass = stringTokenizer.nextToken().trim();
+      if (StringUtils.isNotEmpty(excludedClass)) {
+        result.add(excludedClass);
+      }
+    }
+    
+    return result;
   }
   
   private void savePart() {

@@ -33,25 +33,12 @@ public class Application implements IApplication {
   public Object start(IApplicationContext context) {
     final Display display = PlatformUI.createDisplay();
     try {
-
+      display.addListener(SWT.OpenDocument, new OpenDocumentEventProcessor());
       
       Object licenseReturnCode = LicenseManager.getInstance().interceptStart();
       if (licenseReturnCode != null) {
         return licenseReturnCode;
       }
-      
-      /*
-      if (ExpirationHelper.hasExpired()) {
-        display.syncExec(new Runnable() {
-          public void run() {
-            MessageDialog.openError(display.getActiveShell(), "COLT 1.0 Beta", "Your copy of Code Orchestra Livecoding Tool has expired");
-          }
-        });
-        return IApplication.EXIT_OK;
-      }
-      */
-
-      display.addListener(SWT.OpenDocument, new OpenDocumentEventProcessor());
       
       // TODO: handle errors
       CodeOrchestraHttpServer.getInstance().init();
