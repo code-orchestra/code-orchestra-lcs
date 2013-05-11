@@ -71,6 +71,8 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private Label targetPlayerErrorLabel;
 
   protected IWorkbenchWindow window;
+
+  private BooleanFieldEditor excludeUnusedCodeEditor;
   
   @Override
   public void init(IViewSite site) throws PartInitException {
@@ -231,6 +233,14 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     compilerStrictEditor = new BooleanFieldEditor("compilerStrict", "Strict mode", strictModeComposite);
     compilerStrictEditor.setPreferenceStore(getPreferenceStore());
     strictModeComposite.setLayout(new GridLayout());
+    
+    Composite excludeUnusedCodeComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
+    GridData excludeUnusedCodeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+    excludeUnusedCodeGridData.horizontalIndent = 10;
+    excludeUnusedCodeComposite.setLayoutData(excludeUnusedCodeGridData);
+    excludeUnusedCodeEditor = new BooleanFieldEditor("excludeUnusedCode", "Exclude unused code from incremental compilation linking", strictModeComposite);
+    excludeUnusedCodeEditor.setPreferenceStore(getPreferenceStore());
+    excludeUnusedCodeComposite.setLayout(new GridLayout());
 
     Composite compilationTimeoutComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     GridData compilationTimeoutCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
@@ -340,6 +350,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     localeOptionsEditor.load();
     compilerOptionsEditor.load();
     compilationTimeoutValueEditor.load();
+    excludeUnusedCodeEditor.load();
   }
 
   @Override
@@ -359,6 +370,7 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     localeOptionsEditor.store();
     compilerOptionsEditor.store();
     compilationTimeoutValueEditor.store();
+    excludeUnusedCodeEditor.store();
   }
 
   private void updateUI() {

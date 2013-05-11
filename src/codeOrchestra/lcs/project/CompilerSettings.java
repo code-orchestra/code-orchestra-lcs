@@ -26,6 +26,10 @@ public class CompilerSettings extends ProjectSettingsPart {
 		super(preferenceStore);
 	}	
 	
+	public boolean excludeUnusedCode() {
+	  return getPreferenceStore().getBoolean("excludeUnusedCode");
+	}
+	
 	public List<String> getExcludedClasses() {
 	  List<String> excludedClasses = new ArrayList<String>();
 	  

@@ -188,11 +188,13 @@ public class FlexConfigBuilder {
         }
         
         if (!StringUtils.isEmpty(relativePath)) {
-          String fqName = NameUtil.namespaceFromPath(relativePath);
-          
+          String fqName = NameUtil.namespaceFromPath(relativePath);          
           List<String> usedClassesFqNames = new LinkReportReader(LCSProject.getCurrentProject().getLinkReportFile()).fetchUsedClassesFqNames();
           
-          if (usedClassesFqNames.contains(fqName) && !IgnoredSources.isIgnoredTrait(fqName) && !excludedClasses.contains(fqName)) {
+          if (!IgnoredSources.isIgnoredTrait(fqName) && !excludedClasses.contains(fqName)) {
+            if (!usedClassesFqNames.contains(fqName) && compilerSettings.excludeUnusedCode()) {
+              continue;
+            }
             flexConfig.addClass(fqName);
           }
         }

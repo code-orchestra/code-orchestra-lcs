@@ -136,6 +136,7 @@ public class LCSProject {
     preferenceStore.setValue("useDefaultSDKConfiguration", true);
     preferenceStore.setValue("clearMessages", true);
     preferenceStore.setValue("disconnectOnTimeout", true);
+    preferenceStore.setValue("excludeUnusedCode", true);
     preferenceStore.setValue("compilationTimeoutValue", "30");
   }
   
