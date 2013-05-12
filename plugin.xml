@@ -3,158 +3,36 @@
 <plugin>
 
    <extension
-         id="application"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="codeOrchestra.lcs.Application">
-         </run>
-      </application>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            name="LCS Perspective"
-            class="codeOrchestra.lcs.Perspective"
-            id="LCS.perspective">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            allowMultiple="true"
-            class="codeOrchestra.lcs.views.SourceSettingsView"
-            icon="icons/paths.png"
-            id="LCS.sourcesView"
-            name="Project Paths"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="true"
-            class="codeOrchestra.lcs.views.LiveCodingSettingsView"
-            icon="icons/liveResults.png"
-            id="LCS.liveCodingView"
-            name="Live Settings"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="true"
-            class="codeOrchestra.lcs.views.CompilerSettingsView"
-            icon="icons/compiler.png"
-            id="LCS.compilerView"
-            name="Compiler Settings"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="true"
-            class="codeOrchestra.lcs.views.MessagesView"
-            id="LCS.messages"
-            name="Messages"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="true"
-            class="codeOrchestra.lcs.views.FCSHConsoleView"
-            icon="icons/console.gif"
-            id="LCS.fcshConsole"
-            name="FCSH"
-            restorable="true">
-      </view>
-      <view
-            allowMultiple="true"
-            class="codeOrchestra.lcs.views.SessionView"
-            icon="icons/application.png"
-            id="LCS.session"
-            name="Session"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <category
-            name="LiveCodingConfiguration"
-            id="LCS.category">
-      </category>
-      <command
-            name="Open Live Coding Project"
-            description="Opens a Live Coding Project"
-            categoryId="LCS.category"
-            id="LCS.open">
-      </command>
-      <command
-            description="Saves current Live Coding Project"
-            id="LCS.save"
-            name="Saves current Live Coding Project">
-      </command>
-      <command
-            categoryId="LCS.category"
-            description="Creates a new Live Coding Project"
-            id="LCS.newProject"
-            name="Creates a new Live Coding Project">
-      </command>
-      <command
-            categoryId="LCS.category"
-            description="Start Live Coding Session"
-            id="LCS.sessionStart"
-            name="Start Live Coding Session">
-      </command>
-      <command
-            description="Clear Caches"
-            id="LCS.clearCaches"
-            name="Clear Caches">
-      </command>
-      <command
-            description="Browse to Logs Folder"
-            id="LCS.goToLogsFolder"
-            name="Browse to Logs Folder">
-      </command>
-      <command
-            description="Run build artifact again"
-            id="LCS.startPlus"
-            name="Run again">
-      </command>
-      <command
-            description="Enter Serial Number"
-            id="LCS.enterSerial"
-            name="Enter Serial Number">
-      </command>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-   </extension>
-   <extension
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="code-orchestra-lcs.application"
-            name="Code Orchestra Livecoding Tool">
-         <property
-               name="aboutText"
-               value="Code Orchestra Live Coding Tool (COLT)">
-         </property>
-         <property
-               name="aboutImage"
-               value="icons/COLT.png">
-         </property>
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
+            name="lcs">
          <property
                name="appName"
-               value="Code Orchestra Livecoding Tool">
+               value="lcs">
          </property>
          <property
-               name="windowImages"
-               value="icons/colticon_128.png">
+           name="applicationXMI"
+           value="com.codeorchestra.lcs.plugin/Application.e4xmi">
          </property>
+         <property
+           name="lifeCycleURI"
+           value="bundleclass://com.codeorchestra.lcs.plugin/codeOrchestra.lcs.LifeCycleManager">
+         </property>
+		<property
+			name="cssTheme"
+			value="com.codeorchestra.lcs.themes.dark">
+		</property>         
       </product>
    </extension>
    <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="codeOrchestra.lcs.COLTEditor"
-            default="false"
-            extensions="colt"
-            id="code-orchestra-lcs.editor1"
-            name="name">
-      </editor>
-   </extension>
+ point="org.eclipse.e4.ui.css.swt.theme">
+ <theme
+    basestylesheeturi="css/dark.css"
+    id="com.codeorchestra.lcs.themes.dark"
+    label="Dark Theme">
+ </theme>
+</extension>
 
 </plugin>

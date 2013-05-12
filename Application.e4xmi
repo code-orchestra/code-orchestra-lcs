@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_rOXPALsXEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.application">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_tfSv0LsXEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.mainwindow" selectedElement="_yMD0YLssEeK0FMElwATIxw" label="COLT">
+    <children xsi:type="advanced:PerspectiveStack" xmi:id="_yMD0YLssEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.perspectivestack.lcs">
+      <children xsi:type="advanced:Perspective" xmi:id="_znJ5YLssEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.perspective.lcs">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_7ZvE4LssEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.partsashcontainer.base">
+          <children xsi:type="basic:PartStack" xmi:id="_9Iu9ULssEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.partstack.project">
+            <children xsi:type="basic:Part" xmi:id="_Cj4XYLstEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.part.settings" label="Settings"/>
+          </children>
+          <children xsi:type="basic:PartSashContainer" xmi:id="_-g8GYLssEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.partsashcontainer.0" horizontal="true">
+            <children xsi:type="basic:PartStack" xmi:id="_HcN_ULstEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.partstack.messages">
+              <children xsi:type="basic:Part" xmi:id="_M4VpwLstEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.part.message" label="Message"/>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_H-saQLstEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.partstack.fcsh">
+              <children xsi:type="basic:Part" xmi:id="_N9O1QLstEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.part.fcsh" label="FCSH"/>
+            </children>
+          </children>
+        </children>
+      </children>
+    </children>
+  </children>
+  <handlers xmi:id="_68mBcLsiEeK0FMElwATIxw" elementId="com.codeorchestra.lcs.plugin.handler.DarkThemeHandler"/>
+  <addons xmi:id="_rOXPAbsXEeK0FMElwATIxw" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_rOXPArsXEeK0FMElwATIxw" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_rOXPA7sXEeK0FMElwATIxw" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_rOXPBLsXEeK0FMElwATIxw" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_rOXPBbsXEeK0FMElwATIxw" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_rOXPBrsXEeK0FMElwATIxw" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+  <addons xmi:id="_rOXPB7sXEeK0FMElwATIxw" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+</application:Application>
