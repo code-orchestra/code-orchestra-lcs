@@ -12,6 +12,14 @@
       </application>
    </extension>
    <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <theme
+            basestylesheeturi="css/dark.css"
+            id="com.codeorchestra.lcs.themes.dark"
+            label="dark theme">
+      </theme>
+   </extension>   
+   <extension
          point="org.eclipse.ui.perspectives">
       <perspective
             name="LCS Perspective"
