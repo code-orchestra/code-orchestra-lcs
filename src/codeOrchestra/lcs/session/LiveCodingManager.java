@@ -237,7 +237,7 @@ public class LiveCodingManager {
     File targetFile = new File(currentProject.getOrCreateIncrementalSourcesDir(), "codeOrchestra/liveCoding/load/" + className + ".as");
     Map<String, String> replacements = new HashMap<String, String>();
     replacements.put("{CLASS_POSTFIX}", classPostfix);
-    replacements.put("{RELATIVE_PATH}", "../../../" + assetFile.getRelativePath());
+    replacements.put("{RELATIVE_PATH}", "../../../" + FileUtils.unixify(assetFile.getRelativePath()));
     try {
       TemplateCopyUtil.copy(templateFile, targetFile, replacements);
     } catch (IOException e) {

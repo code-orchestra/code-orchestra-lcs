@@ -35,6 +35,10 @@ public class FileUtils {
     }
   };
 
+  public static String unixify(String path) {
+    return path.replace("\\", "/");
+  }
+  
   public static boolean clear(File dir) {
     File[] files = dir.listFiles();
     if (files == null) return true;
