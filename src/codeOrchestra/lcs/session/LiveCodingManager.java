@@ -268,7 +268,7 @@ public class LiveCodingManager {
           // 4 - send the message
           StringBuilder sb = new StringBuilder("asset");
           sb.append(":").append("codeOrchestra.liveCoding.load.").append(className).append(":");
-          sb.append(assetFile.getRelativePath()).append(":").append(timeStamp);
+          sb.append(FileUtils.unixify(assetFile.getRelativePath())).append(":").append(timeStamp);
           sendLiveCodingMessage(sb.toString());
           
           incrementPackageNumber();
