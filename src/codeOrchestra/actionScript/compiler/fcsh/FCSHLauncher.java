@@ -58,7 +58,7 @@ public class FCSHLauncher extends JavaLauncher {
     setProgramParameter(programParameters.toString());
     
     StringBuilder jvmParameters = new StringBuilder();
-    jvmParameters.append("-Xms512m -Xmx512m -Dsun.io.useCanonCaches=false ");
+    jvmParameters.append("-Xms1000m -Xmx1000m -Dsun.io.useCanonCaches=false ");
 
     
     if (PROFILING_ON) {
