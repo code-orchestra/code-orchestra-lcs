@@ -28,7 +28,12 @@ public class SourceFile {
       "avi",
       "mp4",
       "mpeg4",
-      "xml" };
+      "xml",
+      "3ds",
+      "plan",
+      "decor",
+      "potr",
+      "matr"};
     for (String extension : extensions) {
       add(extension);
     }
