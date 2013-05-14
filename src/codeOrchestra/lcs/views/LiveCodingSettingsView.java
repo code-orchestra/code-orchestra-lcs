@@ -7,7 +7,6 @@ import java.util.List;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,7 +30,6 @@ import codeOrchestra.lcs.run.Target;
 import codeOrchestra.lcs.run.index.IndexHTMLGenerator;
 import codeOrchestra.lcs.session.LiveCodingManager;
 import codeOrchestra.lcs.views.elements.AirIosLaunchCustomizationDialogShell;
-import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.StringUtils;
 
 import com.intellij.openapi.util.SystemInfo;
@@ -43,7 +41,7 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 
   public static final String ID = "LCS.liveCodingView";
 
-  private StringButtonFieldEditor flashPlayerPathEditor;
+  private FileFieldEditor flashPlayerPathEditor;
   private StringFieldEditor webAddressEditor;
 
   private RadioGroupFieldEditor liveMethodsGroupEditor;
@@ -176,11 +174,11 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     flashPlayerPathComposite = new Composite(launcherSettingsGroup, SWT.NONE);
     flashPlayerPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 
+    flashPlayerPathEditor = new FileFieldEditor("flashPlayerPath", "", flashPlayerPathComposite);
     if (SystemInfo.isMac) {
-      flashPlayerPathEditor = new DirectoryFieldEditorEx("flashPlayerPath", "", flashPlayerPathComposite);
+      flashPlayerPathEditor.setFileExtensions(new String[] { "*.app" });
     } else {
-      flashPlayerPathEditor = new FileFieldEditor("flashPlayerPath", "", flashPlayerPathComposite);
-      ((FileFieldEditor) flashPlayerPathEditor).setFileExtensions(new String[] { "*.exe" });
+      flashPlayerPathEditor.setFileExtensions(new String[] { "*.exe" });
     }
     flashPlayerPathEditor.setPreferenceStore(getPreferenceStore());
 
