@@ -55,16 +55,18 @@ public class FCSHFlexSDKRunner extends AbstractFlexSDKRunner {
   protected List<String> getCommandArguments() {
     List<String> commandArguments = new ArrayList<String>();
 
-    // Use default SDK flex config
-    String loadConfigOperator = compilerSettings.useDefaultSDKConfiguration() ? "+=" : "=";
-    String configFileArg = "-load-config" + loadConfigOperator + copyConfigToTempDir(configFile.getPath());
-    commandArguments.add(configFileArg);
-    
     // Custom configuration file
     if (compilerSettings.useCustomSDKConfiguration()) {
-      String customConfigFileArg = "-load-config+=" + compilerSettings.getCustomConfigPath();
+      // Use default SDK flex config?
+      String loadConfigOperator = compilerSettings.useDefaultSDKConfiguration() ? "+=" : "=";
+      String customConfigFileArg = "-load-config" + loadConfigOperator + compilerSettings.getCustomConfigPath();
       commandArguments.add(customConfigFileArg);
     }
+    
+    // COLT-generated config file
+    boolean atLeastOneConfigIsPresent = compilerSettings.useCustomSDKConfiguration() || compilerSettings.useDefaultSDKConfiguration();    
+    String configFileArg = "-load-config" + (atLeastOneConfigIsPresent ? "+=" : "=") + copyConfigToTempDir(configFile.getPath());
+    commandArguments.add(configFileArg);    
 
     // Additional compiler options
     if (!StringUtils.isEmpty(compilerSettings.getCompilerOptions())) {
