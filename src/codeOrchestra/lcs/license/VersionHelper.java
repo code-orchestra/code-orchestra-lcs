@@ -10,7 +10,7 @@ import codeOrchestra.lcs.Activator;
  */
 public final class VersionHelper {
 
-  private static final String VERSION_CODE_NAME = "COLT1.0";
+  private static final String VERSION_CODE_NAME = "COLT1.0.2";
 
   public static final boolean IS_RELEASE_VERSION = true;
 

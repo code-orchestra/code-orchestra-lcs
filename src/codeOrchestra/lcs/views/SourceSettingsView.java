@@ -21,6 +21,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
 
   private PathEditorEx sourcePathsEditor;
   private PathEditorEx libraryPathsEditor;
+  private PathEditorEx assetPathsEditor;
   
   @Override
   public void savePart() {
@@ -32,16 +33,34 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
   public List<String> validate() {
     List<String> errors = new ArrayList<String>();
     
+    // Sources
     List<String> sourcePaths = sourcePathsEditor.getItems();
     if (sourcePaths.isEmpty()) {
       errors.add("No source paths specified");
     }
-    
     for (String sourcePath : sourcePaths) {
       if (!new File(sourcePath).exists()) {
         errors.add("Invalid source path " + sourcePath);
       }
     }
+    
+    // Libraries
+    List<String> libraryPaths = libraryPathsEditor.getItems();
+    for (String libraryPath : libraryPaths) {
+      if (!new File(libraryPath).exists()) {
+        errors.add("Invalid library path " + libraryPath);
+      }
+    }
+    
+    // Assets
+    /*
+    List<String> assetsPaths = assetPathsEditor.getItems();
+    for (String assetPaths : assetsPaths) {
+      if (!new File(assetPaths).exists()) {
+        errors.add("Invalid source path " + assetPaths);
+      }
+    }
+    */
     
     return errors;
   }
@@ -65,6 +84,12 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     libraryPathsEditor = new PathEditorEx("libraryPaths", "Library Paths:", "Choose a Library Path", banner, false);
     libraryPathsEditor.setPreferenceStore(getPreferenceStore());
     libraryPathsEditor.load();   
+    
+    /*
+    assetPathsEditor = new PathEditorEx("asssetPaths", "Assets Paths:", "Choose an Assets Folder Path", banner, false);
+    assetPathsEditor.setPreferenceStore(getPreferenceStore());
+    assetPathsEditor.load();
+    */
   }
 
   @Override

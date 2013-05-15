@@ -13,6 +13,10 @@ public class SourceSettings extends ProjectSettingsPart {
 		super(preferenceStore);
 	}
 	
+	public List<String> getAssetPaths() {
+    return getPaths("asssetPaths");
+  }
+	
 	public List<String> getSourcePaths() {
 	  return getPaths("sourcePaths");
 	}

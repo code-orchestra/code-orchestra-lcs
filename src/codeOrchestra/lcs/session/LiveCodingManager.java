@@ -312,16 +312,22 @@ public class LiveCodingManager {
   }
 
   public void startListeningForSourcesChanges() {
-    List<File> sourceDirs = new ArrayList<File>();
+    List<File> watchedDirs = new ArrayList<File>();
     LCSProject currentProject = LCSProject.getCurrentProject();
     for (String sourceDirPath : currentProject.getSourceSettings().getSourcePaths()) {
       File sourceDir = new File(sourceDirPath);
       if (sourceDir.exists() && sourceDir.isDirectory()) {
-        sourceDirs.add(sourceDir);
+        watchedDirs.add(sourceDir);
+      }
+    }
+    for (String assetDirPath : currentProject.getSourceSettings().getAssetPaths()) {
+      File assetDir = new File(assetDirPath);
+      if (assetDir.exists() && assetDir.isDirectory()) {
+        watchedDirs.add(assetDir);
       }
     }
  
-    sourceTrackerThread = new SourcesTrackerThread(sourcesTrackerCallback, sourceDirs);
+    sourceTrackerThread = new SourcesTrackerThread(sourcesTrackerCallback, watchedDirs);
     sourceTrackerThread.start();
   }
   
