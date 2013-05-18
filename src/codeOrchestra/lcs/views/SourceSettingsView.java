@@ -27,6 +27,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
   public void savePart() {
     sourcePathsEditor.store();
     libraryPathsEditor.store();    
+    assetPathsEditor.store();
   }
   
   @Override
@@ -53,14 +54,12 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     }
     
     // Assets
-    /*
     List<String> assetsPaths = assetPathsEditor.getItems();
     for (String assetPaths : assetsPaths) {
       if (!new File(assetPaths).exists()) {
         errors.add("Invalid source path " + assetPaths);
       }
     }
-    */
     
     return errors;
   }
@@ -85,11 +84,9 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     libraryPathsEditor.setPreferenceStore(getPreferenceStore());
     libraryPathsEditor.load();   
     
-    /*
-    assetPathsEditor = new PathEditorEx("asssetPaths", "Assets Paths:", "Choose an Assets Folder Path", banner, false);
+    assetPathsEditor = new PathEditorEx("asssetPaths", "Assets Paths:", "Choose an Assets Folder Path", banner, true);
     assetPathsEditor.setPreferenceStore(getPreferenceStore());
     assetPathsEditor.load();
-    */
   }
 
   @Override

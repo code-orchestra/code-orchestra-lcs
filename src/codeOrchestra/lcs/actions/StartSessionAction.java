@@ -75,8 +75,9 @@ public class StartSessionAction extends Action {
 
         // Build digests
         monitor.setTaskName("Building libs digests");
-        new ProjectDigestHelper(LCSProject.getCurrentProject()).build();
-        monitor.worked(40);
+        ProjectDigestHelper projectDigestHelper = new ProjectDigestHelper(LCSProject.getCurrentProject());
+        projectDigestHelper.build();
+        monitor.worked(30);
 
         // Restart FCSH
         monitor.setTaskName("Restaring FCSH");
@@ -97,21 +98,30 @@ public class StartSessionAction extends Action {
         monitor.setTaskName("Compiling");
         boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();
         monitor.worked(40);
-
-        // Start the compiled SWF
-        monitor.setTaskName("Launching");
+        
         if (successfulBaseGeneration) {
+          // Fetch the embed digest 
+          monitor.setTaskName("Reading embed digests");
+          LiveCodingManager.instance().resetEmbeds(projectDigestHelper.getEmbedDigests());
+          monitor.worked(10);
+        
+          // Start the compiled SWF
+          monitor.setTaskName("Launching");
           try {
             ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject());
             processHandler.addProcessListener(new LoggingProcessListener("Launch"));
             processHandler.startNotify();
+            monitor.worked(10);
           } catch (ExecutionException e) {
             ErrorHandler.handle(e, "Error while launching build artifact");
             e.printStackTrace();
             setEnabled(true);
+            return Status.CANCEL_STATUS;
           }
+        } else {
+          setEnabled(true);
+          return Status.CANCEL_STATUS;          
         }
-        monitor.worked(10);
 
         setEnabled(true);
         return Status.OK_STATUS;
