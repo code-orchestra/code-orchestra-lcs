@@ -147,6 +147,8 @@ public class LiveCodingManager {
     try {
       compilationInProgress = true;
 
+      FileUtils.clear(new File(PathUtils.getIncrementalOutputDir(LCSProject.getCurrentProject())));
+      
       LCSMaker lcsMaker = new LCSMaker(false);
       try {
         return lcsMaker.make();
@@ -179,20 +181,27 @@ public class LiveCodingManager {
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
       try {
         if (lcsMaker.make()) {
-
           try {
             FCSHManager.instance().stopCPUProfiling();
-          } catch (FCSHException e1) {
-            ErrorHandler.handle(e1, "Error while stopping profling");
+          } catch (FCSHException e) {
+            ErrorHandler.handle(e, "Error while stopping profling");
           }
 
+          // Copy the swc to the incremental dir
+          try {
+            FileUtils.copyFileChecked(new File(PathUtils.getSourceIncrementalSWCPath(currentProject)), new File(PathUtils.getTargetIncrementalSWCPath(currentProject, packageId)), false);
+          } catch (IOException e) {
+            ErrorHandler.handle(e, "Error while copying incremental compilation artifact");
+          }
+          
           // Extract and copy the artifact
           try {
-            UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
+            UnzipUtil.unzip(new File(PathUtils.getSourceIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
           } catch (IOException e) {
             ErrorHandler.handle(e, "Error while unzipping incremental compilation artifact");
           }
 
+          // Copy the swf from swc and copy to the incremental dir
           File extractedSWF = new File(FileUtils.getTempDir(), "library.swf");
           if (extractedSWF.exists()) {
             File artifact = new File(PathUtils.getIncrementalSWFPath(currentProject, packageId));
@@ -299,7 +308,7 @@ public class LiveCodingManager {
       if (lcsMaker.make()) {
         // Extract and copy the artifact
         try {
-          UnzipUtil.unzip(new File(PathUtils.getIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
+          UnzipUtil.unzip(new File(PathUtils.getSourceIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
         } catch (IOException e) {
           ErrorHandler.handle(e, "Error while unzipping incremental compilation artifact (asset)");
         }

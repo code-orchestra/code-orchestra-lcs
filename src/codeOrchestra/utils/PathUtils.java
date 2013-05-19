@@ -34,8 +34,12 @@ public class PathUtils {
     return project.getOutputDir().getPath() + File.separator + "livecoding";
   }
 
-  public static String getIncrementalSWCPath(LCSProject project) {
+  public static String getSourceIncrementalSWCPath(LCSProject project) {
     return project.getOutputDir().getPath() +  File.separator + project.getName() + "_liveCoding.swc";
+  }
+  
+  public static String getTargetIncrementalSWCPath(LCSProject project, int packageId) {
+    return getIncrementalOutputDir(project) +  File.separator + "package_" + packageId + ".swc";
   }
   
   public static File getApplicationBaseDir() {

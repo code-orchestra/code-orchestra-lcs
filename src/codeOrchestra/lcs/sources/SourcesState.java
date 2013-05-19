@@ -47,6 +47,8 @@ public class SourcesState {
 				if (newTimestamp != oldTimestamp) {
 					changedFiles.add(pathToWrapper.get(newStatePath));
 				}
+			} else {
+			  changedFiles.add(pathToWrapper.get(newStatePath));
 			}
 		}
 		

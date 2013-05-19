@@ -2,6 +2,7 @@ package codeOrchestra.lcs.flex.config;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
@@ -58,7 +59,22 @@ public class FlexConfigBuilder {
       String outputFileName = compilerSettings.getOutputFilename().replaceFirst("\\.swf$", ".swc");
       flexConfig.addLibraryPath(project.getOutputDir().getPath() +  File.separator + outputFileName);
       flexConfig.addLibraryPath(PathUtils.getColtSWCPath());
-      flexConfig.setOutputPath(PathUtils.getIncrementalSWCPath(project));
+      flexConfig.setOutputPath(PathUtils.getSourceIncrementalSWCPath(project));
+      
+      // Add previous incremental SWCs as libraries
+      File incrementalOutputDir = new File(PathUtils.getIncrementalOutputDir(project));
+      File[] incrementalSWCs = incrementalOutputDir.listFiles(new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+          return name.toLowerCase().endsWith(".swc");
+        }
+      });
+      if (incrementalSWCs != null && incrementalSWCs.length > 0) {
+        for (int i = 0; i < incrementalSWCs.length; i++) {
+          File incrementalSWC = incrementalSWCs[i];
+          flexConfig.addLibraryPath(incrementalSWC.getPath());
+        }
+      }
       
       // Load root module link report file for externs for Live-Coding
       // incremental module
