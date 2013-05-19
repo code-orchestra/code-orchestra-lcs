@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 
 import codeOrchestra.lcs.project.CompilerSettings;
+import codeOrchestra.lcs.project.LCSProject;
 
 /**
  * This class provides the labels for the file tree
@@ -86,7 +87,7 @@ public class FileTreeLabelProvider implements ILabelProvider {
    */
   public String getText(Object arg0) {
 	String postfix = "";
-	File outputFile = CompilerSettings.getOutputFile();
+	File outputFile = LCSProject.getCurrentProject().getOutputFile();
 	if (((File) arg0).getAbsolutePath().equals(outputFile.getAbsolutePath())) {
 		postfix = " (required)";
 	}

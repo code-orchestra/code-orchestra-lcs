@@ -21,6 +21,16 @@ public class StringUtils {
 
   public static final String EMPTY = "";
   
+  public static boolean equals(String object1, String object2) {
+    if (object1 == object2) {
+        return true;
+    }
+    if ((object1 == null) || (object2 == null)) {
+        return false;
+    }
+    return object1.equals(object2);
+}
+  
   public static String reverse(String str) {
     if (str == null) {
         return null;

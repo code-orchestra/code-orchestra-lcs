@@ -12,15 +12,6 @@ import codeOrchestra.utils.StringUtils;
  * @author Alexander Eliseyev
  */
 public class CompilerSettings extends ProjectSettingsPart {
-
-	public static File getOutputFile() {
-		LCSProject project = LCSProject.getCurrentProject();
-		CompilerSettings compilerSettings = project.getCompilerSettings();
-		String outputFileName = compilerSettings.getOutputFilename();
-		String outputFilePath = project.getOutputDir().getAbsolutePath()+File.separator+outputFileName;
-		File outputFile = new File(outputFilePath);
-		return outputFile;
-	}
 	
 	public CompilerSettings(IPreferenceStore preferenceStore) {
 		super(preferenceStore);
@@ -87,11 +78,9 @@ public class CompilerSettings extends ProjectSettingsPart {
 	  return getPreferenceStore().getString("outputFileName");
 	}
 	
-	/*
 	public String getOutputPath() {
 	  return getPreferenceStore().getString("outputPath");
 	}
-	*/
 	
 	public String getTargetPlayerVersion() {
 	  return getPreferenceStore().getString("targetPlayerVersion");

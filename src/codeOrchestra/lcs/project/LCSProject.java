@@ -58,8 +58,11 @@ public class LCSProject {
     sourceSettings = new SourceSettings(preferenceStore);
     liveCodingSettings = new LiveCodingSettings(preferenceStore);
 
-    initPaths();
-    
+    initPaths();    
+    updateExternalPaths();
+  }
+
+  public void updateExternalPaths() {
     CodeOrchestraHttpServer.getInstance().addAlias(getOutputDir(), "/output");
   }
 
@@ -93,6 +96,10 @@ public class LCSProject {
   }
   
   public File getOutputDir() {
+    return new File(compilerSettings.getOutputPath());
+  }
+  
+  public File getDefaultOutputDir() {
     return new File(getBaseDir(), "colt_output");
   }
   
@@ -133,6 +140,7 @@ public class LCSProject {
   }
 
   private void initDefaultValues() {
+    preferenceStore.setValue("outputPath", getDefaultOutputDir().getPath());
     preferenceStore.setValue("useDefaultSDKConfiguration", true);
     preferenceStore.setValue("clearMessages", true);
     preferenceStore.setValue("disconnectOnTimeout", true);
@@ -147,6 +155,10 @@ public class LCSProject {
     } catch (IOException e) {
       throw new RuntimeException("Can't save the project " + name, e);
     }
+  }
+  
+  public File getOutputFile() {
+    return new File(getOutputDir(), compilerSettings.getOutputFilename());
   }
 
 }

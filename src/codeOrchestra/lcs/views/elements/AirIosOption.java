@@ -1,7 +1,5 @@
 package codeOrchestra.lcs.views.elements;
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -15,11 +13,14 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * @author Oleg Chiruhin
+ */
 public class AirIosOption {
-	private String title;
+
+  private String title;
 	private String name;
 	private String compilerSetting;
-	private String value;
 	private Composite composite;
 	private Composite parentComponent;
 	private IPreferenceStore preferenceStore;

@@ -14,7 +14,10 @@ import org.eclipse.swt.widgets.Group;
 import scala.actors.threadpool.Arrays;
 
 public class AirIosOptions {
-	private String[][] optionSources = new String[][] {
+	
+  // AE: WTF is all this? 
+  
+  private String[][] optionSources = new String[][] {
 			new String[]{"AIR SDK","air-sdk",null,"directory"},
 			of("provisioning-profile"),
 			of("keystore"),

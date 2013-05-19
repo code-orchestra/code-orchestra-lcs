@@ -71,7 +71,7 @@ public class FileTreeContentProvider implements ITreeContentProvider {
 			// the root nodes in the file system
 			return File.listRoots();
 		} else {
-			File outputFile = CompilerSettings.getOutputFile();
+			File outputFile = LCSProject.getCurrentProject().getOutputFile();
 			
 			Object[] fileObjects = root.listFiles();
 			

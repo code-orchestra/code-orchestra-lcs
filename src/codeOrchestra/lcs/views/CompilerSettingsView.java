@@ -33,6 +33,7 @@ import codeOrchestra.lcs.flex.FlexSDKSettings;
 import codeOrchestra.lcs.flex.usedCode.ExcludeClassesDialogShell;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.utils.DirectoryFieldEditorEx;
 import codeOrchestra.utils.StringUtils;
 
 /**
@@ -73,6 +74,8 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   protected IWorkbenchWindow window;
 
   private BooleanFieldEditor excludeUnusedCodeEditor;
+
+  private DirectoryFieldEditorEx outputPathEditor;
   
   @Override
   public void init(IViewSite site) throws PartInitException {
@@ -186,12 +189,17 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     mainClassEditor.setPreferenceStore(getPreferenceStore());
 
     Composite outputFileComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
-    outputFileComposite.setLayout(new GridLayout());
+    outputFileComposite.setLayout(new GridLayout(3, false));
     GridData outputFileCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
     outputFileComposite.setLayoutData(outputFileCompositeGridData);
 
     outputFileNameEditor = new StringFieldEditor("outputFileName", " Output file name:", outputFileComposite);
     outputFileNameEditor.setPreferenceStore(getPreferenceStore());
+    
+    new Label(outputFileComposite, SWT.NONE); // cell filler
+    
+    outputPathEditor = new DirectoryFieldEditorEx("outputPath", " Output path:", outputFileComposite);
+    outputPathEditor.setPreferenceStore(getPreferenceStore());
 
     // Target player composite
     // This control has to be saved/restored manually, w/o preferences store
@@ -342,6 +350,10 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     if (StringUtils.isEmpty(outputFileNameEditor.getStringValue())) {
       outputFileNameEditor.setStringValue(LCSProject.getCurrentProject().getName() + ".swf");
     }
+    outputPathEditor.load();
+    if (StringUtils.isEmpty(outputPathEditor.getStringValue())) {
+      outputPathEditor.setStringValue(LCSProject.getCurrentProject().getDefaultOutputDir().getPath());
+    }
 
     useFrameworkAsRSLEditor.load();
     nonDefaultLocaleEditor.load();
@@ -362,6 +374,18 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     customSDKBooleanEditor.store();
     customCompilerConfigEditor.store();
     outputFileNameEditor.store();
+    
+    // Update external path if the output dir has changed
+    boolean mustReloadExternalPaths = false;
+    String currentOutputPath = LCSProject.getCurrentProject().getCompilerSettings().getOutputPath();
+    if (!StringUtils.equals(currentOutputPath, outputPathEditor.getStringValue())) {
+      mustReloadExternalPaths = true;      
+    }
+    outputPathEditor.store();
+    if (mustReloadExternalPaths) {
+      LCSProject.getCurrentProject().updateExternalPaths();
+    }
+    
     targetPlayerEditor.store();
     useFrameworkAsRSLEditor.store();
     nonDefaultLocaleEditor.store();
