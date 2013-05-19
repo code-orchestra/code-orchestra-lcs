@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import codeOrchestra.actionScript.compiler.fcsh.FSCHCompilerKind;
 import codeOrchestra.http.CodeOrchestraHttpServer;
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -96,7 +97,11 @@ public class LCSProject {
   }
   
   public File getOutputDir() {
-    return new File(compilerSettings.getOutputPath());
+    String outputPath = compilerSettings.getOutputPath();
+    if (StringUtils.isEmpty(outputPath)) {
+      return getDefaultOutputDir();
+    }
+    return new File(outputPath);
   }
   
   public File getDefaultOutputDir() {
