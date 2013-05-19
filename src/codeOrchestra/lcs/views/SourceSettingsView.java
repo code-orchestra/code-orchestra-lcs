@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,12 +23,14 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
   private PathEditorEx sourcePathsEditor;
   private PathEditorEx libraryPathsEditor;
   private PathEditorEx assetPathsEditor;
+  private DirectoryFieldEditor htmlTemplatePathEditor;
   
   @Override
   public void savePart() {
     sourcePathsEditor.store();
     libraryPathsEditor.store();    
     assetPathsEditor.store();
+    htmlTemplatePathEditor.store();
   }
   
   @Override
@@ -73,6 +76,7 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     parent.setLayout(layout);
 
     Composite banner = new Composite(parent, SWT.NONE);
+    banner.setLayout(new GridLayout(2, false));
     GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
     banner.setLayoutData(layoutData);
 
@@ -87,6 +91,15 @@ public class SourceSettingsView extends LiveCodingProjectPartView<SourceSettings
     assetPathsEditor = new PathEditorEx("asssetPaths", "Assets Paths:", "Choose an Assets Folder Path", banner, true);
     assetPathsEditor.setPreferenceStore(getPreferenceStore());
     assetPathsEditor.load();
+    
+    Composite htmlTemplateComposite = new Composite(banner, SWT.NONE);
+    GridData htmlTemplateCompositeLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+    htmlTemplateCompositeLayoutData.horizontalSpan = 2;
+    htmlTemplateComposite.setLayoutData(htmlTemplateCompositeLayoutData);
+    
+    htmlTemplatePathEditor = new DirectoryFieldEditor("htmlTemplatePath", "HTML Template:", htmlTemplateComposite);
+    htmlTemplatePathEditor.setPreferenceStore(getPreferenceStore());
+    htmlTemplatePathEditor.load();
   }
 
   @Override

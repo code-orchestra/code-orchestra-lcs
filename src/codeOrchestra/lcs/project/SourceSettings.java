@@ -13,6 +13,10 @@ public class SourceSettings extends ProjectSettingsPart {
 		super(preferenceStore);
 	}
 	
+	public String getHTMLTemplatePath() {
+	  return getPreferenceStore().getString("htmlTemplatePath");
+	}
+	
 	public List<String> getAssetPaths() {
     return getPaths("asssetPaths");
   }

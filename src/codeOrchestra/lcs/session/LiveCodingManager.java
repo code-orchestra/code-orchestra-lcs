@@ -93,7 +93,7 @@ public class LiveCodingManager {
         storedEmbeds = new ArrayList<EmbedDigest>();
         embedDigests.put(embedDigest.getFullPath(), storedEmbeds);
       }
-      
+
       storedEmbeds.add(embedDigest);
     }
   }
@@ -147,8 +147,18 @@ public class LiveCodingManager {
     try {
       compilationInProgress = true;
 
-      FileUtils.clear(new File(PathUtils.getIncrementalOutputDir(LCSProject.getCurrentProject())));
-      
+      LCSProject currentProject = LCSProject.getCurrentProject();
+      FileUtils.clear(new File(PathUtils.getIncrementalOutputDir(currentProject)));
+
+      // COLT-186
+      String htmlTemplatePath = currentProject.getSourceSettings().getHTMLTemplatePath();
+      if (StringUtils.isNotEmpty(htmlTemplatePath)) {
+        File htmlTemplateDir = new File(htmlTemplatePath);
+        if (htmlTemplateDir.exists() && htmlTemplateDir.isDirectory()) {
+          FileUtils.copyDir(htmlTemplateDir, currentProject.getOutputDir(), false);
+        }
+      }
+
       LCSMaker lcsMaker = new LCSMaker(false);
       try {
         return lcsMaker.make();
@@ -193,7 +203,7 @@ public class LiveCodingManager {
           } catch (IOException e) {
             ErrorHandler.handle(e, "Error while copying incremental compilation artifact");
           }
-          
+
           // Extract and copy the artifact
           try {
             UnzipUtil.unzip(new File(PathUtils.getSourceIncrementalSWCPath(currentProject)), FileUtils.getTempDir());
@@ -240,24 +250,24 @@ public class LiveCodingManager {
   private void reportChangedFile(SourceFile sourceFile) {
     if (sourceFile.isAsset()) {
       List<EmbedDigest> embedDigestsByFullPath = embedDigests.get(sourceFile.getFile().getPath());
-      
+
       Map<String, List<String>> mimeTypeToSourceAttributes = new HashMap<String, List<String>>();
       for (EmbedDigest embedDigest : embedDigestsByFullPath) {
         List<String> sourceAttributes = mimeTypeToSourceAttributes.get(embedDigest.getMimeType());
         if (sourceAttributes == null) {
-          sourceAttributes = new ArrayList<String>();          
+          sourceAttributes = new ArrayList<String>();
           mimeTypeToSourceAttributes.put(embedDigest.getMimeType(), sourceAttributes);
         }
-        
+
         if (!sourceAttributes.contains(embedDigest.getSource())) {
           sourceAttributes.add(embedDigest.getSource());
         }
       }
-      
+
       for (String mimeType : mimeTypeToSourceAttributes.keySet()) {
         tryUpdateAsset(sourceFile, mimeType, mimeTypeToSourceAttributes.get(mimeType));
       }
-      
+
       return;
     }
     if (!sourceFile.isCompilable()) {
@@ -277,7 +287,7 @@ public class LiveCodingManager {
     // 0 - clear the incremental sources dir
     LCSProject currentProject = LCSProject.getCurrentProject();
     FileUtils.clear(currentProject.getOrCreateIncrementalSourcesDir());
-    
+
     // 1 - copy the changed asset to the root of incremental dir
     try {
       FileUtils.copyFileChecked(assetFile.getFile(), new File(currentProject.getOrCreateIncrementalSourcesDir(), assetFile.getFile().getName()), false);
@@ -290,12 +300,12 @@ public class LiveCodingManager {
     String className = "Asset_" + classPostfix;
     File templateFile = new File(PathUtils.getTemplaesDir(), StringUtils.isEmpty(mimeType) ? "Asset_update_template.as" : "Asset_update_mimetype_template.as");
     File targetFile = new File(currentProject.getOrCreateIncrementalSourcesDir(), "codeOrchestra/liveCoding/load/" + className + ".as");
-    
+
     Map<String, String> replacements = new HashMap<String, String>();
     replacements.put("{CLASS_POSTFIX}", classPostfix);
     replacements.put("{RELATIVE_PATH}", "/" + assetFile.getFile().getName());
     replacements.put("{MIME_TYPE}", mimeType);
-    
+
     try {
       TemplateCopyUtil.copy(templateFile, targetFile, replacements);
     } catch (IOException e) {
@@ -329,14 +339,14 @@ public class LiveCodingManager {
             sb.append(":").append("codeOrchestra.liveCoding.load.").append(className).append(":");
             sb.append(sourceAttribute).append(":");
             if (StringUtils.isEmpty(mimeType)) {
-              sb.append(":");              
+              sb.append(":");
             } else {
-              sb.append(mimeType).append(":");                            
+              sb.append(mimeType).append(":");
             }
             sb.append(timeStamp);
-            
+
             sendLiveCodingMessage(sb.toString());
-            
+
             try {
               Thread.sleep(60);
             } catch (InterruptedException e) {

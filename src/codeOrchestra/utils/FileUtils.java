@@ -23,6 +23,8 @@ import jetbrains.mps.util.ReadUtil;
  */
 public class FileUtils {
   
+  private static final String[] IGNORED_DIRS = new String[]{".svn", ".git", "_svn"};
+    
   public static final FileFilter FILES_ONLY_FILTER = new FileFilter() {
 	  public boolean accept(File file) {
 	      return file.isFile();
@@ -67,6 +69,47 @@ public class FileUtils {
   
   public static File getTempDir() {
     return new File(System.getProperty("java.io.tmpdir"));
+  }
+  
+  public static void copyDir(File what, File to) {
+    copyDir(what, to, false);
+  }
+
+  public static void copyDir(File what, File to, boolean checkEquals) {
+    assert what.isDirectory();
+    if (!to.exists()) {
+      to.mkdir();
+    }
+
+    for (File f : what.listFiles()) {
+      if (f.isDirectory()) {
+
+        if (isIgnoredDir(f.getName())) continue;
+
+        File fCopy = new File(to, f.getName());
+        if (!fCopy.exists()) {
+          fCopy.mkdir();
+        }
+        copyDir(f, fCopy);
+      }
+
+      if (f.isFile()) {
+        try {
+          copyFileChecked(f, to, checkEquals);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  
+  public static boolean isIgnoredDir(String name) {
+    for (String ignoredDir : IGNORED_DIRS) {
+      if (ignoredDir.equals(name)) {
+        return true;
+      }
+    }
+    return false;
   }
   
   public static void copyFileChecked(File f, File to, boolean checkEquals) throws IOException {
