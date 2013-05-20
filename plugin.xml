@@ -121,6 +121,10 @@
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
+      <scheme
+            id="COLT.scheme"
+            name="COLT key scheme">
+      </scheme>
    </extension>
    <extension
          id="product"
@@ -144,17 +148,10 @@
                name="windowImages"
                value="icons/colticon_128.png">
          </property>
+         <property
+			   name="preferenceCustomization"
+		 	   value="plugin_customization.ini">
+		 </property>
       </product>
    </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="codeOrchestra.lcs.COLTEditor"
-            default="false"
-            extensions="colt"
-            id="code-orchestra-lcs.editor1"
-            name="name">
-      </editor>
-   </extension>
-
 </plugin>

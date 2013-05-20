@@ -1,6 +1,11 @@
 package codeOrchestra.lcs.actions;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -36,9 +41,30 @@ public class SaveProjectAction extends Action {
 	
 	@Override
 	public void run() {
-	  LCSProject currentProject = LCSProject.getCurrentProject();
-	  LiveCodingProjectViews.saveProjectViewsState(window, currentProject);	  
-    currentProject.save();
+	  new Job("Saving project") {
+      @Override
+      protected IStatus run(IProgressMonitor monitor) {
+        monitor.beginTask("Saving project", 100);
+        
+        Display.getDefault().syncExec(new Runnable() {
+          @Override
+          public void run() {
+            LCSProject currentProject = LCSProject.getCurrentProject();
+            LiveCodingProjectViews.saveProjectViewsState(window, currentProject);   
+            currentProject.save();            
+          }
+        });
+        
+        try {
+          Thread.sleep(200);
+        } catch (InterruptedException e) {
+          // ignore
+        }
+        monitor.worked(100);
+        
+        return Status.OK_STATUS;
+      }
+	  }.schedule();
 	}
 	
 

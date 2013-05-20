@@ -12,21 +12,23 @@ import codeOrchestra.lcs.project.ProjectManager;
 /**
  * @author Alexander Eliseyev
  */
-public class OpenDocumentEventProcessor implements Listener {	
-  
-	public void handleEvent(Event event) {
-		if (event.text != null) {
+public class OpenDocumentEventProcessor implements Listener {
+
+  public void handleEvent(Event event) {
+    if (event.text != null) {
       try {
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (ProjectManager.getInstance().openProject(event.text, window)) {
-          return; 
-        } else {
-          ApplicationWorkbenchAdvisor.pathToOpenOnStartup = event.text;
+        if (event.text.toLowerCase().endsWith(".colt")) {
+          IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+          if (ProjectManager.getInstance().openProject(event.text, window)) {
+            return;
+          } else {
+            ApplicationWorkbenchAdvisor.pathToOpenOnStartup = event.text;
+          }
         }
       } catch (PartInitException e) {
         ErrorHandler.handle(e, "Error while opening COLT project: " + event.text);
-      }        		  
-		}
-	}
+      }
+    }
+  }
 
 }
