@@ -54,7 +54,6 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private ComboFieldEditor targetPlayerEditor;
   private BooleanFieldEditor useFrameworkAsRSLEditor;
   private BooleanFieldEditor nonDefaultLocaleEditor;
-  private BooleanFieldEditor compilerStrictEditor;
   private StringFieldEditor localeOptionsEditor;
   private StringFieldEditor compilerOptionsEditor;
   private BooleanFieldEditor compilationTimeoutEditor;
@@ -233,14 +232,6 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     localeOptionsEditor = new StringFieldEditor("localeOptions", "", localeOptionsEditorComposite);
     localeOptionsEditor.setPreferenceStore(getPreferenceStore());
     nonDefaultLocaleComposite.setLayout(new GridLayout(nonDefaultLocaleEditor.getNumberOfControls() + 1, false));
-
-    Composite strictModeComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
-    GridData strictModeCompositeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
-    strictModeCompositeGridData.horizontalIndent = 10;
-    strictModeComposite.setLayoutData(strictModeCompositeGridData);
-    compilerStrictEditor = new BooleanFieldEditor("compilerStrict", "Strict mode", strictModeComposite);
-    compilerStrictEditor.setPreferenceStore(getPreferenceStore());
-    strictModeComposite.setLayout(new GridLayout());
     
     Composite excludeUnusedCodeComposite = new Composite(generalCompilerSettingsGroup, SWT.NONE);
     GridData excludeUnusedCodeGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
@@ -357,7 +348,6 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
 
     useFrameworkAsRSLEditor.load();
     nonDefaultLocaleEditor.load();
-    compilerStrictEditor.load();
     compilationTimeoutEditor.load();
     localeOptionsEditor.load();
     compilerOptionsEditor.load();
@@ -389,7 +379,6 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     targetPlayerEditor.store();
     useFrameworkAsRSLEditor.store();
     nonDefaultLocaleEditor.store();
-    compilerStrictEditor.store();
     compilationTimeoutEditor.store();
     localeOptionsEditor.store();
     compilerOptionsEditor.store();

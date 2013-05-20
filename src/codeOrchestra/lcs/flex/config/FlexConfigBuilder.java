@@ -51,7 +51,7 @@ public class FlexConfigBuilder {
     }
     
     // Always strict = false 
-    flexConfig.setStrict(compilerSettings.useStrictMode());
+    flexConfig.setStrict(false);
 
     // Incremental settings
     if (incrementalCompilation) {
