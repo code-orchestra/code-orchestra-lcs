@@ -4,11 +4,15 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServlet;
+
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
+import org.mortbay.jetty.servlet.ServletHandler;
+import org.mortbay.jetty.servlet.ServletHolder;
 
 import codeOrchestra.utils.PathUtils;
 
@@ -27,6 +31,8 @@ public class CodeOrchestraHttpServer {
 
   private Server server;
   private HandlerList activeHandlers;
+  
+  private ServletHandler servletHandler = new ServletHandler();
 
   private Map<String, Handler> handlersMap = new HashMap<String, Handler>();
 
@@ -41,6 +47,7 @@ public class CodeOrchestraHttpServer {
     server.setHandler(activeHandlers);
 
     addAlias(PathUtils.getApplicationBaseDir(), "/");
+    addHandler(servletHandler, "/servlet");
 
     try {
       server.start();
@@ -54,6 +61,10 @@ public class CodeOrchestraHttpServer {
   public void addAlias(File baseDir, String alias) {
     Handler handler = getContextHandler(alias, getResourceHandler(baseDir.getPath() + "/"));
     addHandler(handler, alias);
+  }
+  
+  public void addServlet(HttpServlet servlet, String alias) {
+    servletHandler.addServletWithMapping(new ServletHolder(servlet), alias);
   }
 
   private void addHandler(Handler handler, String alias) {

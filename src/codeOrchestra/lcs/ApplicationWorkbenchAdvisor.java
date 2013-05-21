@@ -15,9 +15,12 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.ProjectManager;
 import codeOrchestra.lcs.project.RecentProjects;
+import codeOrchestra.lcs.rpc.COLTRemoteServiceServlet;
+import codeOrchestra.lcs.rpc.impl.COLTRemoteServiceImpl;
 import codeOrchestra.lcs.views.FCSHConsoleView;
 
 /**
@@ -58,9 +61,11 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     IWorkbenchPartReference myView = page.findViewReference(FCSHConsoleView.ID);
     page.setPartState(myView, IWorkbenchPage.STATE_MINIMIZED);
 
+    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    
     // Open project requested
     if (pathToOpenOnStartup != null) {
-      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      
       try {
         ProjectManager.getInstance().openProject(pathToOpenOnStartup, window);
       } catch (PartInitException e) {
@@ -72,8 +77,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     List<String> recentProjectsPaths = RecentProjects.getRecentProjectsPaths();
     if (!recentProjectsPaths.isEmpty()) {
       String lastProjectPath = recentProjectsPaths.get(0);
-
-      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       if (new File(lastProjectPath).exists()) {
         try {
           ProjectManager.getInstance().openProject(lastProjectPath, window);
@@ -82,6 +85,10 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
         }
       }
     }
+    
+    // Init remote service
+    COLTRemoteServiceImpl.init(window);
+    CodeOrchestraHttpServer.getInstance().addServlet(new COLTRemoteServiceServlet(), "/rpc");
   }
 
 }
