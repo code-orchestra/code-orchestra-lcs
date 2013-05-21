@@ -24,7 +24,7 @@ public class CodeOrchestraLicenseManager {
     try {
       preferences.sync();
     } catch (BackingStoreException e) {
-      throw new RuntimeException("Can't license data", e);
+      throw new RuntimeException("Can't sync license data", e);
     }
   }
 
