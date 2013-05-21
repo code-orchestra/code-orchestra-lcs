@@ -20,6 +20,8 @@ public class Application implements IApplication {
   
   private LoggerServerSocketThread serverSocketThread = new LoggerServerSocketThread();
 
+  public static long timeStarted;
+  
   public Application() {
     INSTANCE = this;
   }
@@ -33,6 +35,8 @@ public class Application implements IApplication {
   public Object start(IApplicationContext context) {
     final Display display = PlatformUI.createDisplay();
     try {
+      timeStarted = System.currentTimeMillis();
+      
       display.addListener(SWT.OpenDocument, new OpenDocumentEventProcessor());
       
       Object licenseReturnCode = LicenseManager.getInstance().interceptStart();

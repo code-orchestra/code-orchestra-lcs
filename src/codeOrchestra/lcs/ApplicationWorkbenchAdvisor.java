@@ -17,6 +17,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
+import codeOrchestra.lcs.license.UsagePeriods;
 import codeOrchestra.lcs.project.ProjectManager;
 import codeOrchestra.lcs.project.RecentProjects;
 import codeOrchestra.lcs.rpc.COLTRemoteServiceServlet;
@@ -52,6 +53,12 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     if (socketInitException != null) {
       MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "Can't init tracing socket: " + socketInitException);
     }
+  }
+  
+  @Override
+  public boolean preShutdown() {    
+    UsagePeriods.getInstance().addUsagePeriod(Application.timeStarted, System.currentTimeMillis());
+    return super.preShutdown();
   }
 
   @Override

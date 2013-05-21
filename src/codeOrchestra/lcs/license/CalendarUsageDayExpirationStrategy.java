@@ -1,14 +1,15 @@
 package codeOrchestra.lcs.license;
 
-import codeOrchestra.utils.DateUtils;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import org.eclipse.ui.PlatformUI;
-
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
+import javax.swing.JOptionPane;
+
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+
+import codeOrchestra.utils.DateUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -16,7 +17,7 @@ import java.util.prefs.Preferences;
 public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
 
   private static final int EXPIRATION_DAYS = 15;
-  private static final int EXPIRED_SESSION_MINUTES = 30;
+  private static final int EXPIRED_SESSION_MINUTES = 15;
 
   private static final String DATE_STRING = VersionHelper.getVersionCodeName();
 
@@ -27,7 +28,7 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
 
   @Override
   public boolean exitIfExpired() {
-    return false;
+    return true;
   }
 
   @Override
@@ -61,7 +62,7 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
           null,
           "Expired license editor " + EXPIRED_SESSION_MINUTES + " minute(s) session is over, the program will now quit",
           "Expired license",
-          JOptionPane.INFORMATION_MESSAGE);
+          JOptionPane.INFORMATION_MESSAGE);        
 
         PlatformUI.getWorkbench().close();
       }
@@ -74,10 +75,10 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
     String expireMessage = String.format("%d day(s) evaluation license has expired. Your session will be limited to %d minutes unless you enter a serial number",
       getExpirationPeriod(), EXPIRED_SESSION_MINUTES);
 
-    JFrame dummyFrame = new JFrame("Evaluation License");
-
-    int result = JOptionPane.showOptionDialog(dummyFrame, expireMessage, "Evaluation License", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Continue Evaluation" , "Enter Serial Number"}, "---");
-
+    MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "Evaluation License", null, expireMessage, MessageDialog.QUESTION, 
+        new String[] { "Continue Evaluation", "Enter Serial Number" }, 0);
+    
+    int result = dialog.open();
     if (result == 1) {
       return CodeOrchestraLicenseDialogs.showSerialNumberDialog();
     }
