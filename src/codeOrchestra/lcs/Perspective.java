@@ -18,6 +18,8 @@ import codeOrchestra.lcs.views.SourceSettingsView;
  */
 public class Perspective implements IPerspectiveFactory {
 
+  public static final String SETTINGS_FOLDER_ID = "liveCoding";
+
   private String name;
   
 	/**
@@ -30,7 +32,7 @@ public class Perspective implements IPerspectiveFactory {
 		layout.setEditorAreaVisible(false);	
 
 		// Settings
-		IFolderLayout liveCodingFolder = layout.createFolder("liveCoding", IPageLayout.TOP, 0.75f, editorArea);
+		IFolderLayout liveCodingFolder = layout.createFolder(SETTINGS_FOLDER_ID, IPageLayout.TOP, 0.75f, editorArea);
 		liveCodingFolder.addPlaceholder(SourceSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(LiveCodingSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(CompilerSettingsView.ID + ":*");

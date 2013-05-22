@@ -24,6 +24,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         return new ApplicationActionBarAdvisor(configurer);
     }
     
+    @Override
     public void preWindowOpen() {
         configurer = getWindowConfigurer();
         configurer.setInitialSize(new Point(1000, 820));
@@ -40,6 +41,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     public void setTitle(String title) {
       configurer.setTitle(title);
+    }
+    
+    @Override
+    public boolean isDurableFolder(String perspectiveId, String folderId) {
+      return Perspective.SETTINGS_FOLDER_ID.equals(folderId);
     }
     
 }
