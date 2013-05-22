@@ -20,6 +20,10 @@ public class LiveCodingSettings extends ProjectSettingsPart {
   public LauncherType getLauncherType() {
     return getPreferenceStore().getBoolean("flashPlayerLauncher") ? LauncherType.FLASH_PLAYER : LauncherType.DEFAULT;
   }
+  
+  public void setLauncherType(LauncherType flashPlayer) {
+    getPreferenceStore().setValue("flashPlayerLauncher", flashPlayer == LauncherType.FLASH_PLAYER);
+  }
 
   public String getFlashPlayerPath() {
     return getPreferenceStore().getString("flashPlayerPath");

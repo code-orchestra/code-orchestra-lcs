@@ -18,8 +18,7 @@ public class LCSProject {
     return currentProject;
   }
   
-  public static void close() {
-    
+  public static void close() {    
     currentProject = null;
   }
 

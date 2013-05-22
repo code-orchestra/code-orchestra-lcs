@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.rpc.model;
 
 import codeOrchestra.lcs.project.LCSProject;
+import codeOrchestra.lcs.run.LauncherType;
 
 /**
  * @author Alexander Eliseyev
@@ -50,6 +51,7 @@ public class COLTRemoteProject {
     }
     if (flashPlayerPath != null) {
       coltProject.getLiveCodingSettings().setFlashPlayerPath(flashPlayerPath);
+      coltProject.getLiveCodingSettings().setLauncherType(LauncherType.FLASH_PLAYER);
     }
     if (flexSDKPath != null) {
       coltProject.getCompilerSettings().setFlexSDKPath(flexSDKPath);
