@@ -20,6 +20,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import com.intellij.openapi.util.SystemInfo;
 
 import codeOrchestra.lcs.actions.ClearCachesAction;
+import codeOrchestra.lcs.actions.CloseProjectAction;
 import codeOrchestra.lcs.actions.EnterSerialNumberAction;
 import codeOrchestra.lcs.actions.GoToLogsFolderAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
@@ -44,6 +45,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenProjectAction openProjectAction;
     private SaveProjectAction saveProjectAction;    
     private NewProjectAction newProjectAction;
+    private CloseProjectAction closeProjectAction;
     private ClearCachesAction clearCachesAction;
     private GoToLogsFolderAction goToLogsFolderAction;
     private StartPlusAction startPlusAction;
@@ -78,6 +80,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openProjectAction = new OpenProjectAction(window, "Open Project");
         register(openProjectAction);
         
+        closeProjectAction = new CloseProjectAction(window, "Close Project");
+        register(closeProjectAction);
+        
         clearCachesAction = new ClearCachesAction();
         register(clearCachesAction);
         
@@ -103,14 +108,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         menuBar.add(helpMenu);
         
-        // File
-        
+        // File        
         fileMenu.add(newProjectAction);
         fileMenu.add(new Separator());
         fileMenu.add(openProjectAction);
         fileMenu.add(new RecentProjectMenuItem("recentProjects"));
-        fileMenu.add(new Separator());
         fileMenu.add(saveProjectAction);
+        fileMenu.add(closeProjectAction);        
         fileMenu.add(new Separator());        
 
         if (SystemInfo.isMac) {

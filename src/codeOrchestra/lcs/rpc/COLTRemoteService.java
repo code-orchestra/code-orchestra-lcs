@@ -7,8 +7,8 @@ import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
  */
 public interface COLTRemoteService {
   
-  void createProject(COLTRemoteProject project);
+  void createProject(String securityToken, COLTRemoteProject project);
   
-  void loadProject(String path);
+  void loadProject(String securityToken, String path);
 
 }

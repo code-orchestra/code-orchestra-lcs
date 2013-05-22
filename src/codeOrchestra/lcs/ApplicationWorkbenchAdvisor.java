@@ -71,8 +71,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     
     // Open project requested
-    if (pathToOpenOnStartup != null) {
-      
+    if (pathToOpenOnStartup != null) {      
       try {
         ProjectManager.getInstance().openProject(pathToOpenOnStartup, window);
       } catch (PartInitException e) {

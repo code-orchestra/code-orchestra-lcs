@@ -13,23 +13,23 @@ public class LocalhostUtil {
 
   public static String getLocalhostIp() {
     try {
-    for (final Enumeration interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements();) {
-      final NetworkInterface cur = (NetworkInterface) interfaces.nextElement();
-      if (cur.isLoopback()) {
-        continue;
-      }
-
-      for (final InterfaceAddress interfaceAddress : cur.getInterfaceAddresses()) {
-        final InetAddress inetAddress = interfaceAddress.getAddress();
-        if (!((inetAddress instanceof Inet4Address))) {
+      for (final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements();) {
+        final NetworkInterface cur = (NetworkInterface) interfaces.nextElement();
+        if (cur.isLoopback()) {
           continue;
         }
 
-        return inetAddress.getHostAddress();
-      }
-    }
+        for (final InterfaceAddress interfaceAddress : cur.getInterfaceAddresses()) {
+          final InetAddress inetAddress = interfaceAddress.getAddress();
+          if (!((inetAddress instanceof Inet4Address))) {
+            continue;
+          }
 
-    return null;
+          return inetAddress.getHostAddress();
+        }
+      }
+
+      return null;
     } catch (Exception e) {
       return "localhost";
     }

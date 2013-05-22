@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.rpc.impl.COLTRemoteServiceImpl;
 
 import com.googlecode.jsonrpc4j.JsonRpcServer;
@@ -17,6 +18,8 @@ import com.googlecode.jsonrpc4j.JsonRpcServer;
  */
 @SuppressWarnings("serial")
 public class COLTRemoteServiceServlet extends HttpServlet {
+  
+  private static final Logger LOG = Logger.getLogger(COLTRemoteServiceServlet.class);
   
   private COLTRemoteService coltRemoteService;
   private JsonRpcServer jsonRpcServer;
@@ -30,8 +33,7 @@ public class COLTRemoteServiceServlet extends HttpServlet {
     try {
       jsonRpcServer.handle(req, resp);
     } catch (IOException e) {
-      // TODO: handle
-      e.printStackTrace();
+      LOG.error(e);
     }
   }
 

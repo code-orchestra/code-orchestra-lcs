@@ -17,6 +17,11 @@ public class LCSProject {
   public static LCSProject getCurrentProject() {
     return currentProject;
   }
+  
+  public static void close() {
+    
+    currentProject = null;
+  }
 
   public static LCSProject createNew(String name, String path) {
     currentProject = new LCSProject(path);

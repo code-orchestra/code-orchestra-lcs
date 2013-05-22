@@ -22,6 +22,17 @@ public abstract class ProjectSettingsPart {
     return preferenceStore;
   }
 
+  protected void addPath(String preferenceName, String path) {
+    List<String> paths = getPaths(preferenceName);
+    
+    if (!paths.contains(path)) {
+      paths.add(path);
+    }
+    
+    String serializedString = createList(paths.toArray(new String[paths.size()]));
+    getPreferenceStore().setValue(preferenceName, serializedString);
+  }
+  
   protected List<String> getPaths(String preferenceName) {
     List<String> result = new ArrayList<String>();    
     
@@ -46,5 +57,15 @@ public abstract class ProjectSettingsPart {
     }
     return (String[]) v.toArray(new String[v.size()]);
   }
+  
+  protected String createList(String[] items) {
+    StringBuffer path = new StringBuffer("");//$NON-NLS-1$
+
+    for (int i = 0; i < items.length; i++) {
+        path.append(items[i]);
+        path.append(File.pathSeparator);
+    }
+    return path.toString();
+}
 
 }

@@ -118,6 +118,11 @@
             id="LCS.enterSerial"
             name="Enter Serial Number">
       </command>
+      <command
+            description="Closes current Live Coding Project"
+            id="LCS.close"
+            name="Closes current Live Coding Project">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
