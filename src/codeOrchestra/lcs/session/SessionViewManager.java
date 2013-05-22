@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IFolderLayout;
-import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -23,8 +23,8 @@ public class SessionViewManager {
 
   private static SessionViewManager instance;
   
-  public static void init(IPageLayout layout, IFolderLayout folder) {
-    SessionViewManager.instance = new SessionViewManager(folder, layout);
+  public static void init(IFolderLayout folder) {
+    SessionViewManager.instance = new SessionViewManager(folder);
   }
   public static SessionViewManager getInstance() {
     if (instance == null) {
@@ -34,7 +34,6 @@ public class SessionViewManager {
   }
   
   private IFolderLayout folder;
-  private IPageLayout layout;
 
   private String lastClientId;
   
@@ -42,9 +41,10 @@ public class SessionViewManager {
   
   private Map<String, SessionView> sessionViews = new HashMap<String, SessionView>();
   
-  private SessionViewManager(IFolderLayout folder, IPageLayout layout) {
+  private Map<String, IViewReference> sessionViewsReferences = new HashMap<String, IViewReference>();
+  
+  private SessionViewManager(IFolderLayout folder) {
     this.folder = folder;
-    this.layout = layout;
     
     LiveCodingManager.instance().addListener(new LiveCodingAdapter() {
       @Override
@@ -53,18 +53,18 @@ public class SessionViewManager {
       }
       @Override
       public void onSessionEnd(LiveCodingSession session) {
-        SessionView sessionView = sessionViews.get(session.getClientId());
-        closeTab(sessionView);
+        IViewReference viewReference = sessionViewsReferences.get(session.getClientId());
+        closeTab(viewReference);
       }
     });
   }
   
-  private void closeTab(final SessionView sessionView) {
+  private void closeTab(final IViewReference viewReference) {
     Display.getDefault().syncExec(new Runnable() {
       public void run() {
         IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
         try {
-          workbenchWindows[0].getActivePage().hideView(sessionView);
+          workbenchWindows[0].getActivePage().hideView(viewReference);
         } catch (Throwable e) {
           // ignore
         }          
@@ -83,6 +83,13 @@ public class SessionViewManager {
           IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
           try {
             workbenchWindows[0].getActivePage().showView(SessionView.ID, clientId, IWorkbenchPage.VIEW_ACTIVATE);
+            
+            IViewReference[] viewReferences = workbenchWindows[0].getActivePage().getViewReferences();
+            for (IViewReference viewReference : viewReferences) {
+              if (clientId.equals(viewReference.getSecondaryId())) {
+                sessionViewsReferences.put(clientId, viewReference);    
+              }
+            }
           } catch (Throwable e) {
             folder.addView(compositeViewId);
           }          

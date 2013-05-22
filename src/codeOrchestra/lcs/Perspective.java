@@ -37,7 +37,7 @@ public class Perspective implements IPerspectiveFactory {
 		liveCodingFolder.addPlaceholder(LiveCodingSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(CompilerSettingsView.ID + ":*");
 		liveCodingFolder.addPlaceholder(SessionView.ID + ":*");
-		SessionViewManager.init(layout, liveCodingFolder);
+		SessionViewManager.init(liveCodingFolder);
 
 		layout.getViewLayout(SourceSettingsView.ID).setCloseable(false);
 		layout.getViewLayout(LiveCodingSettingsView.ID).setCloseable(false);

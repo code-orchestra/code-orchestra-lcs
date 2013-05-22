@@ -51,7 +51,9 @@ public class SessionView extends ViewPart {
       
       @Override
       public void partClosed(IWorkbenchPart part) {
-        LiveCodingManager.instance().stopSession(session);
+        if (part == SessionView.this) {
+          LiveCodingManager.instance().stopSession(session);  
+        }
       }
       
       @Override
