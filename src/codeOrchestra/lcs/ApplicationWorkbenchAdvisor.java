@@ -94,7 +94,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     
     // Init remote service
     COLTRemoteServiceImpl.init(window);
-    CodeOrchestraHttpServer.getInstance().addServlet(new COLTRemoteServiceServlet(), "/rpc");
+    CodeOrchestraHttpServer.getInstance().addServlet(new COLTRemoteServiceServlet(), "/coltService");
   }
 
 }

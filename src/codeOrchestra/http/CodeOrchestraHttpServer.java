@@ -47,7 +47,12 @@ public class CodeOrchestraHttpServer {
     server.setHandler(activeHandlers);
 
     addAlias(PathUtils.getApplicationBaseDir(), "/");
-    addHandler(servletHandler, "/servlet");
+    
+    ContextHandler contextHandler = new ContextHandler();
+    contextHandler.setContextPath("/rpc");
+    contextHandler.setHandler(servletHandler);
+    contextHandler.setServer(server);
+    addHandler(contextHandler, "/rpc");    
 
     try {
       server.start();
