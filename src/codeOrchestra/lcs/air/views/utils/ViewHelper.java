@@ -1,13 +1,11 @@
-package codeOrchestra.lcs.views.elements;
+package codeOrchestra.lcs.air.views.utils;
 
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.project.LCSProject;
 
 public class ViewHelper {

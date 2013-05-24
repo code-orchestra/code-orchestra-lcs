@@ -77,10 +77,14 @@ public class CompilerSettings extends ProjectSettingsPart {
     getPreferenceStore().setValue("mainClass", mainClass);
   }
 
-  public String getAirScript() {
+  public String getAirIosScript() {
     return getPreferenceStore().getString("airScript");
   }
 
+  public String getAirAndroidScript() {
+    return getPreferenceStore().getString("airAndroidScript");
+  }
+  
   public String getOutputFilename() {
     return getPreferenceStore().getString("outputFileName");
   }

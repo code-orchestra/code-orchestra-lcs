@@ -1,37 +1,30 @@
-package codeOrchestra.lcs.views.elements;
+package codeOrchestra.lcs.air.views.utils;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 public class ModalSettingsDialogShell implements IRelocableComponent {
+	
 	private Shell baseDialogShell; 
 
-	public ModalSettingsDialogShell() {
-		baseConstructor();
+	private ModalSettingsDialogShell() {
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		this.baseDialogShell = new Shell(shell, SWT.PRIMARY_MODAL | SWT.SHELL_TRIM);
 	}
 	
-	public void baseConstructor() {
-		Display display = Display.getDefault();
-		//final Shell shell = new Shell(display, SWT.SHELL_TRIM);
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		this.baseDialogShell = new Shell(shell, SWT.PRIMARY_MODAL|SWT.SHELL_TRIM);
+	public ModalSettingsDialogShell(String title) {
+		this();
+		this.baseDialogShell.setText(title);
+		this.baseDialogShell.pack(true);
 		center();
 	}
 	
 	public ModalSettingsDialogShell(String title, int width, int height) {
-		baseConstructor();
+		this();
 		this.baseDialogShell.setText(title);
 		this.baseDialogShell.setSize(new Point(width,height));
-		center();
-	}
-	
-	public ModalSettingsDialogShell(String title) {
-		baseConstructor();
-		this.baseDialogShell.setText(title);
-		this.baseDialogShell.pack(true);
 		center();
 	}
 	

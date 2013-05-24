@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.views.elements;
+package codeOrchestra.lcs.air.views;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +27,7 @@ import codeOrchestra.lcs.views.elements.fileTree.FileTreeLabelProvider;
  * @author Oleg Chiruhin
  * @author Alexander Eliseyev
  */
-public class AirIosFileTree {
+public class AirFileTree {
   
   public static final String SAVED_PACKAGED_FILES_PREFERENCE_NAME = "__SAVED_PACKAGED_FILES";
   
@@ -42,7 +42,7 @@ public class AirIosFileTree {
 
   private LCSProject currProject;
   
-  public AirIosFileTree(Composite parentComponent, IPreferenceStore preferenceStore) {
+  public AirFileTree(Composite parentComponent, IPreferenceStore preferenceStore) {
     this.currProject = LCSProject.getCurrentProject();
     this.parentComponent = parentComponent;
     this.preferenceStore = preferenceStore;

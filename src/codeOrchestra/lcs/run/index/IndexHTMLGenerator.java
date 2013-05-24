@@ -23,10 +23,10 @@ public class IndexHTMLGenerator {
 
   public void generate() throws IOException {
     File targetSWFObjectFile = new File(project.getOutputDir(), "swfobject.js");
-    FileUtils.copyFileChecked(new File(PathUtils.getTemplaesDir(), "swfobject.js"), targetSWFObjectFile, false);
+    FileUtils.copyFileChecked(new File(PathUtils.getTemplatesDir(), "swfobject.js"), targetSWFObjectFile, false);
     
     File targetIndexFile = new File(project.getOutputDir(), "index.html");
-    FileUtils.copyFileChecked(new File(PathUtils.getTemplaesDir(), "index.html"), targetIndexFile, false);
+    FileUtils.copyFileChecked(new File(PathUtils.getTemplatesDir(), "index.html"), targetIndexFile, false);
     
     Map<String, String> replacements = new HashMap<String, String>();
     replacements.put("{SWF_NAME}", project.getCompilerSettings().getOutputFilename());

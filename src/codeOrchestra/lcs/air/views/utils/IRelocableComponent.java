@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.views.elements;
+package codeOrchestra.lcs.air.views.utils;
 
 public interface IRelocableComponent {
 	public void setLocation(int x, int y);

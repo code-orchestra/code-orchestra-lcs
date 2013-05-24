@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.views.elements;
+package codeOrchestra.lcs.air.views;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -13,12 +13,16 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import codeOrchestra.lcs.air.views.utils.PasswordFieldEditor;
+
 /**
  * @author Oleg Chiruhin
+ * @author Alexander Eliseyev
  */
-public class AirIosOption {
+public class AirOption {
 
-  private String title;
+	private String title;
+
 	private String name;
 	private String compilerSetting;
 	private Composite composite;
@@ -26,8 +30,19 @@ public class AirIosOption {
 	private IPreferenceStore preferenceStore;
 	private int horizontalIndent = 1;
 	private StringFieldEditor editor;
-	private String widgetType;
+	private AirOptionType optionType;
 
+	public AirOption(String title, String name, String compilerSetting, AirOptionType optionType,
+			Composite parentComponent, IPreferenceStore preferenceStore, int horizontalIndent) {
+		this.title = title;
+		this.name = name;
+		this.compilerSetting = compilerSetting;
+		this.parentComponent = parentComponent;
+		this.preferenceStore = preferenceStore;
+		this.horizontalIndent = horizontalIndent;
+		this.optionType = optionType;
+	}
+	
 	public void updateComposite() {
 		Label label = new Label(getParentComponent(), SWT.NONE);
 		label.setText(getTitle());
@@ -37,26 +52,28 @@ public class AirIosOption {
 		editorCompositeGridData.horizontalIndent = 1;
 		editorCompositeGridData.horizontalSpan = getHorizontalIndent();
 		getComposite().setLayoutData(editorCompositeGridData);
-		final StringFieldEditor currEditor ;
-		if (!widgetType.equals("password")) {
+
+		final StringFieldEditor currEditor;
+		if (optionType != AirOptionType.PASSWORD) {
 			currEditor = new StringFieldEditor(getName(), "", getComposite());
 		} else {
 			currEditor = new PasswordFieldEditor(getName(), "", getComposite());
-		}	 
+		}
+
 		setEditor(currEditor);
 		getEditor().setEnabled(true, getComposite());
-		getEditor().setPreferenceStore(getPreferenceStore());		
-		if (widgetType.equals("file")||widgetType.equals("directory")) {
+		getEditor().setPreferenceStore(getPreferenceStore());
 
+		if (optionType.isFileType()) {
 			Button btn = new Button(getParentComponent(), SWT.PUSH);
 			btn.setText("Browse...");
 			btn.setSize(btn.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			
 			btn.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					if (widgetType.equals("directory")) {
+					if (optionType == AirOptionType.DIRECTORY) {
 						currEditor.setStringValue(getDirPath("Select directory"));
-					} else 
-					if (widgetType.equals("file")) {
+					} else if (optionType == AirOptionType.FILE) {
 						currEditor.setStringValue(getFilePath("Select file"));
 					}
 				}
@@ -94,58 +111,39 @@ public class AirIosOption {
 			}
 		}
 		return file;
-	}	
-
-	public AirIosOption(String title, String name, String compilerSetting, String widgetType, Composite parentComponent, IPreferenceStore preferenceStore, int horizontalIndent) {
-		this.title = title;
-		this.name = name;
-		this.compilerSetting = compilerSetting;
-		this.parentComponent = parentComponent;
-		this.preferenceStore = preferenceStore;
-		this.horizontalIndent = horizontalIndent;
-		this.widgetType = widgetType;
 	}
-
 
 	public String getName() {
 		return name;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	public StringFieldEditor getEditor() {
 		return editor;
 	}
 
-
 	public void setEditor(StringFieldEditor editor) {
 		this.editor = editor;
 	}
-
 
 	public int getHorizontalIndent() {
 		return horizontalIndent;
 	}
 
-
 	public void setHorizontalIndent(int horizontalIndent) {
 		this.horizontalIndent = horizontalIndent;
 	}
-
 
 	public String getTitle() {
 		return title;
 	}
 
-
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
 
 	public String getCompilerSetting() {
 		return compilerSetting;
@@ -183,13 +181,12 @@ public class AirIosOption {
 		this.preferenceStore = preferenceStore;
 	}
 
-	public String getWidgetType() {
-		return widgetType;
+	public AirOptionType getOptionType() {
+		return optionType;
 	}
 
-	public void setWidgetType(String widgetType) {
-		this.widgetType = widgetType;
+	public void setOptionType(AirOptionType optionType) {
+		this.optionType = optionType;
 	}
-
 
 }

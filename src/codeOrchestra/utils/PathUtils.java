@@ -16,7 +16,7 @@ public class PathUtils {
     return new File(productDir, "flex_sdk").getPath();
   }
   
-  public static String getTemplaesDir() {
+  public static String getTemplatesDir() {
     File productDir = getApplicationBaseDir();    
     return new File(productDir, "templates").getPath();
   }

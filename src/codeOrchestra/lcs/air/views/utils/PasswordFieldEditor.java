@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.views.elements;
+package codeOrchestra.lcs.air.views.utils;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;

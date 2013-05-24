@@ -3,20 +3,12 @@ package codeOrchestra.lcs.run;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-
 import jetbrains.mps.execution.api.commands.ProcessHandlerBuilder;
-
 import codeOrchestra.actionScript.run.BrowserUtil;
 import codeOrchestra.actionScript.security.TrustedLocations;
-import codeOrchestra.lcs.air.ipaBuildScriptGenerator;
 import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
-import codeOrchestra.lcs.views.LiveCodingSettingsView;
-import codeOrchestra.lcs.views.elements.ViewHelper;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.ProcessHandler;
@@ -33,25 +25,31 @@ public class LiveLauncher {
     Target launchTarget = liveCodingSettings.getLaunchTarget();
 
     if (launchTarget == Target.AIR_IOS) {
-        	String scriptPath = compilerSettings.getAirScript();
-        	return new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir());
+      String scriptPath = compilerSettings.getAirIosScript();
+      return new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir());
     }
     
-    LauncherType launcherType = liveCodingSettings.getLauncherType();    
-    String swfPath = project.getOutputDir().getPath() + File.separator + compilerSettings.getOutputFilename();    
+    if (launchTarget == Target.AIR_ANDROID) {
+      String scriptPath = compilerSettings.getAirAndroidScript();
+      return new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir());
+    }
+
+    LauncherType launcherType = liveCodingSettings.getLauncherType();
+    String swfPath = project.getOutputDir().getPath() + File.separator + compilerSettings.getOutputFilename();
     if (launchTarget == Target.SWF) {
       TrustedLocations.getInstance().addTrustedLocation(swfPath);
     }
-    
+
     String target = launchTarget == Target.WEB_ADDRESS ? liveCodingSettings.getWebAddress() : swfPath;
 
     switch (launcherType) {
-    case DEFAULT:
-      return new ProcessHandlerBuilder().append(getCommand(BrowserUtil.launchBrowser(target, null))).build();
-    case FLASH_PLAYER:
-      return new ProcessHandlerBuilder().append(completeFlashPlayerPath(liveCodingSettings.getFlashPlayerPath())).append(protect(target)).build();
-    default:
-      throw new ExecutionException("Unsupported launcher type: " + launcherType);
+      case DEFAULT:
+        return new ProcessHandlerBuilder().append(getCommand(BrowserUtil.launchBrowser(target, null))).build();
+      case FLASH_PLAYER:
+        return new ProcessHandlerBuilder().append(completeFlashPlayerPath(liveCodingSettings.getFlashPlayerPath()))
+          .append(protect(target)).build();
+      default:
+        throw new ExecutionException("Unsupported launcher type: " + launcherType);
     }
   }
 

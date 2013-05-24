@@ -1,10 +1,11 @@
 package codeOrchestra.lcs.run;
 
 public enum Target {
+
   SWF,
   WEB_ADDRESS,
-  AIR,
-  AIR_IOS;
+  AIR_IOS,
+  AIR_ANDROID;
   
   public static Target parse(String str) {
     for (Target target : values()) {

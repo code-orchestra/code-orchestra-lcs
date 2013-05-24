@@ -298,7 +298,7 @@ public class LiveCodingManager {
     // 2 - copy/modify the source template file
     String classPostfix = assetFile.getFile().getName().replace(".", "_").replace(" ", "_") + timeStamp;
     String className = "Asset_" + classPostfix;
-    File templateFile = new File(PathUtils.getTemplaesDir(), StringUtils.isEmpty(mimeType) ? "Asset_update_template.as" : "Asset_update_mimetype_template.as");
+    File templateFile = new File(PathUtils.getTemplatesDir(), StringUtils.isEmpty(mimeType) ? "Asset_update_template.as" : "Asset_update_mimetype_template.as");
     File targetFile = new File(currentProject.getOrCreateIncrementalSourcesDir(), "codeOrchestra/liveCoding/load/" + className + ".as");
 
     Map<String, String> replacements = new HashMap<String, String>();

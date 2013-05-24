@@ -22,6 +22,8 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
+import codeOrchestra.lcs.air.views.android.AirAndroidLaunchCustomizationDialogShell;
+import codeOrchestra.lcs.air.views.ios.AirIosLaunchCustomizationDialogShell;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.LCSProject;
@@ -29,7 +31,6 @@ import codeOrchestra.lcs.project.LiveCodingSettings;
 import codeOrchestra.lcs.run.Target;
 import codeOrchestra.lcs.run.index.IndexHTMLGenerator;
 import codeOrchestra.lcs.session.LiveCodingManager;
-import codeOrchestra.lcs.views.elements.AirIosLaunchCustomizationDialogShell;
 import codeOrchestra.utils.StringUtils;
 
 import com.intellij.openapi.util.SystemInfo;
@@ -66,6 +67,11 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   private Composite airIosComposite;
   private StringFieldEditor airIosScriptEditor;
   private Button generateAirIosScriptButton;
+
+  private Button airAndroidTargetButton;
+  private Composite airAndroidComposite;
+  private StringFieldEditor airAndroidScriptEditor;
+  private Button generateAirAndroidScriptButton;
 
   private Group targetSettingsGroup;
 
@@ -147,8 +153,8 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       }
     });
 
-    // addAirControls(targetSettingsGroup);
     addAirIosControls(targetSettingsGroup);
+    addAirAndroidControls(targetSettingsGroup);
 
     Group launcherSettingsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
     launcherSettingsGroup.setText("Launcher");
@@ -194,7 +200,8 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     liveMethodsLabel.setText("Live Methods:");
     liveMethodsLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
     Composite liveMethodsComposite = new Composite(liveSettingsGroup, SWT.NONE);
-    String[][] liveMethodOptions = new String[][] { { "Annotated with [Live]", "annotated" }, { "All the methods", "all" } };
+    String[][] liveMethodOptions = new String[][] { { "Annotated with [Live]", "annotated" },
+        { "All the methods", "all" } };
     liveMethodsGroupEditor = new RadioGroupFieldEditor("liveMethods", "", 1, liveMethodOptions, liveMethodsComposite);
     liveMethodsGroupEditor.setPreferenceStore(getPreferenceStore());
 
@@ -229,14 +236,16 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     maxLoopIterationsEditor.setPreferenceStore(getPreferenceStore());
 
     Composite clearMessagesComposite = new Composite(parent, SWT.NONE);
-    clearMessagesEditor = new BooleanFieldEditor("clearMessages", "Clear messages log on session start", clearMessagesComposite);
+    clearMessagesEditor = new BooleanFieldEditor("clearMessages", "Clear messages log on session start",
+        clearMessagesComposite);
     clearMessagesEditor.setPreferenceStore(getPreferenceStore());
     GridData clearMessagesLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
     clearMessagesLayoutData.horizontalSpan = 2;
     clearMessagesComposite.setLayoutData(clearMessagesLayoutData);
 
     Composite diconnectOnTimeoutComposite = new Composite(parent, SWT.NONE);
-    disconnectOnTimeoutEditor = new BooleanFieldEditor("disconnectOnTimeout", "Disconnect on ping timeout", diconnectOnTimeoutComposite);
+    disconnectOnTimeoutEditor = new BooleanFieldEditor("disconnectOnTimeout", "Disconnect on ping timeout",
+        diconnectOnTimeoutComposite);
     disconnectOnTimeoutEditor.setPreferenceStore(getPreferenceStore());
     GridData diconnectOnTimeoutLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
     diconnectOnTimeoutLayoutData.horizontalSpan = 2;
@@ -246,13 +255,14 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     updateUI();
   }
 
+  public void setAirAndroidScriptEditorValue(String value) {
+    airAndroidScriptEditor.setStringValue(value);
+    airAndroidScriptEditor.store();
+  }
+
   public void setAirIosScriptEditorValue(String value) {
     airIosScriptEditor.setStringValue(value);
     airIosScriptEditor.store();
-  }
-
-  public String getAirIosScriptEditorValue() {
-    return airIosScriptEditor.getStringValue();
   }
 
   private void addAirIosControls(Group targetSettingsGroup) {
@@ -268,12 +278,35 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
     airIosScriptEditor = new StringFieldEditor("airScript", "", airIosComposite);
     airIosScriptEditor.setPreferenceStore(getPreferenceStore());
     generateAirIosScriptButton = new Button(targetSettingsGroup, SWT.PUSH);
-    generateAirIosScriptButton.setText("Generate Script");
+    generateAirIosScriptButton.setText("Generate script");
     generateAirIosScriptButton.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
+        AirIosLaunchCustomizationDialogShell dlg = new AirIosLaunchCustomizationDialogShell(window,
+            getPreferenceStore());
+        dlg.show();
+      }
+    });
+  }
 
-        AirIosLaunchCustomizationDialogShell dlg = new AirIosLaunchCustomizationDialogShell(window, getPreferenceStore());
+  private void addAirAndroidControls(Group targetSettingsGroup) {
+    airAndroidTargetButton = new Button(targetSettingsGroup, SWT.RADIO);
+    airAndroidTargetButton.setText("AIR (Android):");
+    airAndroidTargetButton.addSelectionListener(new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent e) {
+        updateUI();
+      }
+    });
+    airAndroidComposite = new Composite(targetSettingsGroup, SWT.NONE);
+    airAndroidComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+    airAndroidScriptEditor = new StringFieldEditor("airAndroidScript", "", airAndroidComposite);
+    airAndroidScriptEditor.setPreferenceStore(getPreferenceStore());
+    generateAirAndroidScriptButton = new Button(targetSettingsGroup, SWT.PUSH);
+    generateAirAndroidScriptButton.setText("Generate script");
+    generateAirAndroidScriptButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        AirAndroidLaunchCustomizationDialogShell dlg = new AirAndroidLaunchCustomizationDialogShell(window, getPreferenceStore());
         dlg.show();
       }
     });
@@ -297,20 +330,24 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
 
     Target target = Target.parse(getPreferenceStore().getString("target"));
     switch (target) {
-    case SWF:
-      defaultTargetButton.setSelection(true);
-      break;
-    case WEB_ADDRESS:
-      webAddressTargetButton.setSelection(true);
-      break;
-    case AIR_IOS:
-      airIosTargetButton.setSelection(true);
-      break;
-    default:
-      break;
+      case SWF:
+        defaultTargetButton.setSelection(true);
+        break;
+      case WEB_ADDRESS:
+        webAddressTargetButton.setSelection(true);
+        break;
+      case AIR_IOS:
+        airIosTargetButton.setSelection(true);
+        break;
+      case AIR_ANDROID:
+        airAndroidTargetButton.setSelection(true);
+        break;      
+      default:
+        break;
     }
 
     airIosScriptEditor.load();
+    airAndroidScriptEditor.load();
     webAddressEditor.load();
     flashPlayerPathEditor.load();
     liveMethodsGroupEditor.load();
@@ -336,10 +373,13 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
       target = Target.WEB_ADDRESS;
     } else if (airIosTargetButton.getSelection()) {
       target = Target.AIR_IOS;
+    } else if (airAndroidTargetButton.getSelection()) {
+      target = Target.AIR_ANDROID;
     }
     getPreferenceStore().setValue("target", target.name());
 
     airIosScriptEditor.store();
+    airAndroidScriptEditor.store();
     webAddressEditor.store();
     flashPlayerPathEditor.store();
     liveMethodsGroupEditor.store();
@@ -351,23 +391,24 @@ public class LiveCodingSettingsView extends LiveCodingProjectPartView<LiveCoding
   }
 
   private void updateUI() {
-    flashPlayerPathEditor.setEnabled(flashPlayerLauncherButton.getSelection() && !webAddressTargetButton.getSelection() && !airIosTargetButton.getSelection(), flashPlayerPathComposite);
-    flashPlayerLauncherButton.setEnabled(!webAddressTargetButton.getSelection() && !airIosTargetButton.getSelection());
+    flashPlayerPathEditor.setEnabled(flashPlayerLauncherButton.getSelection() && !webAddressTargetButton.getSelection()
+        && !airIosTargetButton.getSelection() && !airAndroidTargetButton.getSelection(), flashPlayerPathComposite);
+    flashPlayerLauncherButton.setEnabled(!webAddressTargetButton.getSelection() && !airIosTargetButton.getSelection() && !airAndroidTargetButton.getSelection());
 
     webAddressEditor.setEnabled(webAddressTargetButton.getSelection(), webAddressComposite);
     generateIndexButton.setEnabled(webAddressTargetButton.getSelection());
 
     airIosScriptEditor.setEnabled(airIosTargetButton.getSelection(), airIosComposite);
+    airAndroidScriptEditor.setEnabled(airAndroidTargetButton.getSelection(), airAndroidComposite);
+    
     generateAirIosScriptButton.setEnabled(airIosTargetButton.getSelection());
+    generateAirAndroidScriptButton.setEnabled(airAndroidTargetButton.getSelection());    
 
-    if ((webAddressTargetButton.getSelection() || airIosTargetButton.getSelection()) && flashPlayerLauncherButton.getSelection()) {
+    if ((webAddressTargetButton.getSelection() || airIosTargetButton.getSelection() || airAndroidTargetButton.getSelection())
+        && flashPlayerLauncherButton.getSelection()) {
       flashPlayerLauncherButton.setSelection(false);
       defaultLauncherButton.setSelection(true);
     }
-  }
-
-  public boolean isAirIosSelected() {
-    return airIosTargetButton.getSelection();
   }
 
   @Override

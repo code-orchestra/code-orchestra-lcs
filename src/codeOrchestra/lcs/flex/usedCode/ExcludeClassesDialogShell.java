@@ -24,11 +24,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
+import codeOrchestra.lcs.air.views.utils.ModalSettingsDialogShell;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.make.LCSMaker;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.ProjectPreferenceStore;
-import codeOrchestra.lcs.views.elements.ModalSettingsDialogShell;
 import codeOrchestra.utils.StringUtils;
 
 /**
