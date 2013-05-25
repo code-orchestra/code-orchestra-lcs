@@ -11,7 +11,6 @@ import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.LiveCodingSettings;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.util.SystemInfo;
 
 /**
@@ -19,19 +18,19 @@ import com.intellij.openapi.util.SystemInfo;
  */
 public class LiveLauncher {
 
-  public ProcessHandler launch(LCSProject project) throws ExecutionException {
+  public ProcessHandlerWrapper launch(LCSProject project) throws ExecutionException {
     LiveCodingSettings liveCodingSettings = project.getLiveCodingSettings();
     CompilerSettings compilerSettings = project.getCompilerSettings();
     Target launchTarget = liveCodingSettings.getLaunchTarget();
 
     if (launchTarget == Target.AIR_IOS) {
       String scriptPath = compilerSettings.getAirIosScript();
-      return new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir());
+      return new ProcessHandlerWrapper(new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir()), true);
     }
     
     if (launchTarget == Target.AIR_ANDROID) {
       String scriptPath = compilerSettings.getAirAndroidScript();
-      return new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir());
+      return new ProcessHandlerWrapper(new ProcessHandlerBuilder().append(protect(scriptPath)).build(project.getOutputDir()), true);
     }
 
     LauncherType launcherType = liveCodingSettings.getLauncherType();
@@ -44,10 +43,10 @@ public class LiveLauncher {
 
     switch (launcherType) {
       case DEFAULT:
-        return new ProcessHandlerBuilder().append(getCommand(BrowserUtil.launchBrowser(target, null))).build();
+        return new ProcessHandlerWrapper(new ProcessHandlerBuilder().append(getCommand(BrowserUtil.launchBrowser(target, null))).build(), false);
       case FLASH_PLAYER:
-        return new ProcessHandlerBuilder().append(completeFlashPlayerPath(liveCodingSettings.getFlashPlayerPath()))
-          .append(protect(target)).build();
+        return new ProcessHandlerWrapper(new ProcessHandlerBuilder().append(completeFlashPlayerPath(liveCodingSettings.getFlashPlayerPath()))
+          .append(protect(target)).build(), false);
       default:
         throw new ExecutionException("Unsupported launcher type: " + launcherType);
     }

@@ -43,7 +43,7 @@ public class StartPlusAction extends Action {
   @Override
   public void run() {
     try {
-      ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject());
+      ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject()).getProcessHandler();
       processHandler.addProcessListener(new LoggingProcessListener("Launch"));
       processHandler.startNotify();
     } catch (ExecutionException e) {

@@ -20,6 +20,7 @@ import codeOrchestra.lcs.messages.MessagesManager;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.run.LiveLauncher;
 import codeOrchestra.lcs.run.LoggingProcessListener;
+import codeOrchestra.lcs.run.ProcessHandlerWrapper;
 import codeOrchestra.lcs.session.LiveCodingManager;
 
 import com.intellij.execution.ExecutionException;
@@ -69,18 +70,24 @@ public class StartSessionAction extends Action {
     }
 
     Job job = new Job("Base Compilation") {
+      
+      private void report(IProgressMonitor monitor, String text) {
+        monitor.setTaskName(text);
+        setName(text);
+      }
+      
       @Override
       protected IStatus run(IProgressMonitor monitor) {
         monitor.beginTask("Base Compilation", 100);
 
         // Build digests
-        monitor.setTaskName("Building libs digests");
+        report(monitor, "Building digests");        
         ProjectDigestHelper projectDigestHelper = new ProjectDigestHelper(LCSProject.getCurrentProject());
         projectDigestHelper.build();
         monitor.worked(30);
 
         // Restart FCSH
-        monitor.setTaskName("Restaring FCSH");
+        report(monitor, "Restaring FCSH");        
         try {
           FCSHManager.instance().restart();
         } catch (FCSHException e) {
@@ -95,22 +102,28 @@ public class StartSessionAction extends Action {
         monitor.worked(10);
 
         // Base compilation
-        monitor.setTaskName("Compiling");
+        report(monitor, "Compiling");        
         boolean successfulBaseGeneration = LiveCodingManager.instance().runBaseCompilation();
         monitor.worked(40);
         
         if (successfulBaseGeneration) {
           // Fetch the embed digest 
-          monitor.setTaskName("Reading embed digests");
+          report(monitor, "Reading embed digests");
           LiveCodingManager.instance().resetEmbeds(projectDigestHelper.getEmbedDigests());
           monitor.worked(10);
         
           // Start the compiled SWF
-          monitor.setTaskName("Launching");
+          report(monitor, "Launching");
           try {
-            ProcessHandler processHandler = new LiveLauncher().launch(LCSProject.getCurrentProject());
+            ProcessHandlerWrapper processHandlerWrapper = new LiveLauncher().launch(LCSProject.getCurrentProject());
+            ProcessHandler processHandler = processHandlerWrapper.getProcessHandler();
             processHandler.addProcessListener(new LoggingProcessListener("Launch"));
             processHandler.startNotify();
+            
+            if (processHandlerWrapper.mustWaitForExecutionEnd()) {
+              processHandler.waitFor();
+            }
+            
             monitor.worked(10);
           } catch (ExecutionException e) {
             ErrorHandler.handle(e, "Error while launching build artifact");
