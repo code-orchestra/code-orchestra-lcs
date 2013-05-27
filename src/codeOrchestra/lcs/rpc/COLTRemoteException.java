@@ -1,4 +1,4 @@
-package codeOrchestra.lcs.rpc.impl;
+package codeOrchestra.lcs.rpc;
 
 @SuppressWarnings("serial")
 public class COLTRemoteException extends Exception {

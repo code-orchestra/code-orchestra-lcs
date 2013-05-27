@@ -20,6 +20,7 @@ import org.eclipse.jface.action.StatusLineLayoutData;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -66,6 +67,8 @@ public class StatusLineContributionItemEx extends ContributionItem {
 
   private Image image;
 
+  private MouseListener mouseListener;
+
   /**
    * Creates a status line contribution item with the given id.
    * 
@@ -95,6 +98,14 @@ public class StatusLineContributionItemEx extends ContributionItem {
     this.charWidth = charWidth;
     setVisible(false); // no text to start with
   }
+  
+  public void setMouseListener(MouseListener mouseListener) {
+    this.mouseListener = mouseListener;
+  }
+  
+  public CLabel getLabel() {
+    return label;
+  }
 
   public void fill(Composite parent) {
     statusLine = parent;
@@ -102,7 +113,10 @@ public class StatusLineContributionItemEx extends ContributionItem {
     Label sep = new Label(parent, SWT.SEPARATOR);
     label = new CLabel(statusLine, SWT.SHADOW_NONE);
     label.setText(text);
-    label.setImage(image);
+    label.setImage(image);    
+    if (mouseListener != null) {
+      label.addMouseListener(mouseListener);
+    }
 
     if (charWidth == CALC_TRUE_WIDTH) {
       // compute the size of the label to get the width hint for the
@@ -151,6 +165,10 @@ public class StatusLineContributionItemEx extends ContributionItem {
    */
   public String getText() {
     return text;
+  }
+
+  public Image getImage() {
+    return image;
   }
 
   public void setImage(Image image) {

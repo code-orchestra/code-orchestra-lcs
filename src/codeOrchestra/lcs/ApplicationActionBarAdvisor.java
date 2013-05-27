@@ -29,6 +29,7 @@ import codeOrchestra.lcs.actions.SaveProjectAction;
 import codeOrchestra.lcs.actions.StartPlusAction;
 import codeOrchestra.lcs.actions.StartSessionAction;
 import codeOrchestra.lcs.menu.RecentProjectMenuItem;
+import codeOrchestra.lcs.rpc.security.view.SecurityTokenStatusLineItem;
 import codeOrchestra.lcs.status.SessionStatusLineItem;
 
 /**
@@ -149,6 +150,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillStatusLine(IStatusLineManager statusLine) {
       SessionStatusLineItem sessionStatusLineItem = new SessionStatusLineItem();
       statusLine.add(sessionStatusLineItem);
+      
+      SecurityTokenStatusLineItem securityTokenStatusLineItem = new SecurityTokenStatusLineItem();
+      statusLine.add(securityTokenStatusLineItem);
     }
     
 }

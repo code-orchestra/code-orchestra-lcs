@@ -11,8 +11,14 @@ import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.ProjectManager;
+import codeOrchestra.lcs.rpc.COLTRemoteException;
 import codeOrchestra.lcs.rpc.COLTRemoteService;
+import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
+import codeOrchestra.lcs.rpc.security.COLTRemoteSecuriryManager;
+import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
+import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
+import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
 
 /**
  * @author Alexander Eliseyev
@@ -42,14 +48,14 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
   }
 
   @Override
-  public void createProject(String securityToken, final COLTRemoteProject remoteProject) {
-    execute(securityToken, new RemoteCommand() {
-      
+  public void createProject(String securityToken, final COLTRemoteProject remoteProject)
+      throws COLTRemoteTransferableException {
+    executeSecurily(securityToken, new RemoteCommand() {
       @Override
       public String getName() {
         return "Create project under " + remoteProject.getPath();
       }
-      
+
       @Override
       public void execute() throws COLTRemoteException {
         File projectFile = new File(remoteProject.getPath());
@@ -61,24 +67,23 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
         } catch (IOException e) {
           throw new COLTRemoteException("Error while creating project file", e);
         }
-        
+
         LiveCodingProjectViews.closeProjectViews();
-        
+
         LCSProject newProject = LCSProject.createNew(remoteProject.getName(), remoteProject.getPath());
         remoteProject.copyTo(newProject);
-        
+
         try {
           LiveCodingProjectViews.openProjectViews(window, newProject);
         } catch (PartInitException e) {
           throw new COLTRemoteException("Error while opening project file", e);
-        }        
-      }      
+        }
+      }
     });
   }
 
-  public void loadProject(String securityToken, final String path) {
-    execute(securityToken, new RemoteCommand() {
-      
+  public void loadProject(String securityToken, final String path) throws COLTRemoteTransferableException {
+    executeSecurily(securityToken, new RemoteCommand() {
       @Override
       public String getName() {
         return "Load project " + path;
@@ -92,13 +97,12 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
           throw new COLTRemoteException(e);
         }
       }
-      
+
     });
   }
-  
-  private void execute(String securityToken, final RemoteCommand command) {
-    final COLTRemoteException[] exception = new COLTRemoteException[1];
 
+  private void execute(final RemoteCommand command) throws COLTRemoteTransferableException {
+    final COLTRemoteException[] exception = new COLTRemoteException[1];
     getDisplay().syncExec(new Runnable() {
       @Override
       public void run() {
@@ -111,11 +115,27 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
     });
 
     if (exception[0] != null) {
+      // TODO: delete
+      exception[0].printStackTrace();
+      
+      if (exception[0] instanceof COLTRemoteTransferableException) {
+        throw (COLTRemoteTransferableException) exception[0];
+      }
+
       ErrorHandler.handle(exception[0], "Error while handling remote command: " + command.getName());
       // TODO: report to client
     }
   }
-  
+
+  private void executeSecurily(String securityToken, final RemoteCommand command)
+      throws COLTRemoteTransferableException {
+    if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
+      throw new InvalidAuthTokenException();
+    }
+
+    execute(command);
+  }
+
   public static Display getDisplay() {
     Display display = Display.getCurrent();
     if (display == null) {
@@ -124,9 +144,30 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
     return display;
   }
 
-  private static interface RemoteCommand {   
-    String getName();    
-    void execute() throws COLTRemoteException;    
+  @Override
+  public void requestShortCode(final String requestor) throws COLTRemoteTransferableException {
+    execute(new RemoteCommand() {
+      @Override
+      public String getName() {
+        return "Request short code";
+      }
+
+      @Override
+      public void execute() throws COLTRemoteException {
+        COLTRemoteSecuriryManager.getInstance().createNewTokenAndGetShortCode(requestor);
+      }
+    });
+  }
+
+  @Override
+  public String obtainAuthToken(String shortCode) throws TooManyFailedCodeTypeAttemptsException,
+      InvalidShortCodeException {
+    return COLTRemoteSecuriryManager.getInstance().obtainAuthToken(shortCode);
+  }
+  
+  private static interface RemoteCommand {
+    String getName();
+    void execute() throws COLTRemoteException;
   }
 
 }

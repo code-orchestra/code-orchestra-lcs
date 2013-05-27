@@ -6,6 +6,9 @@ import java.util.Enumeration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class ActivationReporter {
 
   private static final String ACTIVATION_URL = "http://activation.codeorchestra.com";

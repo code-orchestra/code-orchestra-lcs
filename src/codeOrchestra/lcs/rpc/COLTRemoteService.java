@@ -1,14 +1,20 @@
 package codeOrchestra.lcs.rpc;
 
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
+import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
+import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
 
 /**
  * @author Alexander Eliseyev
  */
 public interface COLTRemoteService {
+ 
+  void requestShortCode(String requestor) throws COLTRemoteTransferableException;
   
-  void createProject(String securityToken, COLTRemoteProject project);
+  String obtainAuthToken(String shortCode) throws TooManyFailedCodeTypeAttemptsException, InvalidShortCodeException;
   
-  void loadProject(String securityToken, String path);
+  void createProject(String securityToken, COLTRemoteProject project) throws COLTRemoteTransferableException;
+  
+  void loadProject(String securityToken, String path) throws COLTRemoteTransferableException;
 
 }

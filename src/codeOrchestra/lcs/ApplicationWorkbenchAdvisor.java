@@ -22,6 +22,7 @@ import codeOrchestra.lcs.project.ProjectManager;
 import codeOrchestra.lcs.project.RecentProjects;
 import codeOrchestra.lcs.rpc.COLTRemoteServiceServlet;
 import codeOrchestra.lcs.rpc.impl.COLTRemoteServiceImpl;
+import codeOrchestra.lcs.rpc.security.view.SecurityTokenStatusLineItem;
 import codeOrchestra.lcs.views.FCSHConsoleView;
 
 /**
@@ -64,11 +65,12 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
   @Override
   public void postStartup() {
     // Hide FCSH console
-    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
     IWorkbenchPartReference myView = page.findViewReference(FCSHConsoleView.ID);
     page.setPartState(myView, IWorkbenchPage.STATE_MINIMIZED);
 
-    IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    IWorkbenchWindow window = activeWorkbenchWindow;
     
     // Open project requested
     if (pathToOpenOnStartup != null) {      
@@ -95,6 +97,8 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     // Init remote service
     COLTRemoteServiceImpl.init(window);
     CodeOrchestraHttpServer.getInstance().addServlet(new COLTRemoteServiceServlet(), "/coltService");
+    
+    SecurityTokenStatusLineItem.INSTANCE.init(activeWorkbenchWindow.getShell());
   }
 
 }
