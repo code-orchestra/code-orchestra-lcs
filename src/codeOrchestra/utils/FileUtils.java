@@ -112,6 +112,23 @@ public class FileUtils {
     return false;
   }
   
+  public static void copyFileWithIncrementalReplaces(File f, File to) throws IOException {
+    File target;
+    if (to.isDirectory()) {
+      target = new File(to, f.getName());
+    } else {
+      target = to;
+    }
+
+    if (!to.getParentFile().exists()) {
+      to.getParentFile().mkdirs();
+    }
+
+    String content = FileUtils.read(f);    
+    content = content.replaceAll("\\[\\s*Embed.+\\]", "");    
+    write(target, content);
+  }
+  
   public static void copyFileChecked(File f, File to, boolean checkEquals) throws IOException {
     File target;
     if (to.isDirectory()) {
@@ -142,7 +159,7 @@ public class FileUtils {
     is.close();
     os.close();
   }
-  
+
   public static String read(File file) {
     try {
       return read(new FileReader(file));

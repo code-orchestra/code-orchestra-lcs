@@ -91,7 +91,7 @@ public class FlexConfigBuilder {
         FileUtils.clear(incrementalSourcesDir);
         for (SourceFile sourceFile : changedFiles) {
           try {
-            FileUtils.copyFileChecked(sourceFile.getFile(), new File(incrementalSourcesDir, sourceFile.getRelativePath()), false);
+            FileUtils.copyFileWithIncrementalReplaces(sourceFile.getFile(), new File(incrementalSourcesDir, sourceFile.getRelativePath()));
           } catch (IOException e) {
             throw new LCSException("Can't copy changed source file to 'incremental' dir", e);
           }
