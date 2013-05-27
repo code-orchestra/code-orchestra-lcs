@@ -5,7 +5,10 @@ package codeOrchestra.liveCoding.load {
   
   public class Asset_{CLASS_POSTFIX} implements IAssetUpdate {
     {
-      Security.allowDomain("*");
+      try {
+        Security.allowDomain("*");
+      } catch (e : *)  {
+      }
     }
 
     [Embed(source="{RELATIVE_PATH}", mimeType="{MIME_TYPE}")]
