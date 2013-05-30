@@ -1,6 +1,7 @@
 package codeOrchestra.actionScript.security;
 
 import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.StringUtils;
 
 import com.intellij.openapi.util.SystemInfo;
 
@@ -51,12 +52,23 @@ public class TrustedLocations {
     List<String> trustedLocations = new ArrayList<String>();
 
     String trustConfigurationContent = FileUtils.read(getOrCreateTrustConfigurationFile());
+    String[] trustLocationsSplit = trustConfigurationContent.split("\\n");
+    if (trustLocationsSplit != null && trustLocationsSplit.length > 0) {
+      for (String token : trustLocationsSplit) {
+        if (token != null && StringUtils.isNotEmpty(token.trim())) {
+          trustedLocations.add(token.trim());          
+        }                
+      }
+    }
+    
+    /*
     StringTokenizer stringTokenizer = new StringTokenizer(trustConfigurationContent);
 
     while(stringTokenizer.hasMoreTokens()) {
       String token = stringTokenizer.nextToken();
       trustedLocations.add(token);
     }
+    */
 
     return trustedLocations;
   }
