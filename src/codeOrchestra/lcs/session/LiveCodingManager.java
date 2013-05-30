@@ -563,7 +563,8 @@ public class LiveCodingManager {
         }
 
         if (lastPong < lastPing) {
-          if (LCSProject.getCurrentProject().getLiveCodingSettings().disconnectOnTimeout()) {
+          LCSProject currentProject = LCSProject.getCurrentProject();
+          if (currentProject == null || currentProject.getLiveCodingSettings().disconnectOnTimeout()) {
             stopSession(liveCodingSession);
           }
         }
