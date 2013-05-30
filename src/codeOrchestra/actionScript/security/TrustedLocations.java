@@ -1,15 +1,14 @@
 package codeOrchestra.actionScript.security;
 
-import codeOrchestra.utils.FileUtils;
-import codeOrchestra.utils.StringUtils;
-
-import com.intellij.openapi.util.SystemInfo;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
+
+import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.StringUtils;
+
+import com.intellij.openapi.util.SystemInfo;
 
 /**
  * @author Alexander Eliseyev
@@ -61,15 +60,6 @@ public class TrustedLocations {
       }
     }
     
-    /*
-    StringTokenizer stringTokenizer = new StringTokenizer(trustConfigurationContent);
-
-    while(stringTokenizer.hasMoreTokens()) {
-      String token = stringTokenizer.nextToken();
-      trustedLocations.add(token);
-    }
-    */
-
     return trustedLocations;
   }
 
