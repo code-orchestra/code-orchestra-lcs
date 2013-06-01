@@ -49,7 +49,7 @@ public class LCSMaker {
     this.skipSecondPhase = skipSecondPhase;
   }
 
-  public boolean make() throws MakeException {
+  public CompilationResult make() throws MakeException {
     FSCHCompilerKind compilerKind = assetMode ? FSCHCompilerKind.COMPC : (isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC);
 
     LCSProject currentProject = LCSProject.getCurrentProject();
@@ -105,8 +105,9 @@ public class LCSMaker {
 
     // Base/incremental compilation first phase
     FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
-    if (!doCompile(flexSDKRunner)) {
-      return false;
+    CompilationResult compilationResult = doCompile(flexSDKRunner);
+    if (!compilationResult.isOk()) {
+      return compilationResult;
     }
 
     // Base compilation second phase
@@ -127,21 +128,22 @@ public class LCSMaker {
       }
 
       flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
-      if (!doCompile(flexSDKRunner)) {
-        return false;
+      compilationResult = doCompile(flexSDKRunner);
+      if (!compilationResult.isOk()) {
+        return compilationResult;
       }
     }
 
-    return true;
+    return compilationResult;
   }
 
-  private boolean doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
+  private CompilationResult doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
     CompilationResult compilationResult = flexSDKRunner.run();
 
     if (compilationResult == null) {
       String errorMessage = String.format("Compilation timed out");
       LOG.error(errorMessage);
-      return false;      
+      return CompilationResult.ABORTED;      
     }
     
     if (compilationResult.getErrors() > 0) {
@@ -149,11 +151,11 @@ public class LCSMaker {
       String errorMessage = String.format("Compilation failed with (%d) error(s): %s", compilationResult.getErrors(), outputFile);
 
       LOG.error(errorMessage);
-      return false;
+      return compilationResult;
     }
 
     LOG.info("Compilation is completed successfully");
-    return true;
+    return compilationResult;
   }
 
   private FCSHFlexSDKRunner getFlexSDKRunner(File flexConfigFile, FSCHCompilerKind compilerKind) {

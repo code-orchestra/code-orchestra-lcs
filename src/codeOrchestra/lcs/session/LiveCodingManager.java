@@ -15,6 +15,7 @@ import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingAdapter;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingListener;
 import codeOrchestra.actionScript.liveCoding.run.LiveCodingSessionImpl;
+import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.actionScript.modulemaker.MakeException;
 import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.digest.EmbedDigest;
@@ -143,7 +144,7 @@ public class LiveCodingManager {
     }
   }
 
-  public boolean runBaseCompilation() {
+  public CompilationResult runBaseCompilation() {
     try {
       compilationInProgress = true;
 
@@ -168,7 +169,7 @@ public class LiveCodingManager {
     } finally {
       compilationInProgress = false;
     }
-    return false;
+    return CompilationResult.ABORTED;
   }
 
   public synchronized void runIncrementalCompilation() {
@@ -199,7 +200,7 @@ public class LiveCodingManager {
 
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
       try {
-        if (lcsMaker.make()) {
+        if (lcsMaker.make().isOk()) {
           try {
             FCSHManager.instance().stopCPUProfiling();
           } catch (FCSHException e) {
@@ -324,7 +325,7 @@ public class LiveCodingManager {
     // 3 - compile
     LCSMaker lcsMaker = new LCSMaker(Collections.singletonList(new SourceFile(targetFile, currentProject.getOrCreateIncrementalSourcesDir().getPath())), true);
     try {
-      if (lcsMaker.make()) {
+      if (lcsMaker.make().isOk()) {
         // Extract and copy the artifact
         try {
           UnzipUtil.unzip(new File(PathUtils.getSourceIncrementalSWCPath(currentProject)), FileUtils.getTempDir());

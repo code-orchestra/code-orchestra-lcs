@@ -14,7 +14,10 @@ import codeOrchestra.lcs.project.ProjectManager;
 import codeOrchestra.lcs.rpc.COLTRemoteException;
 import codeOrchestra.lcs.rpc.COLTRemoteService;
 import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
+import codeOrchestra.lcs.rpc.COLTUnhandledException;
+import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
+import codeOrchestra.lcs.rpc.model.COLTState;
 import codeOrchestra.lcs.rpc.security.COLTRemoteSecuriryManager;
 import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
@@ -47,6 +50,18 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
     this.window = window;
   }
 
+  @Override
+  public COLTCompilationResult runBaseCompilation() throws COLTRemoteTransferableException {
+    // TODO: implement
+    return null;
+  }
+  
+  @Override
+  public COLTState getState() throws COLTRemoteTransferableException {
+    // TODO: implement
+    return null;
+  }
+  
   @Override
   public void createProject(String securityToken, final COLTRemoteProject remoteProject)
       throws COLTRemoteTransferableException {
@@ -102,20 +117,19 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
   }
 
   private void execute(final RemoteCommand command) throws COLTRemoteTransferableException {
-    final COLTRemoteException[] exception = new COLTRemoteException[1];
+    final Throwable[] exception = new Throwable[1];
     getDisplay().syncExec(new Runnable() {
       @Override
       public void run() {
         try {
           command.execute();
-        } catch (COLTRemoteException t) {
+        } catch (Throwable t) {
           exception[0] = t;
         }
       }
     });
 
     if (exception[0] != null) {
-      // TODO: delete
       exception[0].printStackTrace();
       
       if (exception[0] instanceof COLTRemoteTransferableException) {
@@ -123,7 +137,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
       }
 
       ErrorHandler.handle(exception[0], "Error while handling remote command: " + command.getName());
-      // TODO: report to client
+      throw new COLTUnhandledException(exception[0]);
     }
   }
 

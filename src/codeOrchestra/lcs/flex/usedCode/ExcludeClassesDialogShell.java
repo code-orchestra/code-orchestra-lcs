@@ -72,7 +72,7 @@ public class ExcludeClassesDialogShell extends ModalSettingsDialogShell {
 
           LCSMaker lcsMaker = new LCSMaker(false);
           lcsMaker.setSkipSecondPhase(true);
-          boolean makeOk = lcsMaker.make();          
+          boolean makeOk = lcsMaker.make().isOk();          
           monitor.worked(80);
           
           if (!makeOk) {

@@ -8,9 +8,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Alexander Eliseyev
+ */
+@SuppressWarnings("serial")
 public class CompilationResult implements Serializable {
 
   public static final CompilationResult OK = new CompilationResult(0, 0, false);
+  
+  public static final CompilationResult ABORTED = new CompilationResult(0, 0, true);
 
   private int myErrors;
   private int myWarnings;
