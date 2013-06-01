@@ -1,8 +1,12 @@
 package codeOrchestra.lcs.rpc.model;
 
+/**
+ * @author Alexander Eliseyev
+ */
 public class COLTState {
   
   private boolean compilationInProgress;
+  
   private COLTConnection[] activeConnections;
   
   public boolean isCompilationInProgress() {

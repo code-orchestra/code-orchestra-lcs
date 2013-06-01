@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 /**
  * @author Alexander Eliseyev
  */
+@SuppressWarnings("serial")
 public class CompilerMessage implements Serializable {
 
   private final static String MESSAGE_PATTERN = "^\\s*((?:\\w:)?[^:]+)\\((\\d+)\\):\\s+col:\\s+(\\d+):?\\s+(Error|Warning):\\s+(.+)\\s*$";

@@ -52,8 +52,11 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
   @Override
   public COLTCompilationResult runBaseCompilation() throws COLTRemoteTransferableException {
+    COLTCompilationResult[] compilationResult = new COLTCompilationResult[1];
+    
     // TODO: implement
-    return null;
+    
+    return compilationResult[0];
   }
   
   @Override
