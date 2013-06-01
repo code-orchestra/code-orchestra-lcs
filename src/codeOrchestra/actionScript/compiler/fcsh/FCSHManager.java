@@ -1,7 +1,10 @@
 package codeOrchestra.actionScript.compiler.fcsh;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import codeOrchestra.actionScript.compiler.fcsh.console.command.CommandCallback;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandExecuteThread;
@@ -10,10 +13,12 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.COMPCComman
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CPUProfilingStartCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CPUProfilingStopCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CompileTargetCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingCachesDeleteCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingIncrementalCOMPCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
@@ -35,6 +40,8 @@ public class FCSHManager {
   public static final long FCSH_INIT_TIMEOUT = 3000;
 
   private FCSHProcessHandler fcshProcessHandler;
+  
+  private final Map<List<String>, CompilerTarget> compilerTargets = Collections.synchronizedMap(new HashMap<List<String>, CompilerTarget>());
 
   public void restart() throws FCSHException {
     destroyProcess();
@@ -49,6 +56,29 @@ public class FCSHManager {
     } catch (Throwable t) {
       // ignore
     }
+  }
+  
+  public CompilerTarget registerCompileTarget(List<String> arguments, int id) {
+    synchronized (compilerTargets) {
+      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      if (compilerTarget == null) {
+        compilerTarget = new CompilerTarget(id);
+        compilerTargets.put(arguments, compilerTarget);
+      }
+
+      return compilerTarget;
+    }
+  }
+  
+  public CompilationResult compile(CompilerTarget target) throws FCSHException {
+    assureFCSHIsActive();
+
+    CompileTargetCommand compileCommand = new CompileTargetCommand(this, target);
+    LOG.info("Compiling the target #" + target.getId());
+
+    submitCommand(compileCommand);
+
+    return compileCommand.getCompileResult();
   }
 
   private void assureFCSHIsActive() throws FCSHException {
@@ -107,6 +137,15 @@ public class FCSHManager {
   public CompilationResult baseMXMLC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
+    /*
+    synchronized (compilerTargets) {
+      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      if (compilerTarget != null) {
+        return compile(compilerTarget);
+      }
+    }
+    */
+    
     LivecodingBaseMXMLCCommand mxmlcCommand = new LivecodingBaseMXMLCCommand(arguments);
     LOG.info("Compiling: " + mxmlcCommand.getCommand());
 
@@ -118,6 +157,15 @@ public class FCSHManager {
   public CompilationResult baseCOMPC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
+    /*
+    synchronized (compilerTargets) {
+      CompilerTarget compilerTarget = compilerTargets.get(arguments);
+      if (compilerTarget != null) {
+        return compile(compilerTarget);
+      }
+    }
+    */
+    
     LivecodingBaseCOMPCCommand compcCommand = new LivecodingBaseCOMPCCommand(arguments);
     LOG.info("Compiling: " + compcCommand.getCommand());
 
@@ -171,6 +219,10 @@ public class FCSHManager {
     submitCommand(new CPUProfilingStopCommand());
   }
 
+  public void clearTargets() {
+    this.compilerTargets.clear();
+  }
+  
   public FCSHProcessHandler getProcessHandler() {
     return fcshProcessHandler;
   }

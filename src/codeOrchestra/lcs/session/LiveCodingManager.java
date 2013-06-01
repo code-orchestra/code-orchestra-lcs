@@ -182,11 +182,14 @@ public class LiveCodingManager {
         changedFiles.clear();
       }
 
+      // Incremental compilation target is now cleared on the compiler side
+      /*
       try {
         FCSHManager.instance().clear();
       } catch (FCSHException e) {
         ErrorHandler.handle(e, "Error while clearing targets");
       }
+      */
       
       try {
         FCSHManager.instance().startCPUProfiling();
