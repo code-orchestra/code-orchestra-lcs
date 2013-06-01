@@ -9,6 +9,7 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.FCSHCommandRunna
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.COMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CPUProfilingStartCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.CPUProfilingStopCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.ClearCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseCOMPCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingCachesDeleteCommand;
@@ -95,6 +96,12 @@ public class FCSHManager {
     } else {
       new FCSHCommandExecuteThread(fcshCommandRunnable).start();
     }
+  }
+  
+  public void clear() throws FCSHException {
+    assureFCSHIsActive();
+
+    submitCommand(new ClearCommand());
   }
 
   public CompilationResult baseMXMLC(List<String> arguments) throws FCSHException {

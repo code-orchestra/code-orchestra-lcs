@@ -183,9 +183,15 @@ public class LiveCodingManager {
       }
 
       try {
+        FCSHManager.instance().clear();
+      } catch (FCSHException e) {
+        ErrorHandler.handle(e, "Error while clearing targets");
+      }
+      
+      try {
         FCSHManager.instance().startCPUProfiling();
-      } catch (FCSHException e1) {
-        ErrorHandler.handle(e1, "Error while starting profling");
+      } catch (FCSHException e) {
+        ErrorHandler.handle(e, "Error while starting profling");
       }
 
       LCSMaker lcsMaker = new LCSMaker(changedFilesSnapshot);
