@@ -2,12 +2,18 @@ package codeOrchestra.lcs.rpc.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
+import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
+import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
+import codeOrchestra.lcs.controller.COLTController;
+import codeOrchestra.lcs.controller.COLTControllerCallbackEx;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.project.ProjectManager;
@@ -16,12 +22,14 @@ import codeOrchestra.lcs.rpc.COLTRemoteService;
 import codeOrchestra.lcs.rpc.COLTRemoteTransferableException;
 import codeOrchestra.lcs.rpc.COLTUnhandledException;
 import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
+import codeOrchestra.lcs.rpc.model.COLTConnection;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
 import codeOrchestra.lcs.rpc.model.COLTState;
 import codeOrchestra.lcs.rpc.security.COLTRemoteSecuriryManager;
 import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
 import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
+import codeOrchestra.lcs.session.LiveCodingManager;
 
 /**
  * @author Alexander Eliseyev
@@ -46,36 +54,73 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
   private IWorkbenchWindow window;
 
+  private final Object monitor = new Object();
+  
   public COLTRemoteServiceImpl(IWorkbenchWindow window) {
     this.window = window;
   }
 
   @Override
-  public COLTCompilationResult runBaseCompilation() throws COLTRemoteTransferableException {
-    COLTCompilationResult[] compilationResult = new COLTCompilationResult[1];
-    
-    // TODO: implement
-    
-    return compilationResult[0];
+  public COLTCompilationResult runBaseCompilation(String securityToken) throws COLTRemoteTransferableException {
+    return executeSecurilyAsyncInUI(securityToken, new RemoteAsyncCommand<COLTCompilationResult>() {
+      @Override
+      public String getName() {
+        return "Compile and run";
+      }
+
+      @Override
+      public void execute(final COLTControllerCallbackEx<COLTCompilationResult> callback) {
+        COLTController.startBaseCompilationAndRun(window, new COLTControllerCallbackEx<CompilationResult>() {
+          @Override
+          public void onComplete(CompilationResult successResult) {
+            callback.onComplete(new COLTCompilationResult(successResult));
+          }
+
+          @Override
+          public void onError(Throwable t, CompilationResult errorResult) {
+            callback.onError(t, errorResult != null ? new COLTCompilationResult(errorResult) : null);
+          }
+        }, false);        
+      }
+    });
   }
-  
+
   @Override
-  public COLTState getState() throws COLTRemoteTransferableException {
-    // TODO: implement
-    return null;
+  public COLTState getState(String securityToken) throws COLTRemoteTransferableException {
+    return executeSecurily(securityToken, new RemoteCommand<COLTState>() {
+      @Override
+      public String getName() {
+        return "Get COLT state";
+      }
+
+      @Override
+      public COLTState execute() throws COLTRemoteException {
+        COLTState state = new COLTState();
+        
+        List<COLTConnection> coltConnections = new ArrayList<COLTConnection>();
+        for (LiveCodingSession session : LiveCodingManager.instance().getCurrentConnections()) {
+          if (!session.isDisposed()) {
+            coltConnections.add(new COLTConnection(session));            
+          }                    
+        }
+        state.setActiveConnections(coltConnections.toArray(new COLTConnection[coltConnections.size()]));
+        
+        return state;
+      }
+    });
   }
-  
+
   @Override
   public void createProject(String securityToken, final COLTRemoteProject remoteProject)
       throws COLTRemoteTransferableException {
-    executeSecurily(securityToken, new RemoteCommand() {
+    executeSecurilyInUI(securityToken, new RemoteCommand<Void>() {
       @Override
       public String getName() {
         return "Create project under " + remoteProject.getPath();
       }
 
       @Override
-      public void execute() throws COLTRemoteException {
+      public Void execute() throws COLTRemoteException {
         File projectFile = new File(remoteProject.getPath());
         if (projectFile.exists()) {
           projectFile.delete();
@@ -93,6 +138,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
         try {
           LiveCodingProjectViews.openProjectViews(window, newProject);
+          return null;
         } catch (PartInitException e) {
           throw new COLTRemoteException("Error while opening project file", e);
         }
@@ -101,31 +147,34 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
   }
 
   public void loadProject(String securityToken, final String path) throws COLTRemoteTransferableException {
-    executeSecurily(securityToken, new RemoteCommand() {
+    executeSecurilyInUI(securityToken, new RemoteCommand<Void>() {
       @Override
       public String getName() {
         return "Load project " + path;
       }
 
       @Override
-      public void execute() throws COLTRemoteException {
+      public Void execute() throws COLTRemoteException {
         try {
           ProjectManager.getInstance().openProject(path, window);
+          return null;
         } catch (PartInitException e) {
           throw new COLTRemoteException(e);
         }
       }
-
     });
   }
 
-  private void execute(final RemoteCommand command) throws COLTRemoteTransferableException {
+  @SuppressWarnings("unchecked")
+  private <T> T executeInDisplayAndWait(final RemoteCommand<T> command) throws COLTRemoteTransferableException {
     final Throwable[] exception = new Throwable[1];
+    final Object[] result = new Object[1];
+
     getDisplay().syncExec(new Runnable() {
       @Override
       public void run() {
         try {
-          command.execute();
+          result[0] = command.execute();
         } catch (Throwable t) {
           exception[0] = t;
         }
@@ -134,7 +183,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
     if (exception[0] != null) {
       exception[0].printStackTrace();
-      
+
       if (exception[0] instanceof COLTRemoteTransferableException) {
         throw (COLTRemoteTransferableException) exception[0];
       }
@@ -142,15 +191,96 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
       ErrorHandler.handle(exception[0], "Error while handling remote command: " + command.getName());
       throw new COLTUnhandledException(exception[0]);
     }
+
+    return (T) result[0];
+  }
+  
+  @SuppressWarnings("unchecked")
+  private <T> T executeInDisplayAsyncAndWait(final RemoteAsyncCommand<T> command) throws COLTRemoteTransferableException {
+    final Throwable[] exception = new Throwable[1];
+    final Object[] result = new Object[1];
+    
+    getDisplay().asyncExec(new Runnable() {
+      @Override
+      public void run() {
+          command.execute(new COLTControllerCallbackEx<T>() {
+            @Override
+            public void onComplete(T successResult) {
+              result[0] = successResult;       
+              
+              synchronized (monitor) {
+                monitor.notify();                
+              }
+            }
+
+            @Override
+            public void onError(Throwable t, T errorResult) {
+              exception[0] = t;
+              result[0] = errorResult;
+              
+              synchronized (monitor) {
+                monitor.notify();                
+              }
+            }
+          });
+      }
+    });
+    
+    synchronized (monitor) {
+      try {
+        monitor.wait();
+      } catch (InterruptedException e) {
+        // ignore
+      }      
+    }
+
+    if (exception[0] != null) {
+      exception[0].printStackTrace();
+
+      if (exception[0] instanceof COLTRemoteTransferableException) {
+        throw (COLTRemoteTransferableException) exception[0];
+      }
+
+      ErrorHandler.handle(exception[0], "Error while handling remote command: " + command.getName());
+      throw new COLTUnhandledException(exception[0]);
+    }
+
+    return (T) result[0];
   }
 
-  private void executeSecurily(String securityToken, final RemoteCommand command)
-      throws COLTRemoteTransferableException {
+  private <T> T executeSecurily(String securityToken, final RemoteCommand<T> command) throws COLTRemoteTransferableException {
     if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
       throw new InvalidAuthTokenException();
     }
 
-    execute(command);
+    try {
+      return command.execute();
+    } catch (COLTRemoteException e) {
+      e.printStackTrace();
+
+      if (e instanceof COLTRemoteTransferableException) {
+        throw (COLTRemoteTransferableException) e;
+      }
+
+      ErrorHandler.handle(e, "Error while handling remote command: " + command.getName());
+      throw new COLTUnhandledException(e);
+    }
+  }
+  
+  private <T> T executeSecurilyInUI(String securityToken, final RemoteCommand<T> command) throws COLTRemoteTransferableException {
+    if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
+      throw new InvalidAuthTokenException();
+    }
+
+    return executeInDisplayAndWait(command);
+  }
+  
+  private <T> T executeSecurilyAsyncInUI(String securityToken, final RemoteAsyncCommand<T> command) throws COLTRemoteTransferableException {
+    if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
+      throw new InvalidAuthTokenException();
+    }
+
+    return executeInDisplayAsyncAndWait(command);
   }
 
   public static Display getDisplay() {
@@ -163,15 +293,16 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
   @Override
   public void requestShortCode(final String requestor) throws COLTRemoteTransferableException {
-    execute(new RemoteCommand() {
+    executeInDisplayAndWait(new RemoteCommand<Void>() {
       @Override
       public String getName() {
         return "Request short code";
       }
 
       @Override
-      public void execute() throws COLTRemoteException {
+      public Void execute() throws COLTRemoteException {
         COLTRemoteSecuriryManager.getInstance().createNewTokenAndGetShortCode(requestor);
+        return null;
       }
     });
   }
@@ -182,9 +313,17 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
     return COLTRemoteSecuriryManager.getInstance().obtainAuthToken(shortCode);
   }
   
-  private static interface RemoteCommand {
+  private static interface RemoteCommand<T> {
     String getName();
-    void execute() throws COLTRemoteException;
+
+    T execute() throws COLTRemoteException;
   }
+  
+  private static interface RemoteAsyncCommand<T> {
+    String getName();
+    
+    void execute(COLTControllerCallbackEx<T> callback);
+  }
+  
 
 }

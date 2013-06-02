@@ -11,7 +11,7 @@ public class COLTUnhandledException extends COLTRemoteTransferableException {
   }
 
   public COLTUnhandledException(String message, Throwable cause) {
-    super(message, cause);
+    super(message + ", caused by: " + getCauseMessage(cause));
   }
 
   public COLTUnhandledException(String message) {
@@ -19,7 +19,11 @@ public class COLTUnhandledException extends COLTRemoteTransferableException {
   }
 
   public COLTUnhandledException(Throwable cause) {
-    super(cause);
-  } 
+    super(getCauseMessage(cause));
+  }
 
+  private static String getCauseMessage(Throwable cause) {
+    return cause.getClass().getSimpleName() + (cause.getMessage() != null ? ": " + cause.getMessage() : "");
+  } 
+  
 }

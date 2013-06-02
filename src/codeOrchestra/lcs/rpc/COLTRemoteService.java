@@ -11,13 +11,17 @@ import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
  */
 public interface COLTRemoteService {
   
-  COLTState getState() throws COLTRemoteTransferableException;
- 
-  COLTCompilationResult runBaseCompilation() throws COLTRemoteTransferableException;
+  // Authorization methods
   
   void requestShortCode(String requestor) throws COLTRemoteTransferableException;
   
   String obtainAuthToken(String shortCode) throws TooManyFailedCodeTypeAttemptsException, InvalidShortCodeException;
+  
+  // Secured methods
+  
+  COLTState getState(String securityToken) throws COLTRemoteTransferableException;
+ 
+  COLTCompilationResult runBaseCompilation(String securityToken) throws COLTRemoteTransferableException;
   
   void createProject(String securityToken, COLTRemoteProject project) throws COLTRemoteTransferableException;
   

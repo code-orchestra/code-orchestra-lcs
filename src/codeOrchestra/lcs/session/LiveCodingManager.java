@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -476,6 +477,19 @@ public class LiveCodingManager {
 
   public Set<String> getCurrentSessionsCliensIds() {
     return currentSessions.keySet();
+  }
+  
+  public List<LiveCodingSession> getCurrentConnections() {
+    List<LiveCodingSession> connectionsList = new ArrayList<LiveCodingSession>(currentSessions.values());
+    
+    Collections.sort(connectionsList, new Comparator<LiveCodingSession>() {
+      @Override
+      public int compare(LiveCodingSession session1, LiveCodingSession session2) {
+        return Integer.valueOf(session1.getClientId()) - Integer.valueOf(session2.getClientId());
+      }
+    });
+    
+    return connectionsList;
   }
 
   private class SessionHandleListener extends LiveCodingAdapter {
