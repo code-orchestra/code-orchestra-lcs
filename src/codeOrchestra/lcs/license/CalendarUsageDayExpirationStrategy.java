@@ -72,11 +72,10 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
 
   @Override
   public boolean showTrialExpiredDialog() {
-    String expireMessage = String.format("%d day(s) evaluation license has expired. Your session will be limited to %d minutes unless you enter a serial number",
-      getExpirationPeriod(), EXPIRED_SESSION_MINUTES);
+    String expireMessage = String.format("%d day(s) evaluation license has expired. The programm will quit unless you enter a serial number", getExpirationPeriod());
 
     MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "Evaluation License", null, expireMessage, MessageDialog.QUESTION, 
-        new String[] { "Continue Evaluation", "Enter Serial Number" }, 0);
+        new String[] { "Exit", "Enter Serial Number" }, 0);
     
     int result = dialog.open();
     if (result == 1) {
