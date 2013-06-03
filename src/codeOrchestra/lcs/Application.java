@@ -9,7 +9,7 @@ import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
 import codeOrchestra.http.CodeOrchestraHttpServer;
-import codeOrchestra.lcs.license.ExternalValidationServer;
+import codeOrchestra.lcs.license.COLTRunningKey;
 import codeOrchestra.lcs.license.LicenseManager;
 
 /**
@@ -46,7 +46,7 @@ public class Application implements IApplication {
       }
       
       // TODO: handle errors
-      ExternalValidationServer.getInstance().start();
+      COLTRunningKey.setRunning(true);
       CodeOrchestraHttpServer.getInstance().init();
       getServerSocketThread().openSocket();
 

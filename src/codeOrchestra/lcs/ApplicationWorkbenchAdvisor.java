@@ -17,6 +17,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
 import codeOrchestra.http.CodeOrchestraHttpServer;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
+import codeOrchestra.lcs.license.COLTRunningKey;
 import codeOrchestra.lcs.license.UsagePeriods;
 import codeOrchestra.lcs.project.ProjectManager;
 import codeOrchestra.lcs.project.RecentProjects;
@@ -59,6 +60,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
   @Override
   public boolean preShutdown() {    
     UsagePeriods.getInstance().addUsagePeriod(Application.timeStarted, System.currentTimeMillis());
+    COLTRunningKey.setRunning(false);
     return super.preShutdown();
   }
 
