@@ -22,6 +22,9 @@ import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
 import codeOrchestra.lcs.logging.Logger;
+import codeOrchestra.utils.StringUtils;
+
+import com.intellij.openapi.util.SystemInfo;
 
 /**
  * @author Alexander Eliseyev
@@ -87,18 +90,27 @@ public class FCSHManager {
       return;
     }
 
-    FCSHLauncher fcshLauncher = new FCSHLauncher();
-    ProcessBuilder processBuilder = fcshLauncher.createProcessBuilder();
+    IFCSHLauncher fcshLauncher;
+    ProcessBuilder processBuilder;
+    if (FCSHLauncher.NATIVE_FCSH && SystemInfo.isWindows) {
+    	fcshLauncher = new FCSHNativeLauncher();
+    } else {
+    	fcshLauncher = new FCSHLauncher();    	   
+    }
+	processBuilder = fcshLauncher.createProcessBuilder();	
+    
     Process fcshProcess;
     try {
-      fcshProcess = processBuilder.start();
+    	fcshLauncher.runBeforeStart();
+    	fcshProcess = processBuilder.start();
     } catch (IOException e) {
       throw new FCSHException("Error while trying to start the fcsh process", e);
     }
 
-    LOG.info(fcshLauncher.getCommandString());
+    String commandString = StringUtils.join(processBuilder.command(), ", ");    
+    LOG.info(commandString);
     
-    fcshProcessHandler = new FCSHProcessHandler(fcshProcess, fcshLauncher.getCommandString());
+    fcshProcessHandler = new FCSHProcessHandler(fcshProcess, commandString);
     fcshProcessHandler.startNotify();
 
     // Give fcsh some time to start up

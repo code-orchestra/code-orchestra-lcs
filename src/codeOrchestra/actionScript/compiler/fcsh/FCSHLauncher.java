@@ -14,9 +14,11 @@ import com.intellij.openapi.util.SystemInfo;
 /**
  * @author Alexander Eliseyev
  */
-public class FCSHLauncher extends JavaLauncher {
+public class FCSHLauncher extends JavaLauncher implements IFCSHLauncher {
 
   public static final boolean PROFILING_ON = System.getProperty("colt.profiling.on") != null;
+  
+  public static final boolean NATIVE_FCSH = true;
   
   public FCSHLauncher() {
     super(null);
@@ -69,6 +71,10 @@ public class FCSHLauncher extends JavaLauncher {
     }
     setWorkingDirectory(new File(FlexSDKSettings.getDefaultFlexSDKPath(), "bin"));
     setVirtualMachineParameter(jvmParameters.toString());
+  }
+
+  @Override
+  public void runBeforeStart() {	
   }
 
 }
