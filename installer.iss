@@ -33,6 +33,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
+[InstallDelete]
+Type: filesandordirs; Name: "{app}" 
+
 [Files]
 Source: "C:\programs\COLT\COLT.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\programs\COLT\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
