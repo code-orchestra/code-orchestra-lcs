@@ -54,3 +54,21 @@ Root: HKCR; Subkey: "COLTProject\shell\open\command"; ValueType: string; ValueNa
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var 
+  ResultCode: Integer;
+begin
+  if CurStep = ssPostInstall then begin
+    SaveStringToFile(ExpandConstant('{app}\flex_sdk\bin\placement.txt'), 'Root="' + ExpandConstant('{app}\flex_sdk\bin') + '"', False);
+
+    if Exec(ExpandConstant('{app}\flex_sdk\bin\xbind.exe'), 'xbind.script placement.txt', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+      begin
+        // MsgBox('xbind ok', mbInformation, MB_OK);
+      end
+      else begin
+        MsgBox('xbind failed: ' + SysErrorMessage(ResultCode), mbCriticalError, MB_OK);
+        Abort();
+      end;
+    end;
+end;
