@@ -20,6 +20,9 @@ import codeOrchestra.lcs.project.CompilerSettings;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.sources.SourceFile;
 
+/** 
+ * @author Alexander Eliseyev
+ */
 public class LCSMaker {
 
   private static final Logger LOG = Logger.getLogger(LCSMaker.class.getSimpleName());
@@ -47,7 +50,9 @@ public class LCSMaker {
   }
   
   public void setProductionMode(boolean productionMode) {
-    setSkipSecondPhase(true);
+    if (productionMode) {
+      setSkipSecondPhase(true);
+    }
     this.productionMode = productionMode;
   }
 
