@@ -84,6 +84,7 @@ public class FCSHManager {
     return compileCommand.getCompileResult();
   }
 
+  @SuppressWarnings("unused")
   private void assureFCSHIsActive() throws FCSHException {
     if (fcshProcessHandler != null && !fcshProcessHandler.isProcessTerminated()) {
       // No need to reactivate, the process is still running
