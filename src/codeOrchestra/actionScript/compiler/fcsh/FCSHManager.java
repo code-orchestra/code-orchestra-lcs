@@ -18,6 +18,7 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingB
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingBaseMXMLCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingCachesDeleteCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingIncrementalCOMPCCommand;
+import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.MXMLCCommand;
 import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
@@ -32,19 +33,20 @@ import com.intellij.openapi.util.SystemInfo;
 public class FCSHManager {
 
   private static FCSHManager instance = new FCSHManager();
-  
+
   public static FCSHManager instance() {
     return instance;
   }
-  
+
   public static final Logger LOG = Logger.getLogger("fcsh");
 
   private static final int FCSH_INIT_CHECK_INTERVAL = 100;
   public static final long FCSH_INIT_TIMEOUT = 3000;
 
   private FCSHProcessHandler fcshProcessHandler;
-  
-  private final Map<List<String>, CompilerTarget> compilerTargets = Collections.synchronizedMap(new HashMap<List<String>, CompilerTarget>());
+
+  private final Map<List<String>, CompilerTarget> compilerTargets = Collections
+      .synchronizedMap(new HashMap<List<String>, CompilerTarget>());
 
   public void restart() throws FCSHException {
     destroyProcess();
@@ -60,7 +62,7 @@ public class FCSHManager {
       // ignore
     }
   }
-  
+
   public CompilerTarget registerCompileTarget(List<String> arguments, int id) {
     synchronized (compilerTargets) {
       CompilerTarget compilerTarget = compilerTargets.get(arguments);
@@ -72,7 +74,7 @@ public class FCSHManager {
       return compilerTarget;
     }
   }
-  
+
   public CompilationResult compile(CompilerTarget target) throws FCSHException {
     assureFCSHIsActive();
 
@@ -94,23 +96,23 @@ public class FCSHManager {
     IFCSHLauncher fcshLauncher;
     ProcessBuilder processBuilder;
     if (FCSHLauncher.NATIVE_FCSH && SystemInfo.isWindows) {
-    	fcshLauncher = new FCSHNativeLauncher();
+      fcshLauncher = new FCSHNativeLauncher();
     } else {
-    	fcshLauncher = new FCSHLauncher();    	   
+      fcshLauncher = new FCSHLauncher();
     }
-	processBuilder = fcshLauncher.createProcessBuilder();	
-    
+    processBuilder = fcshLauncher.createProcessBuilder();
+
     Process fcshProcess;
     try {
-    	fcshLauncher.runBeforeStart();
-    	fcshProcess = processBuilder.start();
+      fcshLauncher.runBeforeStart();
+      fcshProcess = processBuilder.start();
     } catch (IOException e) {
       throw new FCSHException("Error while trying to start the fcsh process", e);
     }
 
-    String commandString = StringUtils.join(processBuilder.command(), ", ");    
+    String commandString = StringUtils.join(processBuilder.command(), ", ");
     LOG.info(commandString);
-    
+
     fcshProcessHandler = new FCSHProcessHandler(fcshProcess, commandString);
     fcshProcessHandler.startNotify();
 
@@ -140,7 +142,7 @@ public class FCSHManager {
       new FCSHCommandExecuteThread(fcshCommandRunnable).start();
     }
   }
-  
+
   public void clear() throws FCSHException {
     assureFCSHIsActive();
 
@@ -150,15 +152,6 @@ public class FCSHManager {
   public CompilationResult baseMXMLC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
-    /*
-    synchronized (compilerTargets) {
-      CompilerTarget compilerTarget = compilerTargets.get(arguments);
-      if (compilerTarget != null) {
-        return compile(compilerTarget);
-      }
-    }
-    */
-    
     LivecodingBaseMXMLCCommand mxmlcCommand = new LivecodingBaseMXMLCCommand(arguments);
     LOG.info("Compiling: " + mxmlcCommand.getCommand());
 
@@ -170,15 +163,6 @@ public class FCSHManager {
   public CompilationResult baseCOMPC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
-    /*
-    synchronized (compilerTargets) {
-      CompilerTarget compilerTarget = compilerTargets.get(arguments);
-      if (compilerTarget != null) {
-        return compile(compilerTarget);
-      }
-    }
-    */
-    
     LivecodingBaseCOMPCCommand compcCommand = new LivecodingBaseCOMPCCommand(arguments);
     LOG.info("Compiling: " + compcCommand.getCommand());
 
@@ -186,7 +170,7 @@ public class FCSHManager {
 
     return compcCommand.getCompileResult();
   }
-  
+
   public CompilationResult incrementalCOMPC(List<String> arguments) throws FCSHException {
     assureFCSHIsActive();
 
@@ -197,16 +181,41 @@ public class FCSHManager {
 
     return compcCommand.getCompileResult();
   }
-  
+
   public CompilationResult compc(List<String> commandArguments) throws FCSHException {
     assureFCSHIsActive();
 
+    synchronized (compilerTargets) {
+      CompilerTarget compilerTarget = compilerTargets.get(commandArguments);
+      if (compilerTarget != null) {
+        return compile(compilerTarget);
+      }
+    }
+    
     COMPCCommand compcCommand = new COMPCCommand(commandArguments);
     LOG.info("Compiling: " + compcCommand.getCommand());
 
     submitCommand(compcCommand);
 
     return compcCommand.getCompileResult();
+  }  
+
+  public CompilationResult mxmlc(List<String> commandArguments) throws FCSHException {
+    assureFCSHIsActive();
+
+    synchronized (compilerTargets) {
+      CompilerTarget compilerTarget = compilerTargets.get(commandArguments);
+      if (compilerTarget != null) {
+        return compile(compilerTarget);
+      }
+    }
+    
+    MXMLCCommand mxmlcCommand = new MXMLCCommand(commandArguments);
+    LOG.info("Compiling: " + mxmlcCommand.getCommand());
+
+    submitCommand(mxmlcCommand);
+
+    return mxmlcCommand.getCompileResult();
   }
 
   public void deleteLivecodingCaches() throws FCSHException {
@@ -215,7 +224,7 @@ public class FCSHManager {
     LivecodingCachesDeleteCommand deleteCachesCommand = new LivecodingCachesDeleteCommand();
     submitCommand(deleteCachesCommand);
   }
-  
+
   public void startCPUProfiling() throws FCSHException {
     if (!FCSHLauncher.PROFILING_ON) {
       return;
@@ -223,7 +232,7 @@ public class FCSHManager {
     assureFCSHIsActive();
     submitCommand(new CPUProfilingStartCommand());
   }
-  
+
   public void stopCPUProfiling() throws FCSHException {
     if (!FCSHLauncher.PROFILING_ON) {
       return;
@@ -235,7 +244,7 @@ public class FCSHManager {
   public void clearTargets() {
     this.compilerTargets.clear();
   }
-  
+
   public FCSHProcessHandler getProcessHandler() {
     return fcshProcessHandler;
   }

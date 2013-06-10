@@ -144,13 +144,16 @@ public class LiveCodingManager {
       }
     }
   }
-
-  public CompilationResult runBaseCompilation() {
+  
+  private CompilationResult compileProject(boolean production) {
     try {
       compilationInProgress = true;
 
       LCSProject currentProject = LCSProject.getCurrentProject();
-      FileUtils.clear(new File(PathUtils.getIncrementalOutputDir(currentProject)));
+      
+      if (!production) {        
+        FileUtils.clear(new File(PathUtils.getIncrementalOutputDir(currentProject)));
+      }
 
       // COLT-186
       String htmlTemplatePath = currentProject.getSourceSettings().getHTMLTemplatePath();
@@ -162,15 +165,24 @@ public class LiveCodingManager {
       }
 
       LCSMaker lcsMaker = new LCSMaker(false);
+      lcsMaker.setProductionMode(production);
       try {
         return lcsMaker.make();
       } catch (MakeException e) {
-        ErrorHandler.handle(e, "Error while running base compilation");
+        ErrorHandler.handle(e, "Error while running " + (production ? "production" : "base live") + " compilation");
       }
     } finally {
       compilationInProgress = false;
     }
     return CompilationResult.ABORTED;
+  }
+
+  public CompilationResult runBaseCompilation() {
+    return compileProject(false);
+  }
+  
+  public CompilationResult runProductionCompilation() {
+    return compileProject(true);
   }
 
   public synchronized void runIncrementalCompilation() {

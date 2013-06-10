@@ -27,6 +27,80 @@ import com.intellij.execution.process.ProcessHandler;
  */
 public class COLTController {
   
+  public static void startProductionCompilation(IWorkbenchWindow window, final COLTControllerCallback<CompilationResult, CompilationResult> callback, final boolean run, boolean sync) {
+    try {
+      // Save project
+      final LCSProject currentProject = LCSProject.getCurrentProject();
+      if (!LiveCodingProjectViews.saveProjectViewsState(window, currentProject)) {
+        callback.onError(null, null);
+        return;
+      }
+      currentProject.save();
+
+      // Clear messages
+      if (currentProject.getLiveCodingSettings().clearMessagesOnSessionStart()) {
+        MessagesManager.getInstance().clear();
+      }
+    } catch (Throwable t) {
+      callback.onError(t, null);
+      throw new RuntimeException(t);
+    }
+
+    Job job = new Job("Production Compilation") {
+      
+      private void report(IProgressMonitor monitor, String text) {
+        monitor.setTaskName(text);
+        setName(text);
+      }
+      
+      @Override
+      protected IStatus run(IProgressMonitor monitor) {
+        monitor.beginTask("Production Compilation", 100);
+
+        // Base compilation
+        report(monitor, "Compiling");        
+        CompilationResult compilationResult = LiveCodingManager.instance().runProductionCompilation();
+        monitor.worked(run ? 80 : 100);
+        
+        if (compilationResult.isOk() && run) {
+          // Start the compiled SWF
+          report(monitor, "Launching");
+          try {
+            ProcessHandlerWrapper processHandlerWrapper = new LiveLauncher().launch(LCSProject.getCurrentProject());
+            ProcessHandler processHandler = processHandlerWrapper.getProcessHandler();
+            processHandler.addProcessListener(new LoggingProcessListener("Launch"));
+            processHandler.startNotify();
+            
+            if (processHandlerWrapper.mustWaitForExecutionEnd()) {
+              processHandler.waitFor();
+            }
+            
+            monitor.worked(20);
+          } catch (ExecutionException e) {
+            ErrorHandler.handle(e, "Error while launching build artifact");
+            callback.onError(e, compilationResult);
+            return Status.CANCEL_STATUS;
+          }
+        } else {
+          callback.onError(null, compilationResult);
+          return Status.CANCEL_STATUS;          
+        }
+
+        callback.onComplete(compilationResult);
+        return Status.OK_STATUS;
+      }
+    };
+    
+    job.schedule();
+    
+    if (sync) {
+      try {
+        job.join();
+      } catch (InterruptedException e) {
+        // ignore
+      }
+    }
+  }
   
   public static void startBaseCompilationAndRun(IWorkbenchWindow window, final COLTControllerCallback<CompilationResult, CompilationResult> callback, boolean sync) {
     try {

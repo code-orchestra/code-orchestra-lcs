@@ -30,7 +30,8 @@ public class LCSMaker {
   private boolean assetMode;
   
   private boolean skipSecondPhase;
-
+  private boolean productionMode;
+  
   public LCSMaker(boolean isIncremental) {
     this.isIncremental = isIncremental;
   }
@@ -45,12 +46,21 @@ public class LCSMaker {
     this.assetMode = assetMode;
   }
   
+  public void setProductionMode(boolean productionMode) {
+    setSkipSecondPhase(true);
+    this.productionMode = productionMode;
+  }
+
   public void setSkipSecondPhase(boolean skipSecondPhase) {
     this.skipSecondPhase = skipSecondPhase;
   }
-
+  
   public CompilationResult make() throws MakeException {
-    FSCHCompilerKind compilerKind = assetMode ? FSCHCompilerKind.COMPC : (isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC);
+    FSCHCompilerKind compilerKind = productionMode ? FSCHCompilerKind.MXMLC : (
+        assetMode ? FSCHCompilerKind.COMPC : (
+            isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC
+        )
+    );
 
     LCSProject currentProject = LCSProject.getCurrentProject();
     CompilerSettings compilerSettings = currentProject.getCompilerSettings();
@@ -71,7 +81,7 @@ public class LCSMaker {
     }
 
     // Toggle livecoding mode in fcsh
-    if (!assetMode) {
+    if (!productionMode && !assetMode) {
       if (isIncremental) {
         if (!sentLiveCodingCommand) {
           try {

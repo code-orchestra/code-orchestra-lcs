@@ -4,10 +4,12 @@ package codeOrchestra.actionScript.compiler.fcsh;
  * @author Alexander Eliseyev
  */
 public enum FSCHCompilerKind {
+  
   BASE_MXMLC("lcmxmlc"),
   BASE_COMPC("lccompc"),
   INCREMENTAL_COMPC("lcicompc"), 
-  COMPC("compc");
+  COMPC("compc"),
+  MXMLC("mxmlc");
   
   private String commandName;
 

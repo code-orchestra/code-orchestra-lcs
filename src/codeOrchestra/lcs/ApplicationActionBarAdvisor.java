@@ -25,6 +25,7 @@ import codeOrchestra.lcs.actions.EnterSerialNumberAction;
 import codeOrchestra.lcs.actions.GoToLogsFolderAction;
 import codeOrchestra.lcs.actions.NewProjectAction;
 import codeOrchestra.lcs.actions.OpenProjectAction;
+import codeOrchestra.lcs.actions.ProductionRunAction;
 import codeOrchestra.lcs.actions.SaveProjectAction;
 import codeOrchestra.lcs.actions.StartPlusAction;
 import codeOrchestra.lcs.actions.StartSessionAction;
@@ -51,6 +52,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private GoToLogsFolderAction goToLogsFolderAction;
     private StartPlusAction startPlusAction;
     private EnterSerialNumberAction enterSerialAction;
+    private ProductionRunAction productionRunAction;
     
     private StartSessionAction startSessionAction;
 
@@ -98,6 +100,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         enterSerialAction = new EnterSerialNumberAction();
         register(enterSerialAction);
+        
+        productionRunAction = new ProductionRunAction(window);
+        register(productionRunAction);
     }
     
     protected void fillMenuBar(IMenuManager menuBar) {
@@ -138,11 +143,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         projectToolBar.add(openProjectAction);
         projectToolBar.add(saveProjectAction);        
         coolBar.add(new ToolBarContributionItem(projectToolBar, "project"));
-                
+
+        IToolBarManager productionToolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
+        productionToolbar.add(productionRunAction);
+        coolBar.add(new ToolBarContributionItem(productionToolbar, "production"));
+        
         IToolBarManager runToolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         runToolbar.add(startSessionAction);
         runToolbar.add(startPlusAction);
-        coolBar.add(new ToolBarContributionItem(runToolbar, "run"));
+        coolBar.add(new ToolBarContributionItem(runToolbar, "run"));        
     }
     
     

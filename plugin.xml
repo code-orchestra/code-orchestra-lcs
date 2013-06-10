@@ -123,6 +123,11 @@
             id="LCS.close"
             name="Closes current Live Coding Project">
       </command>
+      <command
+            description="Build and Run for Production"
+            id="LCS.productionBuild"
+            name="Build and Run for Production">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
