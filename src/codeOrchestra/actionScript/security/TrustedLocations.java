@@ -15,6 +15,8 @@ import com.intellij.openapi.util.SystemInfo;
  */
 public class TrustedLocations {
 
+  private static final int MAX_LOCATIONS_COUNT = 100;
+  
   private static final TrustedLocations instance = new TrustedLocations();
 
   public static TrustedLocations getInstance() {
@@ -28,7 +30,11 @@ public class TrustedLocations {
   public void addTrustedLocation(String trustedLocation, boolean stop) {
     List<String> trustedLocations = getTrustedLocations();
     if (!trustedLocations.contains(trustedLocation)) {
-      trustedLocations.add(trustedLocation);
+      trustedLocations.add(0, trustedLocation);
+    }
+    
+    if (trustedLocations.size() > MAX_LOCATIONS_COUNT) {
+      trustedLocations.remove(trustedLocations.size() - 1);
     }
 
     saveTrustedLocations(trustedLocations);
@@ -78,7 +84,7 @@ public class TrustedLocations {
       flashPlayerTrustDir.mkdirs();
     }
 
-    File trustConfigurationFile = new File(flashPlayerTrustDir, "co2.cfg");
+    File trustConfigurationFile = new File(flashPlayerTrustDir, "colt.cfg");
     if (!trustConfigurationFile.exists()) {
       try {
         trustConfigurationFile.createNewFile();
