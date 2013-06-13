@@ -15,6 +15,7 @@ public class CodeOrchestraLicenseManager {
   private static Preferences preferences = Preferences.userNodeForPackage(CodeOrchestraLicenseManager.class);
 
   private static final String SERIAL_NUMBER_KEY = "serial-number";
+  private static final String LEGACY_NUMBER_KEY = "serial-number";  
   private static final String LICENSED_TO_KEY = "licensed-to";
 
   public static void clearLicenseDate() {
@@ -32,6 +33,10 @@ public class CodeOrchestraLicenseManager {
     clearLicenseDate();
   }
 
+  public static String getLegacySerialNumber() {
+    return preferences.get(LEGACY_NUMBER_KEY, StringUtils.EMPTY);
+  }
+  
   public static String getSerialNumber() {
     return preferences.get(SERIAL_NUMBER_KEY, StringUtils.EMPTY);
   }

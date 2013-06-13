@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 import codeOrchestra.lcs.license.plimus.PlimusExpirationStrategy;
 import codeOrchestra.lcs.license.plimus.PlimusHelper;
 import codeOrchestra.lcs.license.plimus.PlimusResponse;
+import codeOrchestra.utils.StringUtils;
 
 /**
  * @author Alexander Eliseyev
@@ -84,6 +85,11 @@ public class LicenseManager {
           return IApplication.EXIT_OK;          
         }
       }
+    }
+    
+    // Report serial number
+    if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
+      new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
     }
     
     return null;

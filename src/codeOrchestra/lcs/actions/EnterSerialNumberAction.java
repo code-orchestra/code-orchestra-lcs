@@ -16,7 +16,7 @@ public class EnterSerialNumberAction extends Action {
     setText("Enter Serial Number");
     setId(ICommandIds.CMD_ENTER_SERIAL);
     setActionDefinitionId(ICommandIds.CMD_ENTER_SERIAL);
-    setEnabled(!ExpirationHelper.getExpirationStrategy().isTrialOnly() && !CodeOrchestraLicenseManager.noSerialNumberPresent());
+    setEnabled(!ExpirationHelper.getExpirationStrategy().isTrialOnly() && CodeOrchestraLicenseManager.noSerialNumberPresent());
   }
   
   @Override
