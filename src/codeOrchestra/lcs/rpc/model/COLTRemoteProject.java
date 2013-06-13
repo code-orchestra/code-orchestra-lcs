@@ -30,6 +30,11 @@ public class COLTRemoteProject {
   private String targetPlayerVersion;
   private String compilerOptions;
 
+  // New
+  
+  private String launchTarget; // corresponds to codeOrchestra.lcs.run.Target values
+  
+  
   public void copyTo(LCSProject coltProject) {
     if (sources != null) {
       for (String sourcePath : sources) {
