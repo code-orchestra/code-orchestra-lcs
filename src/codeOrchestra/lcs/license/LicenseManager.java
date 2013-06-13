@@ -23,6 +23,11 @@ public class LicenseManager {
 
   public Object interceptStart() {
     final ExpirationStrategy expirationStrategy = ExpirationHelper.getExpirationStrategy();
+
+    // Report serial number
+    if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
+      new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
+    }
     
     // Trial-only (beta versions) - no serial number is checked
     if (expirationStrategy.isTrialOnly()) {
@@ -85,11 +90,6 @@ public class LicenseManager {
           return IApplication.EXIT_OK;          
         }
       }
-    }
-    
-    // Report serial number
-    if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
-      new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
     }
     
     return null;
