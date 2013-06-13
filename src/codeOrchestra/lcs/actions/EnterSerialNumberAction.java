@@ -4,7 +4,8 @@ import org.eclipse.jface.action.Action;
 
 import codeOrchestra.lcs.ICommandIds;
 import codeOrchestra.lcs.license.CodeOrchestraLicenseDialogs;
-import codeOrchestra.lcs.license.LicenseManager;
+import codeOrchestra.lcs.license.CodeOrchestraLicenseManager;
+import codeOrchestra.lcs.license.ExpirationHelper;
 
 /**
  * @author Alexander Eliseyev
@@ -15,7 +16,7 @@ public class EnterSerialNumberAction extends Action {
     setText("Enter Serial Number");
     setId(ICommandIds.CMD_ENTER_SERIAL);
     setActionDefinitionId(ICommandIds.CMD_ENTER_SERIAL);
-    setEnabled(LicenseManager.getInstance().isEvaluationLicense());
+    setEnabled(!ExpirationHelper.getExpirationStrategy().isTrialOnly() && !CodeOrchestraLicenseManager.noSerialNumberPresent());
   }
   
   @Override

@@ -113,4 +113,19 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
     return EXPIRATION_DAYS;
   }
 
+  @Override
+  public boolean allowTrial() {
+    return true;
+  }
+
+  @Override
+  public boolean isTrialOnly() {
+    return false;
+  }
+
+  @Override
+  public boolean isSubscriptionBased() {
+    return false;
+  }
+
 }

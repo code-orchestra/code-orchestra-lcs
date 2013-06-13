@@ -5,6 +5,10 @@ package codeOrchestra.lcs.license;
  */
 public interface ExpirationStrategy {
 
+  boolean isTrialOnly();
+  
+  boolean allowTrial();
+  
   int getDaysInUse();
 
   int getExpirationPeriod();
@@ -19,5 +23,7 @@ public interface ExpirationStrategy {
   boolean showTrialExpiredDialog();
 
   void showTrialInProgressDialog();
+
+  boolean isSubscriptionBased();
 
 }

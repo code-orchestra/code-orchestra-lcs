@@ -167,4 +167,19 @@ public class CalendarUsageDayExpirationStrategyEx implements ExpirationStrategy 
     return dateFormat.format(new Date());
   }
 
+  @Override
+  public boolean allowTrial() {
+    return true;
+  }
+  
+  @Override
+  public boolean isTrialOnly() {
+    return false;
+  }
+  
+  @Override
+  public boolean isSubscriptionBased() {
+    return false;
+  }
+  
 }

@@ -36,19 +36,15 @@ public class CodeOrchestraLicenseManager {
     return preferences.get(SERIAL_NUMBER_KEY, StringUtils.EMPTY);
   }
 
+  public static boolean noSerialNumberPresent() {
+    return StringUtils.isEmpty(getSerialNumber());
+  }
+  
   public static boolean isLicenseValid() {
     return SystemCheck.getInstance().isValidMACAddress(getSerialNumber());
   }
 
   public static void registerProduct(String serialNumber) {
-    // This is a bit paranoid, as the serial number must be checked before handing it over here,
-    // but hey, you never know.
-    if (!SystemCheck.getInstance().isValidMACAddress(serialNumber)) {
-      throw new IllegalArgumentException("Invalid serial number");
-    }
-
-    new ActivationReporter(serialNumber).report();
-    
     preferences.put(SERIAL_NUMBER_KEY, serialNumber);
 
     try {
@@ -56,32 +52,6 @@ public class CodeOrchestraLicenseManager {
     } catch (BackingStoreException e) {
       throw new RuntimeException("Can't sync license expiry data", e);
     }
-  }
-
-  public static String getLicensedTo() {
-    if (!isLicenseValid()) {
-      return StringUtils.EMPTY;
-    }
-
-    String licensedTo = preferences.get(LICENSED_TO_KEY, StringUtils.EMPTY);
-    if (StringUtils.isEmpty(licensedTo)) {
-      licensedTo = lookupLicensedToBySerialNumber();
-
-      preferences.put(LICENSED_TO_KEY, licensedTo);
-
-      try {
-        preferences.sync();
-      } catch (BackingStoreException e) {
-        throw new RuntimeException("Can't sync license owner data");
-      }
-    }
-
-    return licensedTo;
-  }
-
-  private static String lookupLicensedToBySerialNumber() {
-    // TODO: implement
-    return "(can't retrieve the license owner's name)";
   }
 
 }
