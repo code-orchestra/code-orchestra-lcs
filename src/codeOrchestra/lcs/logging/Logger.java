@@ -5,8 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+
 import codeOrchestra.actionScript.logging.model.MessageScope;
 import codeOrchestra.actionScript.logging.scope.MessageScopeRegistry;
+import codeOrchestra.lcs.Activator;
 import codeOrchestra.lcs.messages.MessagesManager;
 import codeOrchestra.lcs.session.SessionViewManager;
 import codeOrchestra.lcs.views.MessagesView;
@@ -59,6 +64,9 @@ public final class Logger {
   
   public void error(Throwable t) {
     log(t.getMessage(), DEFAULT_SCOPES, System.currentTimeMillis(), Level.ERROR);
+    
+    IStatus status = new Status(IStatus.ERROR, "code-orchestra-lcs", 0, null, t);
+    Platform.getLog(Activator.getDefault().getBundle()).log(status);
   }
   
   public void info(String message) {
