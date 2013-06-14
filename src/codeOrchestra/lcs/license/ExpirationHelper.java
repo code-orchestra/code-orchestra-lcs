@@ -10,24 +10,4 @@ public final class ExpirationHelper {
   }
 
   private static final ExpirationStrategy expirationStrategy = new CalendarUsageDayExpirationStrategy();
-
-  public static int getDaysInUse() {
-    return expirationStrategy.getDaysInUse();
-  }
-
-  public static int getExpirationPeriod() {
-    return expirationStrategy.getExpirationPeriod();
-  }
-
-  public static int getDaysLeft() {
-    if (hasExpired()) {
-      throw new IllegalStateException("Expiration period is over");
-    }
-    return getExpirationPeriod() - getDaysInUse() + 1;
-  }
-
-  public static boolean hasExpired() {
-    return getDaysInUse() > getExpirationPeriod();
-  }
-
 }

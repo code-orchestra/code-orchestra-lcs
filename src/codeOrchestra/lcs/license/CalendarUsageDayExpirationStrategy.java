@@ -14,7 +14,7 @@ import codeOrchestra.utils.DateUtils;
 /**
  * @author Alexander Eliseyev
  */
-public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
+public class CalendarUsageDayExpirationStrategy extends AbstractExpirationWithSerialNumberStrategy implements ExpirationStrategy {
 
   private static final int EXPIRATION_DAYS = 15;
   private static final int EXPIRED_SESSION_MINUTES = 15;
@@ -79,17 +79,12 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
     
     int result = dialog.open();
     if (result == 1) {
-      return CodeOrchestraLicenseDialogs.showSerialNumberDialog();
+      return showSerialNumberDialog();
     }
 
     return false;
   }
-
-  @Override
-  public void showTrialInProgressDialog() {
-    CodeOrchestraLicenseDialogs.showTrialInProgressDialog();
-  }
-
+  
   @Override
   public int getDaysInUse() {
     long curentTime = System.currentTimeMillis();
@@ -127,5 +122,5 @@ public class CalendarUsageDayExpirationStrategy implements ExpirationStrategy {
   public boolean isSubscriptionBased() {
     return false;
   }
-
+  
 }

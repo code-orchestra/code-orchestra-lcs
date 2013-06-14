@@ -14,12 +14,13 @@ import codeOrchestra.lcs.license.plimus.PlimusResponseStatus;
 /**
  * @author Alexander Eliseyev
  */
-public class CodeOrchestraLicenseDialogs {
+public abstract class AbstractExpirationWithSerialNumberStrategy extends AbstractExpirationStrategy implements ExpirationStrategy {
 
-  public static void showTrialInProgressDialog() {
+  @Override
+  public void showTrialInProgressDialog() {
     String expireMessage = String.format("You have %d days of %d evaluation period days left. You may continue evaluation or enter a serial number",
-      ExpirationHelper.getDaysLeft(),
-      ExpirationHelper.getExpirationPeriod());
+      getDaysLeft(),
+      getExpirationPeriod());
     
     MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "Evaluation License", null, expireMessage, MessageDialog.INFORMATION, 
         new String[] { "Continue Evaluation", "Enter Serial Number" }, 0);
@@ -28,8 +29,8 @@ public class CodeOrchestraLicenseDialogs {
       showSerialNumberDialog();
     }
   }
-
-  public static boolean showSerialNumberDialog() {
+  
+  public boolean showSerialNumberDialog() {
     InputDialog inputDialog = new InputDialog(Display.getDefault().getActiveShell(), "Serial number", "Please type the serial number purchased", null, null);
     if (inputDialog.open() == Window.CANCEL) {
       return false;
@@ -77,5 +78,5 @@ public class CodeOrchestraLicenseDialogs {
 
     return false;
   }
-
+  
 }

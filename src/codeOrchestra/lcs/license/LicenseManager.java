@@ -1,14 +1,9 @@
 package codeOrchestra.lcs.license;
 
-import java.io.IOException;
-
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
-import codeOrchestra.lcs.license.plimus.PlimusExpirationStrategy;
-import codeOrchestra.lcs.license.plimus.PlimusHelper;
-import codeOrchestra.lcs.license.plimus.PlimusResponse;
 import codeOrchestra.utils.StringUtils;
 
 /**
@@ -31,7 +26,7 @@ public class LicenseManager {
     
     // Trial-only (beta versions) - no serial number is checked
     if (expirationStrategy.isTrialOnly()) {
-      if (ExpirationHelper.hasExpired()) {
+      if (ExpirationHelper.getExpirationStrategy().hasExpired()) {
         expirationStrategy.showTrialExpiredDialog();
         return IApplication.EXIT_OK;        
       } else {
@@ -54,13 +49,14 @@ public class LicenseManager {
     // Trial version with no serial
     if (expirationStrategy.allowTrial() && CodeOrchestraLicenseManager.noSerialNumberPresent()) {
       if (UsagePeriods.getInstance().isCurrentTimePresentInUsagePeriods()) {
-        MessageDialog.openError(Display.getDefault().getActiveShell(), "Evaluation License", "Something is wrong with the system clock\nCOLT was launched already on the currently set time.");        
+        String title = expirationStrategy.isSubscriptionBased() ? "COLT Subscription" : "Evaluation License";
+        MessageDialog.openError(Display.getDefault().getActiveShell(), title, "Something is wrong with the system clock\nCOLT was launched already on the currently set time.");        
         return IApplication.EXIT_OK;
       }      
       
       boolean expired = false;
       
-      if (ExpirationHelper.hasExpired()) {
+      if (ExpirationHelper.getExpirationStrategy().hasExpired()) {
         expired = !expirationStrategy.showTrialExpiredDialog();
       } else {
         expirationStrategy.showTrialInProgressDialog();
@@ -72,22 +68,6 @@ public class LicenseManager {
 
         if (expirationStrategy.exitIfExpired()) {
           return IApplication.EXIT_OK;
-        }
-      }
-    }
-    
-    // Subscription version with serial number entered - check if subscription is expired
-    if (expirationStrategy.isSubscriptionBased() && !CodeOrchestraLicenseManager.noSerialNumberPresent() && expirationStrategy instanceof PlimusExpirationStrategy) {
-      PlimusExpirationStrategy plimusExpirationStrategy = (PlimusExpirationStrategy) expirationStrategy;
-      
-      try {
-        PlimusResponse validationResponse = PlimusHelper.validateKey(CodeOrchestraLicenseManager.getSerialNumber());
-        if (!plimusExpirationStrategy.handleValidationResponse(validationResponse)) {
-          return IApplication.EXIT_OK;
-        }
-      } catch (IOException e) {
-        if (plimusExpirationStrategy.checkIfExpiredLocally() && !CodeOrchestraLicenseDialogs.showSerialNumberDialog()) {
-          return IApplication.EXIT_OK;          
         }
       }
     }

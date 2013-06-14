@@ -9,14 +9,21 @@ public interface ExpirationStrategy {
   
   boolean allowTrial();
   
+  boolean hasExpired();  
+  
+  
   int getDaysInUse();
-
+  
+  int getDaysLeft();
+  
   int getExpirationPeriod();
 
+  
   boolean exitIfExpired();
 
   void handleExpiration();
 
+  
   /**
    * @return whether the user entered a serial number in the dialog
    */
@@ -25,5 +32,7 @@ public interface ExpirationStrategy {
   void showTrialInProgressDialog();
 
   boolean isSubscriptionBased();
+  
+  boolean showSerialNumberDialog();
 
 }

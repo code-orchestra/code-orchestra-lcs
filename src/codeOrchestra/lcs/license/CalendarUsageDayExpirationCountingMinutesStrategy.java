@@ -1,23 +1,23 @@
 package codeOrchestra.lcs.license;
 
-import codeOrchestra.utils.DateUtils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.eclipse.ui.PlatformUI;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
+import codeOrchestra.utils.DateUtils;
 
 /**
  * This implementation counts the minutes of usage each day - RE-2716.
  *
  * @author Alexander Eliseyev
  */
-public class CalendarUsageDayExpirationStrategyEx implements ExpirationStrategy {
+public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractExpirationWithSerialNumberStrategy implements ExpirationStrategy {
 
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy");
   private static final int EXPIRATION_DAYS = 30;
@@ -25,7 +25,7 @@ public class CalendarUsageDayExpirationStrategyEx implements ExpirationStrategy 
 
   private static final String DATE_STRING = VersionHelper.getVersionCodeName();
 
-  private static final Preferences preferences = Preferences.userNodeForPackage(CalendarUsageDayExpirationStrategyEx.class);
+  private static final Preferences preferences = Preferences.userNodeForPackage(CalendarUsageDayExpirationCountingMinutesStrategy.class);
 
   private long startUpTime;
   private Thread expirationThread;
@@ -125,18 +125,12 @@ public class CalendarUsageDayExpirationStrategyEx implements ExpirationStrategy 
     JFrame dummyFrame = new JFrame("Evaluation License");
     int result = JOptionPane.showOptionDialog(dummyFrame, expireMessage, "Evaluation License", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, objects, "---");
     if (result == 1) {
-      return CodeOrchestraLicenseDialogs.showSerialNumberDialog();
+      return showSerialNumberDialog();
     }
 
     return false;
   }
 
-  @Override
-  public void showTrialInProgressDialog() {
-    CodeOrchestraLicenseDialogs.showTrialInProgressDialog();
-  }
-
-  @Override
   public int getDaysInUse() {
     long curentTime = System.currentTimeMillis();
     String currentTimeStr = String.valueOf(curentTime);
@@ -181,5 +175,5 @@ public class CalendarUsageDayExpirationStrategyEx implements ExpirationStrategy 
   public boolean isSubscriptionBased() {
     return false;
   }
-  
+    
 }
