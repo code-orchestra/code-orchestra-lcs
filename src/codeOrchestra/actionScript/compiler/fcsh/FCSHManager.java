@@ -92,6 +92,8 @@ public class FCSHManager {
       return;
     }
 
+    clearTargets();
+    
     IFCSHLauncher fcshLauncher;
     ProcessBuilder processBuilder;
     if (FCSHLauncher.NATIVE_FCSH && SystemInfo.isWindows) {
