@@ -17,12 +17,23 @@ public class LicenseManager {
   }
 
   public Object interceptStart() {
-    final ExpirationStrategy expirationStrategy = ExpirationHelper.getExpirationStrategy();
-
-    // Report serial number
+    // Report serial number every 10 seconds
     if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
-      new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
+      new Thread() {
+        public void run() {
+          while (true) {
+            new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
+            try {
+              Thread.sleep(10000);
+            } catch (InterruptedException e) {
+              // ignore
+            }
+          }                    
+        };
+      }.start();      
     }
+    
+    final ExpirationStrategy expirationStrategy = ExpirationHelper.getExpirationStrategy();
     
     // Trial-only (beta versions) - no serial number is checked
     if (expirationStrategy.isTrialOnly()) {
