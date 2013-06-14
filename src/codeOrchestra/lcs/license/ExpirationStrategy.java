@@ -11,14 +11,7 @@ public interface ExpirationStrategy {
   
   boolean hasExpired();  
   
-  
-  int getDaysInUse();
-  
-  int getDaysLeft();
-  
-  int getExpirationPeriod();
 
-  
   boolean exitIfExpired();
 
   void handleExpiration();

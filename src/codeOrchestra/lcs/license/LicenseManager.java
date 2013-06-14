@@ -45,6 +45,8 @@ public class LicenseManager {
           MessageDialog.openError(Display.getDefault().getActiveShell(), "Evaluation License", "Something is wrong with the system clock\nCOLT was launched already on the currently set time.");        
           return IApplication.EXIT_OK;
         }      
+        
+        expirationStrategy.showTrialInProgressDialog();
 
         return null;
       }      

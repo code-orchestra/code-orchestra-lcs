@@ -1,14 +1,21 @@
 package codeOrchestra.lcs.license;
 
-import java.util.prefs.Preferences;
+import java.util.Date;
+
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Alexander Eliseyev
  */
-public class FastCompilerBetaExpirationStrategy extends AbstractExpirationStrategy implements ExpirationStrategy {
+public class FastCompilerBetaExpirationStrategy implements ExpirationStrategy {
 
-  private static final Preferences preferences = Preferences.userNodeForPackage(FastCompilerBetaExpirationStrategy.class);
-  
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean hasExpired() {
+    return new Date().after(new Date(113, 5, 24));
+  }
+
   @Override
   public boolean isTrialOnly() {
     return true;
@@ -21,24 +28,23 @@ public class FastCompilerBetaExpirationStrategy extends AbstractExpirationStrate
 
   @Override
   public boolean showTrialExpiredDialog() {
-    // TODO: implement
+    String expireMessage = "This copy of COLT has expired.";
+
+    MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT 1.1 (beta)", null,
+        expireMessage, MessageDialog.INFORMATION, new String[] { "OK" }, 0);
+    dialog.open();
+
     return false;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void showTrialInProgressDialog() {
-    // TODO: implement    
-  }
-  
-  @Override
-  public int getDaysInUse() {
-    // TODO: implement
-    return 0;
-  }
+    String expireMessage = String.format("This copy of COLT will expire on %s", new Date(113, 5, 24).toLocaleString());
 
-  @Override
-  public int getExpirationPeriod() {
-    return 10;
+    MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT 1.1 (beta)", null,
+        expireMessage, MessageDialog.INFORMATION, new String[] { "OK" }, 0);
+    dialog.open();
   }
 
   @Override
