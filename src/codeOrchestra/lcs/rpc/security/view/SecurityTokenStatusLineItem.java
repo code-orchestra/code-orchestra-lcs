@@ -79,8 +79,6 @@ public class SecurityTokenStatusLineItem extends StatusLineContributionItemEx {
   }
   
   public void hide() {
-    setVisible(false);    
-    
     shortCodeDialog = null;
     setImage(null);
   }
@@ -89,8 +87,6 @@ public class SecurityTokenStatusLineItem extends StatusLineContributionItemEx {
     setVisible(true);
     
     setImage(codeOrchestra.lcs.Activator.getImageDescriptor("/icons/key-icon.png").createImage());    
-    
-    
     
     if (toolTip.getParent().isVisible()) {
       toolTip.getParent().forceActive();

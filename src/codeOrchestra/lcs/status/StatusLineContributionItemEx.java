@@ -106,7 +106,7 @@ public class StatusLineContributionItemEx extends ContributionItem {
   public CLabel getLabel() {
     return label;
   }
-
+  
   public void fill(Composite parent) {
     statusLine = parent;
 
