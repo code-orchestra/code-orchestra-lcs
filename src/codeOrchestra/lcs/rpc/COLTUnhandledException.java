@@ -1,5 +1,7 @@
 package codeOrchestra.lcs.rpc;
 
+import codeOrchestra.utils.ExceptionUtils;
+
 /**
  * @author Alexander Eliseyev
  */
@@ -14,16 +16,12 @@ public class COLTUnhandledException extends COLTRemoteTransferableException {
     super(message + ", caused by: " + getCauseMessage(cause));
   }
 
-  public COLTUnhandledException(String message) {
-    super(message);
-  }
-
   public COLTUnhandledException(Throwable cause) {
     super(getCauseMessage(cause));
   }
 
   private static String getCauseMessage(Throwable cause) {
-    return cause.getClass().getSimpleName() + (cause.getMessage() != null ? ": " + cause.getMessage() : "");
+    return cause.getClass().getSimpleName() + (cause.getMessage() != null ? ": " + cause.getMessage() : "") + ": " + ExceptionUtils.getStackTrace(cause);
   } 
   
 }

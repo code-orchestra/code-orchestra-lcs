@@ -1,6 +1,8 @@
 package codeOrchestra.utils;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.SocketException;
 
 /**
@@ -8,6 +10,13 @@ import java.net.SocketException;
  */
 public final class ExceptionUtils {
 
+  public static String getStackTrace(Throwable t) {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    t.printStackTrace(pw);
+    return sw.toString();
+  }
+  
   public static boolean isBrokenPipe(IOException exception) {
     String message = exception.getMessage();
     if (message == null) {
