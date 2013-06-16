@@ -61,6 +61,11 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
   }
 
   @Override
+  public int ping() {
+    return 0;
+  }
+  
+  @Override
   public COLTCompilationResult runProductionCompilation(String securityToken, final boolean run) throws COLTRemoteTransferableException {
     return executeSecurilyAsyncInUI(securityToken, new RemoteAsyncCommand<COLTCompilationResult>() {
       @Override

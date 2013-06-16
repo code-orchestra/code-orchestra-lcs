@@ -28,5 +28,7 @@ public interface COLTRemoteService {
   void createProject(String securityToken, COLTRemoteProject project) throws COLTRemoteTransferableException;
   
   void loadProject(String securityToken, String path) throws COLTRemoteTransferableException;
+  
+  int ping();
 
 }
