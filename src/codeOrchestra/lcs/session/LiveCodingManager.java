@@ -18,7 +18,7 @@ import codeOrchestra.actionScript.liveCoding.listener.LiveCodingListener;
 import codeOrchestra.actionScript.liveCoding.run.LiveCodingSessionImpl;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.actionScript.modulemaker.MakeException;
-import codeOrchestra.http.CodeOrchestraHttpServer;
+import codeOrchestra.http.CodeOrchestraResourcesHttpServer;
 import codeOrchestra.lcs.digest.EmbedDigest;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.logging.Logger;
@@ -449,7 +449,7 @@ public class LiveCodingManager {
   }
 
   public String getWebOutputAddress() {
-    return "http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraHttpServer.PORT + "/output";
+    return "http://" + LocalhostUtil.getLocalhostIp() + ":" + CodeOrchestraResourcesHttpServer.PORT + "/output";
   }
 
   private void restoreSessionState(LiveCodingSession session) {

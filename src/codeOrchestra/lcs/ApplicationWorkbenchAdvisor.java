@@ -15,7 +15,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
-import codeOrchestra.http.CodeOrchestraHttpServer;
+import codeOrchestra.http.CodeOrchestraRPCHttpServer;
 import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.license.COLTRunningKey;
 import codeOrchestra.lcs.license.UsagePeriods;
@@ -98,7 +98,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     
     // Init remote service
     COLTRemoteServiceImpl.init(window);
-    CodeOrchestraHttpServer.getInstance().addServlet(new COLTRemoteServiceServlet(), "/coltService");
+    CodeOrchestraRPCHttpServer.getInstance().addServlet(new COLTRemoteServiceServlet(), "/coltService");
     
     SecurityTokenStatusLineItem.INSTANCE.init(activeWorkbenchWindow.getShell());
   }

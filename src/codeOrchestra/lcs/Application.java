@@ -8,7 +8,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.actionScript.logging.transport.LoggerServerSocketThread;
-import codeOrchestra.http.CodeOrchestraHttpServer;
+import codeOrchestra.http.CodeOrchestraRPCHttpServer;
+import codeOrchestra.http.CodeOrchestraResourcesHttpServer;
 import codeOrchestra.lcs.license.COLTRunningKey;
 import codeOrchestra.lcs.license.LicenseManager;
 
@@ -47,7 +48,8 @@ public class Application implements IApplication {
       
       // TODO: handle errors
       COLTRunningKey.setRunning(true);
-      CodeOrchestraHttpServer.getInstance().init();
+      CodeOrchestraResourcesHttpServer.getInstance().init();
+      CodeOrchestraRPCHttpServer.getInstance().init();
       getServerSocketThread().openSocket();
 
       int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor(this));
@@ -69,7 +71,8 @@ public class Application implements IApplication {
     if (!PlatformUI.isWorkbenchRunning())
       return;
 
-    CodeOrchestraHttpServer.getInstance().dispose();
+    CodeOrchestraResourcesHttpServer.getInstance().dispose();
+    CodeOrchestraRPCHttpServer.getInstance().dispose();
     getServerSocketThread().closeSocket();
 
     final IWorkbench workbench = PlatformUI.getWorkbench();

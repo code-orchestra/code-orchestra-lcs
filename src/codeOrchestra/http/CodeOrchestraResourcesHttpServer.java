@@ -4,36 +4,30 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
-
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.jetty.servlet.ServletHolder;
 
 import codeOrchestra.utils.PathUtils;
 
 /**
  * @author Alexander Eliseyev
  */
-public class CodeOrchestraHttpServer {
+public class CodeOrchestraResourcesHttpServer {
 
   public static final int PORT = 8091;
   
-  private static CodeOrchestraHttpServer instance = new CodeOrchestraHttpServer();
+  private static CodeOrchestraResourcesHttpServer instance = new CodeOrchestraResourcesHttpServer();
   
-  public static CodeOrchestraHttpServer getInstance() {
+  public static CodeOrchestraResourcesHttpServer getInstance() {
     return instance;
   }
 
   private Server server;
   private HandlerList activeHandlers;
   
-  private ServletHandler servletHandler = new ServletHandler();
-
   private Map<String, Handler> handlersMap = new HashMap<String, Handler>();
 
   private boolean mustReload;
@@ -47,12 +41,6 @@ public class CodeOrchestraHttpServer {
     server.setHandler(activeHandlers);
 
     addAlias(PathUtils.getApplicationBaseDir(), "/");
-    
-    ContextHandler contextHandler = new ContextHandler();
-    contextHandler.setContextPath("/rpc");
-    contextHandler.setHandler(servletHandler);
-    contextHandler.setServer(server);
-    addHandler(contextHandler, "/rpc");    
 
     try {
       server.start();
@@ -68,10 +56,6 @@ public class CodeOrchestraHttpServer {
     addHandler(handler, alias);
   }
   
-  public void addServlet(HttpServlet servlet, String alias) {
-    servletHandler.addServletWithMapping(new ServletHolder(servlet), alias);
-  }
-
   private void addHandler(Handler handler, String alias) {
     Handler existingHandler = handlersMap.get(alias);
     if (existingHandler != null) {
@@ -95,7 +79,7 @@ public class CodeOrchestraHttpServer {
     try {
       server.stop();
     } catch (Exception e) {
-      throw new RuntimeException("Can't stop HTTP server", e);
+      // ignore
     }
   }
 
@@ -119,6 +103,8 @@ public class CodeOrchestraHttpServer {
 
     private void doReload() {
       try {
+        System.out.println("Reloading Resources HTTP server");
+        
         server.stop();
         server.start();
       } catch (Exception e) {

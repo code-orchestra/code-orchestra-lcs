@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import codeOrchestra.actionScript.compiler.fcsh.FSCHCompilerKind;
-import codeOrchestra.http.CodeOrchestraHttpServer;
+import codeOrchestra.http.CodeOrchestraResourcesHttpServer;
 import codeOrchestra.utils.StringUtils;
 
 /**
@@ -68,7 +68,7 @@ public class LCSProject {
   }
 
   public void updateExternalPaths() {
-    CodeOrchestraHttpServer.getInstance().addAlias(getOutputDir(), "/output");
+    CodeOrchestraResourcesHttpServer.getInstance().addAlias(getOutputDir(), "/output");
   }
 
   private void initPaths() {
