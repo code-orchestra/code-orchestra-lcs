@@ -98,7 +98,12 @@ public class CompilerSettings extends ProjectSettingsPart {
   }
 
   public void setOutputPath(String outputPath) {
+    String previousOutputPath = getPreferenceStore().getString("outputPath");    
     getPreferenceStore().setValue("outputPath", outputPath);
+    
+    if (!StringUtils.equals(outputPath, previousOutputPath)) {
+      LCSProject.getCurrentProject().updateExternalPaths();
+    }
   }
 
   public String getTargetPlayerVersion() {
