@@ -21,7 +21,7 @@ public class ActivationReporter {
     this.serialNumber = serialNumber;
   }
 
-  public void report() {
+  public boolean report() {
     try {
       PostMethod postMethod = new PostMethod(ACTIVATION_URL);
       postMethod.setParameter("sn", serialNumber);
@@ -29,9 +29,12 @@ public class ActivationReporter {
       httpClient.executeMethod(postMethod);
       
       System.out.println("Activation: " + postMethod.getStatusCode());
+      
+      return true;
     } catch (Throwable t) {
       // ignore
     }
+    return false;
   }
 
   private static String getFingerPrint() {

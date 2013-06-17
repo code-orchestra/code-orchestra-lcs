@@ -19,15 +19,20 @@ public class LicenseManager {
   public Object interceptStart() {
     // Report serial number every 10 seconds
     if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
+      if (!new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report()) {
+        MessageDialog.openError(Display.getDefault().getActiveShell(), "COLT License", "COLT beta version requires an active internet connection to start.");        
+        return IApplication.EXIT_OK;
+      }
+      
       new Thread() {
         public void run() {
-          while (true) {
-            new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
+          while (true) {            
             try {
               Thread.sleep(10000);
             } catch (InterruptedException e) {
               // ignore
             }
+            new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report();
           }                    
         };
       }.start();      
