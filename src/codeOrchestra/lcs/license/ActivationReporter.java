@@ -35,7 +35,7 @@ public class ActivationReporter {
   }
 
   private static String getFingerPrint() {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder resultSB = new StringBuilder();
     try {
       for (final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements();) {
         final NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
@@ -44,20 +44,29 @@ public class ActivationReporter {
         }
         
         byte[] mac = networkInterface.getHardwareAddress();
-
-        for (int i = 0; i < mac.length; i++) {
-          sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));    
+        if (mac == null) {
+          continue;
         }
         
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mac.length; i++) {
+          sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+        }
+        
+        if ("00-00-00-00-00-00-00-E0".equals(sb.toString())) {
+          continue;
+        }
+        
+        resultSB.append(sb);
         if (interfaces.hasMoreElements()) {
-          sb.append("|");
+          resultSB.append("|");
         }
       }
     } catch (Exception e) {
       // ignore
     }
     
-    String result = sb.toString();
+    String result = resultSB.toString();
     if (result.endsWith("|")) {
       return result.substring(0, result.length() - 1);
     }
