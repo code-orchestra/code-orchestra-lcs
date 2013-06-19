@@ -30,12 +30,26 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
 
   protected boolean handleValidationResponse(PlimusResponse plimusResponse) {
     if (plimusResponse.getStatus() == PlimusResponseStatus.SUCCESS) {
-      return true;
+      return false;
     }
 
-    // TODO: show dialogs accoring to status
+    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_INVALIDKEY) {
+      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered is invalid.");
+    }
 
-    return false;
+    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_INVALIDPRODUCT) {
+      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered can't be validated.");
+    }
+    
+    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_EXPIREDKEY) {
+      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered had expired " + Math.abs(plimusResponse.getDaysTillExpiration()) + " days ago.");
+    }
+
+    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_MAXCOUNT) {
+      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The key entered has already been registered the maximum number of times.");
+    }
+
+    return true;
   }
 
   boolean checkIfExpiredLocally() {
