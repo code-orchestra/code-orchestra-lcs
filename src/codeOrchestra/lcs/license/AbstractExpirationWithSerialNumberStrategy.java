@@ -68,7 +68,7 @@ public abstract class AbstractExpirationWithSerialNumberStrategy extends Abstrac
       
       if (keyRegistrationResponse.getStatus() == PlimusResponseStatus.SUCCESS) {
         MessageDialog.openInformation(Display.getDefault().getActiveShell(), "Serial number", "Thank you for choosing the Code Orchestra Livecoding Tool!");        
-        CodeOrchestraLicenseManager.registerProduct(serialNumber);
+        registerProduct(serialNumber, keyRegistrationResponse);
         return true;
       } else {
         MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered can't be validated (" + keyRegistrationResponse.getStatus() + ").");
@@ -78,5 +78,7 @@ public abstract class AbstractExpirationWithSerialNumberStrategy extends Abstrac
 
     return false;
   }
+  
+  protected abstract void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse);
   
 }

@@ -9,6 +9,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import codeOrchestra.lcs.license.plimus.PlimusResponse;
 import codeOrchestra.utils.DateUtils;
 
 /**
@@ -121,6 +122,11 @@ public class CalendarUsageDayExpirationStrategy extends AbstractExpirationWithSe
   @Override
   public boolean isSubscriptionBased() {
     return false;
+  }
+
+  @Override
+  protected void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse) {
+    CodeOrchestraLicenseManager.registerProduct(serialNumber);    
   }
   
 }

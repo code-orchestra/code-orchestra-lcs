@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import org.eclipse.ui.PlatformUI;
 
+import codeOrchestra.lcs.license.plimus.PlimusResponse;
 import codeOrchestra.utils.DateUtils;
 
 /**
@@ -174,6 +175,11 @@ public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractE
   @Override
   public boolean isSubscriptionBased() {
     return false;
+  }
+
+  @Override
+  protected void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse) {
+    CodeOrchestraLicenseManager.registerProduct(serialNumber);
   }
     
 }

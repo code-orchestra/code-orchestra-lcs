@@ -10,7 +10,13 @@ import codeOrchestra.lcs.license.plimus.PlimusResponseStatus;
  * @author Alexander Eliseyev
  */
 public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWithSerialNumberStrategy implements ExpirationStrategy {
-
+  
+  @Override
+  public int getDaysLeft() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+  
   protected boolean handleValidationResponse(PlimusResponse plimusResponse) {
     if (plimusResponse.getStatus() == PlimusResponseStatus.SUCCESS) {
       return true;
@@ -37,27 +43,12 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
   }
 
   @Override
-  public int getDaysInUse() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public int getExpirationPeriod() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
   public boolean exitIfExpired() {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
   @Override
   public void handleExpiration() {
-    // TODO Auto-generated method stub
-    
   }
 
   @Override
@@ -86,11 +77,21 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
       return checkIfExpiredLocally();
     }
   }
+  
+  @Override
+  public int getDaysInUse() {
+    throw new UnsupportedOperationException();
+  }
 
   @Override
-  public int getDaysLeft() {
+  public int getExpirationPeriod() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  protected void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse) {
     // TODO Auto-generated method stub
-    return 0;
+    // CodeOrchestraLicenseManager.registerProduct(serialNumber);
   }
   
 }
