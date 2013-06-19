@@ -9,5 +9,5 @@ public final class ExpirationHelper {
     return expirationStrategy;
   }
 
-  private static final ExpirationStrategy expirationStrategy = new FastCompilerBetaExpirationStrategy();
+  private static final ExpirationStrategy expirationStrategy = new PlimusSubscriptionExpirationStrategy();
 }

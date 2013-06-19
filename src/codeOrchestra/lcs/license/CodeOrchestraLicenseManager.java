@@ -14,7 +14,7 @@ public class CodeOrchestraLicenseManager {
 
   private static Preferences preferences = Preferences.userNodeForPackage(CodeOrchestraLicenseManager.class);
 
-  private static final String SERIAL_NUMBER_KEY = "serial-number";
+  private static final String SERIAL_NUMBER_KEY = "sn2";
   private static final String LEGACY_NUMBER_KEY = "serial-number";  
   private static final String LICENSED_TO_KEY = "licensed-to";
 

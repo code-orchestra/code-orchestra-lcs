@@ -87,7 +87,7 @@ public class CalendarUsageDayExpirationStrategy extends AbstractExpirationWithSe
   }
   
   @Override
-  public int getDaysInUse() {
+  public int getTrialDaysInUse() {
     long curentTime = System.currentTimeMillis();
     String currentTimeStr = String.valueOf(curentTime);
 

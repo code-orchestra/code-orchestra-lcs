@@ -5,17 +5,17 @@ package codeOrchestra.lcs.license;
  */
 public abstract class AbstractExpirationStrategy implements ExpirationStrategy {
 
-  protected abstract int getDaysInUse();
+  protected abstract int getTrialDaysInUse();
   
   protected abstract int getExpirationPeriod();
   
   protected int getDaysLeft() {
-    return getExpirationPeriod() - getDaysInUse() + 1;
+    return getExpirationPeriod() - getTrialDaysInUse() + 1;
   }
 
   @Override
   public boolean hasExpired() {
-    return getDaysInUse() > getExpirationPeriod();
+    return getTrialDaysInUse() > getExpirationPeriod();
   }
   
 }

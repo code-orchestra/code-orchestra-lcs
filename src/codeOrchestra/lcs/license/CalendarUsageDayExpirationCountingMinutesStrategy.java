@@ -132,7 +132,7 @@ public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractE
     return false;
   }
 
-  public int getDaysInUse() {
+  public int getTrialDaysInUse() {
     long curentTime = System.currentTimeMillis();
     String currentTimeStr = String.valueOf(curentTime);
 
