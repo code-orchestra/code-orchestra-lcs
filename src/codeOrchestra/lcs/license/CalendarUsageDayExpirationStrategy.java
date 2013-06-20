@@ -72,7 +72,7 @@ public class CalendarUsageDayExpirationStrategy extends AbstractExpirationWithSe
   }
 
   @Override
-  public boolean showTrialExpiredDialog() {
+  public boolean showLicenseExpiredDialog() {
     String expireMessage = String.format("%d day(s) evaluation license has expired. The programm will quit unless you enter a serial number", getExpirationPeriod());
 
     MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "Evaluation License", null, expireMessage, MessageDialog.QUESTION, 

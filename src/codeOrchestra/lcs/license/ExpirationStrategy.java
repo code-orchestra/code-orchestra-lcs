@@ -20,9 +20,9 @@ public interface ExpirationStrategy {
   /**
    * @return whether the user entered a serial number in the dialog
    */
-  boolean showTrialExpiredDialog();
+  boolean showLicenseExpiredDialog();
 
-  void showTrialInProgressDialog();
+  void showLicenseExpirationInProgressDialog();
 
   boolean isSubscriptionBased();
   

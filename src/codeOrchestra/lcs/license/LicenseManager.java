@@ -43,7 +43,7 @@ public class LicenseManager {
     // Trial-only (beta versions) - no serial number is checked
     if (expirationStrategy.isTrialOnly()) {
       if (ExpirationHelper.getExpirationStrategy().hasExpired()) {
-        expirationStrategy.showTrialExpiredDialog();
+        expirationStrategy.showLicenseExpiredDialog();
         return IApplication.EXIT_OK;        
       } else {
         if (UsagePeriods.getInstance().isCurrentTimePresentInUsagePeriods()) {
@@ -51,7 +51,7 @@ public class LicenseManager {
           return IApplication.EXIT_OK;
         }      
         
-        expirationStrategy.showTrialInProgressDialog();
+        expirationStrategy.showLicenseExpirationInProgressDialog();
 
         return null;
       }      
@@ -59,7 +59,7 @@ public class LicenseManager {
     
     // No-trial version (serial-number only) 
     if (!expirationStrategy.allowTrial() && CodeOrchestraLicenseManager.noSerialNumberPresent()) {
-      if (!expirationStrategy.showTrialExpiredDialog()) {
+      if (!expirationStrategy.showLicenseExpiredDialog()) {
         return IApplication.EXIT_OK; 
       }
     }
@@ -75,9 +75,9 @@ public class LicenseManager {
       boolean expired = false;
       
       if (ExpirationHelper.getExpirationStrategy().hasExpired()) {
-        expired = !expirationStrategy.showTrialExpiredDialog();
+        expired = !expirationStrategy.showLicenseExpiredDialog();
       } else {
-        expirationStrategy.showTrialInProgressDialog();
+        expirationStrategy.showLicenseExpirationInProgressDialog();
         expired = false;
       }
       

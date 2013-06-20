@@ -27,7 +27,7 @@ public class FastCompilerBetaExpirationStrategy implements ExpirationStrategy {
   }
 
   @Override
-  public boolean showTrialExpiredDialog() {
+  public boolean showLicenseExpiredDialog() {
     String expireMessage = "This copy of COLT has expired.";
 
     MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT 1.1 (beta)", null,
@@ -39,7 +39,7 @@ public class FastCompilerBetaExpirationStrategy implements ExpirationStrategy {
 
   @SuppressWarnings("deprecation")
   @Override
-  public void showTrialInProgressDialog() {
+  public void showLicenseExpirationInProgressDialog() {
     String expireMessage = String.format("This copy of COLT will expire on %s", new Date(113, 5, 24).toLocaleString());
 
     MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT 1.1 (beta)", null,

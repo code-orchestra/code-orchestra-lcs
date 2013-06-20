@@ -76,7 +76,7 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
   }
 
   @Override
-  public boolean showTrialExpiredDialog() {
+  public boolean showLicenseExpiredDialog() {
     String expireMessage = isInTrialMode() ? "Your COLT trial period has expired. Browse to www.codeorchestra.com to purchase a subscription."
         : "Your COLT subscription has expired. Browse to www.codeorchestra.com to update the subscription.";
 
@@ -91,7 +91,7 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
   }
 
   @Override
-  public void showTrialInProgressDialog() {
+  public void showLicenseExpirationInProgressDialog() {
     if (isInTrialMode()) {
       String expireMessage = String.format("You have %d days of %d evaluation period days left. You may continue evaluation or enter a serial number",
           getDaysLeft(),

@@ -103,7 +103,7 @@ public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractE
   }
 
   @Override
-  public boolean showTrialExpiredDialog() {
+  public boolean showLicenseExpiredDialog() {
     String expireMessage = null;
     Object[] objects = null;
 

@@ -17,7 +17,7 @@ import codeOrchestra.lcs.license.plimus.PlimusResponseStatus;
 public abstract class AbstractExpirationWithSerialNumberStrategy extends AbstractExpirationStrategy implements ExpirationStrategy {
 
   @Override
-  public void showTrialInProgressDialog() {
+  public void showLicenseExpirationInProgressDialog() {
     String expireMessage = String.format("You have %d days of %d evaluation period days left. You may continue evaluation or enter a serial number",
       getDaysLeft(),
       getExpirationPeriod());
