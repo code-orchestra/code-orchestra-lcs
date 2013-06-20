@@ -157,7 +157,7 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
 
   private int getSubscriptionDaysLeft() {
     long expirationDateMillis = preferences.getLong(EXPIRE_LOCALLY_MILLIS, System.currentTimeMillis());
-    return (int) ((System.currentTimeMillis() - expirationDateMillis) / DateUtils.MILLIS_PER_DAY) + 1;
+    return (int) ((expirationDateMillis - System.currentTimeMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
   }
   
   @Override
