@@ -17,8 +17,10 @@ public class LicenseManager {
   }
 
   public Object interceptStart() {
+    final ExpirationStrategy expirationStrategy = ExpirationHelper.getExpirationStrategy();
+    
     // Report serial number every 10 seconds
-    if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
+    if (expirationStrategy.isTrialOnly() && StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
       if (!new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report()) {
         MessageDialog.openError(Display.getDefault().getActiveShell(), "COLT License", "COLT beta version requires an active internet connection to start.");        
         return IApplication.EXIT_OK;
@@ -37,8 +39,6 @@ public class LicenseManager {
         };
       }.start();      
     }
-    
-    final ExpirationStrategy expirationStrategy = ExpirationHelper.getExpirationStrategy();
     
     // Trial-only (beta versions) - no serial number is checked
     if (expirationStrategy.isTrialOnly()) {
