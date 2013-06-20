@@ -15,7 +15,8 @@ public final class PlimusHelper {
 
   private static final String VALIDATION_URL = "https://www.plimus.com/jsp/validateKey.jsp";
   
-  private static final String PRODUCT_ID = "902584";
+//  private static final String PRODUCT_ID = "902584";
+  private static final String PRODUCT_ID = "294006"; // TODO: this is a sandbox product id
   
   private static HttpClient httpClient = new HttpClient();
 
