@@ -16,6 +16,12 @@ public class PlimusResponse {
   private int daysTillExpiration = -1;
   private int useCount = -1;
   
+  public PlimusResponse(PlimusResponseStatus status, int daysTillExpiration, int useCount) {
+    this.status = status;
+    this.daysTillExpiration = daysTillExpiration;
+    this.useCount = useCount;
+  }
+
   public PlimusResponse(String responseString) {
     Document document = XMLUtils.stringToDOM(responseString);
     Element rootElement = document.getDocumentElement();

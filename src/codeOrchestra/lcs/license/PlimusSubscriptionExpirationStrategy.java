@@ -33,22 +33,6 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
       return false;
     }
 
-    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_INVALIDKEY) {
-      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered is invalid.");
-    }
-
-    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_INVALIDPRODUCT) {
-      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered can't be validated.");
-    }
-    
-    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_EXPIREDKEY) {
-      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The serial number entered had expired " + Math.abs(plimusResponse.getDaysTillExpiration()) + " days ago.");
-    }
-
-    if (plimusResponse.getStatus() == PlimusResponseStatus.ERROR_MAXCOUNT) {
-      MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "The key entered has already been registered the maximum number of times.");
-    }
-
     return true;
   }
 
