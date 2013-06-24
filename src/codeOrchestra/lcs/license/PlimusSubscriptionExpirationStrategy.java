@@ -21,6 +21,7 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
   private static final int EXPIRATION_DAYS = 15;  
   private static final String EXPIRE_LOCALLY_MILLIS = "expireLocally";
   private static final String DATE_STRING = "plimusTrialDate";  
+  private static final String LAST_VALIDATION_DATE_STRING = "lastValidationDate";
 
   private static Preferences preferences = Preferences.userNodeForPackage(CodeOrchestraLicenseManager.class);
 
@@ -29,6 +30,13 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
   }
 
   protected boolean handleValidationResponse(PlimusResponse plimusResponse) {
+    preferences.putLong(LAST_VALIDATION_DATE_STRING, System.currentTimeMillis());
+    try {
+      preferences.sync();
+    } catch (BackingStoreException e) {
+      throw new RuntimeException("Can't store key validation time");
+    }
+    
     if (plimusResponse.getStatus() == PlimusResponseStatus.SUCCESS) {
       return false;
     }
@@ -36,7 +44,10 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
     return true;
   }
 
-  boolean checkIfExpiredLocally() {
+  private boolean checkIfExpiredLocally() {
+    if (haventValidatedOnServerForTooLong()) {
+      return true;
+    }
     return getSubscriptionDaysLeft() < 1;
   }
 
@@ -58,9 +69,28 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
   @Override
   public void handleExpiration() {
   }
+  
+  private boolean haventValidatedOnServerForTooLong() {
+    long lastValidationTime = preferences.getLong(LAST_VALIDATION_DATE_STRING, 0);
+    if (lastValidationTime == 0) {
+      return false;
+    }
+    
+    return (((System.currentTimeMillis() - lastValidationTime) / DateUtils.MILLIS_PER_DAY) + 1) > 6;
+  }
 
   @Override
   public boolean showLicenseExpiredDialog() {
+    if (haventValidatedOnServerForTooLong()) {
+      String expireMessage = "Key validation requires an active internet connection";
+
+      MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT License", null,
+          expireMessage, MessageDialog.INFORMATION, new String[] { "Exit" }, 0);
+      dialog.open();
+      
+      return false;      
+    }
+    
     String expireMessage = isInTrialMode() ? "Your COLT trial period has expired. Browse to www.codeorchestra.com to purchase a subscription."
         : "Your COLT subscription has expired. Browse to www.codeorchestra.com to update the subscription.";
 

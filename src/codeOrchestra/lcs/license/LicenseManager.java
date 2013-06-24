@@ -20,7 +20,7 @@ public class LicenseManager {
     final ExpirationStrategy expirationStrategy = ExpirationHelper.getExpirationStrategy();
     
     // Report serial number every 10 seconds
-    if (expirationStrategy.isTrialOnly() && StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
+    if (StringUtils.isNotEmpty(CodeOrchestraLicenseManager.getLegacySerialNumber())) {
       if (!new ActivationReporter(CodeOrchestraLicenseManager.getLegacySerialNumber()).report()) {
         MessageDialog.openError(Display.getDefault().getActiveShell(), "COLT License", "COLT beta version requires an active internet connection to start.");        
         return IApplication.EXIT_OK;
