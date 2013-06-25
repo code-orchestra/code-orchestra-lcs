@@ -17,7 +17,7 @@ import codeOrchestra.utils.DateUtils;
 /**
  * @author Alexander Eliseyev
  */
-public class PlimusSubscriptionWithDemoExpirationStrategy {
+public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationStrategy {
 
   private static final String EXPIRE_LOCALLY_MILLIS = "expireLocally";
   private static final String LAST_VALIDATION_DATE_STRING = "lastValidationDate";
@@ -102,7 +102,7 @@ public class PlimusSubscriptionWithDemoExpirationStrategy {
 
   @Override
   public boolean allowTrial() {
-    return true;
+    return false;
   }
 
   @Override
@@ -152,10 +152,9 @@ public class PlimusSubscriptionWithDemoExpirationStrategy {
   @Override
   public void showLicenseExpirationInProgressDialog() {
     if (getSubscriptionDaysLeft() < 4) {
-      String expireMessage = String.format("You have %d days of paid subscription left.",
-          getSubscriptionDaysLeft());
+      String expireMessage = String.format("You have %d days of paid subscription left.", getSubscriptionDaysLeft());
       
-      MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "Evaluation License", null, expireMessage, MessageDialog.INFORMATION, new String[] { "OK"}, 0);
+      MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT License", null, expireMessage, MessageDialog.INFORMATION, new String[] { "OK"}, 0);
       dialog.open();                 
     }   
   }
@@ -180,7 +179,6 @@ public class PlimusSubscriptionWithDemoExpirationStrategy {
     return (int) ((expirationDateMillis - System.currentTimeMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
   }
   
-  @Override
   protected void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse) {
     CodeOrchestraLicenseManager.registerProduct(serialNumber);
 
