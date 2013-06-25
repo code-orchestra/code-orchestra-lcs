@@ -12,11 +12,12 @@ public interface ExpirationStrategy {
   boolean hasExpired();  
 
   boolean allowsDemo();
+  
+  boolean isInDemoMode();
 
   boolean exitIfExpired();
 
   void handleExpiration();
-
   
   /**
    * @return whether the user entered a serial number in the dialog

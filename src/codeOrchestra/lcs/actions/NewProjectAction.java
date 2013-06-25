@@ -68,6 +68,10 @@ public class NewProjectAction extends Action {
         }
         projectFile.createNewFile();
 
+        LCSProject currentProject = LCSProject.getCurrentProject();
+        if (currentProject != null) {
+          currentProject.setDisposed();
+        }
         LiveCodingProjectViews.closeProjectViews();
         
         LCSProject newProject = LCSProject.createNew(projectName, projectPath);

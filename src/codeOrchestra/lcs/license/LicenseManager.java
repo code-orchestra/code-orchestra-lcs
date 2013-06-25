@@ -58,7 +58,7 @@ public class LicenseManager {
     }
     
     // No-trial version (serial-number only) 
-    if (!expirationStrategy.allowTrial() && CodeOrchestraLicenseManager.noSerialNumberPresent()) {
+    if (!expirationStrategy.allowTrial() && CodeOrchestraLicenseManager.noSerialNumberPresent() && !expirationStrategy.allowsDemo()) {
       if (!expirationStrategy.showLicenseExpiredDialog()) {
         return IApplication.EXIT_OK; 
       }
@@ -87,6 +87,27 @@ public class LicenseManager {
         if (expirationStrategy.exitIfExpired()) {
           return IApplication.EXIT_OK;
         }
+      }
+    }
+    
+    // Demo version with subscription
+    if (expirationStrategy.allowsDemo() && expirationStrategy.isSubscriptionBased()) {
+      if (UsagePeriods.getInstance().isCurrentTimePresentInUsagePeriods()) {
+        String title = "COLT Subscription";
+        MessageDialog.openError(Display.getDefault().getActiveShell(), title, "Something is wrong with the system clock\nCOLT was launched already on the currently set time.");        
+        return IApplication.EXIT_OK;
+      }      
+      
+      boolean expired = false;      
+      if (ExpirationHelper.getExpirationStrategy().hasExpired()) {
+        expired = !expirationStrategy.showLicenseExpiredDialog();
+      } else {
+        expirationStrategy.showLicenseExpirationInProgressDialog();
+        expired = false;
+      }
+      
+      if (expired) {
+        expirationStrategy.handleExpiration();
       }
     }
     

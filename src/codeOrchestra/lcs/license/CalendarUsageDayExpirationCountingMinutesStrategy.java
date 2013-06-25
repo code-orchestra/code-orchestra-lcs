@@ -186,5 +186,10 @@ public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractE
   public boolean allowsDemo() {
     return false;
   }
+
+  @Override
+  public boolean isInDemoMode() {
+    throw new UnsupportedOperationException();
+  }
     
 }

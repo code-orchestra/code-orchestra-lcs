@@ -36,6 +36,11 @@ public class CloseProjectAction extends Action {
   
   @Override
   public void run() {
+    LCSProject currentProject = LCSProject.getCurrentProject();
+    if (currentProject != null) {
+      currentProject.setDisposed();
+    }
+
     LiveCodingProjectViews.closeProjectViews();
     LCSProject.close();
   }

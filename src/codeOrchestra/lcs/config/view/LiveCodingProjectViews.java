@@ -14,6 +14,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import codeOrchestra.lcs.ApplicationWorkbenchWindowAdvisor;
+import codeOrchestra.lcs.license.DemoHelper;
 import codeOrchestra.lcs.project.LCSProject;
 import codeOrchestra.lcs.views.LiveCodingProjectPartView;
 
@@ -94,16 +95,24 @@ public final class LiveCodingProjectViews {
       activated = true;
     }
     
-    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool - " + project.getName() + " - " + project.getPath());
+    updateTitle();
   }
   
+  public static void updateTitle() {
+    LCSProject project = LCSProject.getCurrentProject();
+    if (project != null && !project.isDisposed()) {
+      ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool" + (DemoHelper.get().isInDemoMode() ? " (Demo Mode)" : "") + " - " + project.getName() + " - " + project.getPath());  
+    } else {
+      ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool" + (DemoHelper.get().isInDemoMode() ? " (Demo Mode)" : ""));
+    }    
+  }
   
   public static boolean closeProjectViews() {
     if (ApplicationWorkbenchWindowAdvisor.sharedInstance == null) {
       return false;
     }
     
-    ApplicationWorkbenchWindowAdvisor.sharedInstance.setTitle("Code Orchestra Livecoding Tool");
+    updateTitle();
     
     IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     IWorkbenchPage page = activeWindow.getActivePage();

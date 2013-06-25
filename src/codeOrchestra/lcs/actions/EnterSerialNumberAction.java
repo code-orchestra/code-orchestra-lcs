@@ -3,6 +3,7 @@ package codeOrchestra.lcs.actions;
 import org.eclipse.jface.action.Action;
 
 import codeOrchestra.lcs.ICommandIds;
+import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.license.CodeOrchestraLicenseManager;
 import codeOrchestra.lcs.license.ExpirationHelper;
 
@@ -21,6 +22,7 @@ public class EnterSerialNumberAction extends Action {
   @Override
   public void run() {
     ExpirationHelper.getExpirationStrategy().showSerialNumberDialog();
+    LiveCodingProjectViews.updateTitle();
   }
 
 }

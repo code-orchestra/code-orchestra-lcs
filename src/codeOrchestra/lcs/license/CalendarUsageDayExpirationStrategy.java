@@ -134,4 +134,9 @@ public class CalendarUsageDayExpirationStrategy extends AbstractExpirationWithLo
     return false;
   }
   
+  @Override
+  public boolean isInDemoMode() {
+    throw new UnsupportedOperationException();
+  }
+  
 }

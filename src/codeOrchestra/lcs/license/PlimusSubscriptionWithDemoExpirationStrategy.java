@@ -24,6 +24,8 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
 
   private static Preferences preferences = Preferences.userNodeForPackage(CodeOrchestraLicenseManager.class);
 
+  private boolean demoMode;
+  
   protected boolean handleValidationResponse(PlimusResponse plimusResponse) {
     preferences.putLong(LAST_VALIDATION_DATE_STRING, System.currentTimeMillis());
     try {
@@ -112,6 +114,13 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
 
   @Override
   public void handleExpiration() {
+    demoMode = true;
+    
+    String expireMessage = String.format("COLT is in Demo mode. Compilations count is limited to %d.", DemoHelper.get().getMaxCompilationsCount());
+
+    MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT License", null,
+        expireMessage, MessageDialog.INFORMATION, new String[] { "OK" }, 0);
+    dialog.open();    
   }
   
   private boolean haventValidatedOnServerForTooLong() {
@@ -180,6 +189,8 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
   }
   
   protected void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse) {
+    demoMode = false;
+    
     CodeOrchestraLicenseManager.registerProduct(serialNumber);
 
     preferences.putLong(
@@ -194,7 +205,12 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
   
   @Override
   public boolean allowsDemo() {
-    return false;
+    return true;
+  }
+
+  @Override
+  public boolean isInDemoMode() {
+    return demoMode;
   }
   
 }

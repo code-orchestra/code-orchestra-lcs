@@ -71,5 +71,10 @@ public class FastCompilerBetaExpirationStrategy implements ExpirationStrategy {
     return false;
   }
 
+  @Override
+  public boolean isInDemoMode() {
+    throw new UnsupportedOperationException();
+  }
+
 
 }

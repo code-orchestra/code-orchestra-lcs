@@ -161,6 +161,10 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
           throw new COLTRemoteException("Error while creating project file", e);
         }
 
+        LCSProject currentProject = LCSProject.getCurrentProject();
+        if (currentProject != null) {
+          currentProject.setDisposed();
+        }
         LiveCodingProjectViews.closeProjectViews();
 
         LCSProject newProject = LCSProject.createNew(remoteProject.getName(), remoteProject.getPath());

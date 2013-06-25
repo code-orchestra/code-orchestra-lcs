@@ -244,5 +244,9 @@ public class PlimusSubscriptionExpirationStrategy extends AbstractExpirationWith
     return false;
   }
 
+  @Override
+  public boolean isInDemoMode() {
+    throw new UnsupportedOperationException();
+  }
 
 }

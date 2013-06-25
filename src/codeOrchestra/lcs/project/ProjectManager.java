@@ -17,6 +17,10 @@ public class ProjectManager {
   
   public boolean openProject(String projectPath, IWorkbenchWindow window) throws PartInitException {
     // Close previous project
+    LCSProject currentProject = LCSProject.getCurrentProject();
+    if (currentProject != null) {
+      currentProject.setDisposed();
+    }
     if (!LiveCodingProjectViews.closeProjectViews()) {
       return false;
     }

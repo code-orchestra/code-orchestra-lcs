@@ -44,6 +44,7 @@ public class LCSProject {
   private CompilerSettings compilerSettings;
   private SourceSettings sourceSettings;
   private LiveCodingSettings liveCodingSettings;
+  private boolean disposed;
 
   private LCSProject(String descriptorFile) {
     this.path = descriptorFile;
@@ -168,6 +169,14 @@ public class LCSProject {
   
   public File getOutputFile() {
     return new File(getOutputDir(), compilerSettings.getOutputFilename());
+  }
+
+  public boolean isDisposed() {
+    return disposed;
+  }
+  
+  public void setDisposed() {
+    this.disposed = true;
   }
 
 }
