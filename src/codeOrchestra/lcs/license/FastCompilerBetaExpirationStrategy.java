@@ -65,5 +65,11 @@ public class FastCompilerBetaExpirationStrategy implements ExpirationStrategy {
   public boolean showSerialNumberDialog() {
     throw new UnsupportedOperationException();
   }
+  
+  @Override
+  public boolean allowsDemo() {
+    return false;
+  }
+
 
 }

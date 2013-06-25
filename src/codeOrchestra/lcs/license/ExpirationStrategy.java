@@ -10,7 +10,8 @@ public interface ExpirationStrategy {
   boolean allowTrial();
   
   boolean hasExpired();  
-  
+
+  boolean allowsDemo();
 
   boolean exitIfExpired();
 

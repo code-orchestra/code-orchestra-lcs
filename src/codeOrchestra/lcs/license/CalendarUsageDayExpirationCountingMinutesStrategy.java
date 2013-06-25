@@ -18,7 +18,7 @@ import codeOrchestra.utils.DateUtils;
  *
  * @author Alexander Eliseyev
  */
-public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractExpirationWithSerialNumberStrategy implements ExpirationStrategy {
+public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractExpirationWithLocalSerialValidationStrategy implements ExpirationStrategy {
 
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyy");
   private static final int EXPIRATION_DAYS = 30;
@@ -180,6 +180,11 @@ public class CalendarUsageDayExpirationCountingMinutesStrategy extends AbstractE
   @Override
   protected void registerProduct(String serialNumber, PlimusResponse keyRegistrationResponse) {
     CodeOrchestraLicenseManager.registerProduct(serialNumber);
+  }
+
+  @Override
+  public boolean allowsDemo() {
+    return false;
   }
     
 }
