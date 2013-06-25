@@ -116,7 +116,7 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
   public void handleExpiration() {
     demoMode = true;
     
-    String expireMessage = String.format("COLT is in Demo mode. Compilations count is limited to %d.", DemoHelper.get().getMaxCompilationsCount());
+    String expireMessage = String.format("COLT is in Demo mode. Compilations count is limited to %d.", DemoHelper.get().getMaxCompilationsCount() - 1);
 
     MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT License", null,
         expireMessage, MessageDialog.INFORMATION, new String[] { "OK" }, 0);

@@ -7,6 +7,7 @@ import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHFlexSDKRunner;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
 import codeOrchestra.actionScript.compiler.fcsh.FSCHCompilerKind;
+import codeOrchestra.actionScript.compiler.fcsh.MaximumCompilationsCountReachedException;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingStartCommand;
 import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.LivecodingStopCommand;
 import codeOrchestra.actionScript.make.ASMakeType;
@@ -60,7 +61,7 @@ public class LCSMaker {
     this.skipSecondPhase = skipSecondPhase;
   }
   
-  public CompilationResult make() throws MakeException {
+  public CompilationResult make() throws MakeException, MaximumCompilationsCountReachedException {
     FSCHCompilerKind compilerKind = productionMode ? FSCHCompilerKind.MXMLC : (
         assetMode ? FSCHCompilerKind.COMPC : (
             isIncremental ? FSCHCompilerKind.INCREMENTAL_COMPC : FSCHCompilerKind.BASE_MXMLC
@@ -152,7 +153,7 @@ public class LCSMaker {
     return compilationResult;
   }
 
-  private CompilationResult doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException {
+  private CompilationResult doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException, MaximumCompilationsCountReachedException {
     CompilationResult compilationResult = flexSDKRunner.run();
 
     if (compilationResult == null) {

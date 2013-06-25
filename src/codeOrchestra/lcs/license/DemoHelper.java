@@ -16,7 +16,7 @@ public final class DemoHelper {
 
   private int compilationsCount = 1;
   
-  private static final int MAX_COMPILATIONS_COUNT = 10;
+  private static final int MAX_COMPILATIONS_COUNT = 3 + 1; // TODO: make 11
   
   public int getMaxCompilationsCount() {
     return MAX_COMPILATIONS_COUNT;

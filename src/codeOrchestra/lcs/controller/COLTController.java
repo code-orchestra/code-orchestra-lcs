@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
+import codeOrchestra.actionScript.compiler.fcsh.MaximumCompilationsCountReachedException;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.config.view.LiveCodingProjectViews;
 import codeOrchestra.lcs.digest.ProjectDigestHelper;
@@ -144,6 +145,10 @@ public class COLTController {
           FCSHManager.instance().restart();
         } catch (FCSHException e) {
           ErrorHandler.handle(e, "Error while starting fcsh");
+          callback.onError(e, null);
+          return Status.CANCEL_STATUS;
+        } catch (MaximumCompilationsCountReachedException e) {
+          ErrorHandler.handle("Maximum compilations count allowed in Demo mode is exceeded", "COLT Demo mode");
           callback.onError(e, null);
           return Status.CANCEL_STATUS;
         }

@@ -30,7 +30,7 @@ public class FCSHFlexSDKRunner extends AbstractFlexSDKRunner {
   }
 
   @Override
-  public CompilationResult run() throws MakeException {
+  public CompilationResult run() throws MakeException, MaximumCompilationsCountReachedException {
     FCSHManager fcshManager = FCSHManager.instance();
 
     try {

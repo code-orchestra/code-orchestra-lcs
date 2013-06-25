@@ -1,5 +1,6 @@
 package codeOrchestra.actionScript.modulemaker.process;
 
+import codeOrchestra.actionScript.compiler.fcsh.MaximumCompilationsCountReachedException;
 import codeOrchestra.actionScript.make.ASMakeType;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.actionScript.modulemaker.MakeException;
@@ -32,7 +33,7 @@ public abstract class AbstractFlexSDKRunner {
     this.compilerSettings = LCSProject.getCurrentProject().getCompilerSettings();
   }
 
-  public abstract CompilationResult run() throws MakeException;
+  public abstract CompilationResult run() throws MakeException, MaximumCompilationsCountReachedException;
 
   public abstract String getErrorLogFilePath();
 

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import codeOrchestra.actionScript.compiler.fcsh.FCSHException;
 import codeOrchestra.actionScript.compiler.fcsh.FCSHManager;
+import codeOrchestra.actionScript.compiler.fcsh.MaximumCompilationsCountReachedException;
 import codeOrchestra.actionScript.liveCoding.LiveCodingSession;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingAdapter;
 import codeOrchestra.actionScript.liveCoding.listener.LiveCodingListener;
@@ -170,6 +171,8 @@ public class LiveCodingManager {
         return lcsMaker.make();
       } catch (MakeException e) {
         ErrorHandler.handle(e, "Error while running " + (production ? "production" : "base live") + " compilation");
+      } catch (MaximumCompilationsCountReachedException e) {
+        ErrorHandler.handle("Maximum compilations count allowed in Demo mode is exceeded", "COLT Demo mode");
       }
     } finally {
       compilationInProgress = false;
@@ -260,6 +263,8 @@ public class LiveCodingManager {
         }
       } catch (MakeException e) {
         ErrorHandler.handle(e, "Error while compiling");
+      } catch (MaximumCompilationsCountReachedException e) {
+        ErrorHandler.handle("Maximum compilations count allowed in Demo mode is exceeded", "COLT Demo mode");
       }
     } finally {
       compilationInProgress = false;
@@ -382,6 +387,8 @@ public class LiveCodingManager {
       }
     } catch (MakeException e) {
       ErrorHandler.handle(e, "Error while compiling");
+    } catch (MaximumCompilationsCountReachedException e) {
+      ErrorHandler.handle("Maximum compilations count allowed in Demo mode is exceeded", "COLT Demo mode");
     }
   }
 

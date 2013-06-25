@@ -22,6 +22,8 @@ import codeOrchestra.actionScript.compiler.fcsh.console.command.impl.MXMLCComman
 import codeOrchestra.actionScript.compiler.fcsh.target.CompilerTarget;
 import codeOrchestra.actionScript.modulemaker.CompilationResult;
 import codeOrchestra.lcs.fcsh.FCSHProcessHandler;
+import codeOrchestra.lcs.license.COLTRunningKey;
+import codeOrchestra.lcs.license.DemoHelper;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.utils.StringUtils;
 
@@ -47,7 +49,12 @@ public class FCSHManager {
 
   private final Map<List<String>, CompilerTarget> compilerTargets = Collections.synchronizedMap(new HashMap<List<String>, CompilerTarget>());
 
-  public void restart() throws FCSHException {
+  public void restart() throws FCSHException, MaximumCompilationsCountReachedException {
+    if (DemoHelper.get().maxCompilationsCountReached()) {
+      COLTRunningKey.setRunning(false);
+      throw new MaximumCompilationsCountReachedException(); 
+    }
+    
     destroyProcess();
     assureFCSHIsActive();
   }
@@ -74,7 +81,9 @@ public class FCSHManager {
     }
   }
 
-  public CompilationResult compile(CompilerTarget target) throws FCSHException {
+  public CompilationResult compile(CompilerTarget target) throws FCSHException, MaximumCompilationsCountReachedException {
+    incrementCompilationCount();
+    
     assureFCSHIsActive();
 
     CompileTargetCommand compileCommand = new CompileTargetCommand(this, target);
@@ -85,7 +94,6 @@ public class FCSHManager {
     return compileCommand.getCompileResult();
   }
 
-  @SuppressWarnings("unused")
   private void assureFCSHIsActive() throws FCSHException {
     if (fcshProcessHandler != null && !fcshProcessHandler.isProcessTerminated()) {
       // No need to reactivate, the process is still running
@@ -150,7 +158,9 @@ public class FCSHManager {
     submitCommand(new ClearCommand());
   }
 
-  public CompilationResult baseMXMLC(List<String> arguments) throws FCSHException {
+  public CompilationResult baseMXMLC(List<String> arguments) throws FCSHException, MaximumCompilationsCountReachedException {
+    incrementCompilationCount();
+    
     assureFCSHIsActive();
 
     LivecodingBaseMXMLCCommand mxmlcCommand = new LivecodingBaseMXMLCCommand(arguments);
@@ -172,7 +182,9 @@ public class FCSHManager {
     return compcCommand.getCompileResult();
   }
 
-  public CompilationResult incrementalCOMPC(List<String> arguments) throws FCSHException {
+  public CompilationResult incrementalCOMPC(List<String> arguments) throws FCSHException, MaximumCompilationsCountReachedException {
+    incrementCompilationCount();
+    
     assureFCSHIsActive();
 
     LivecodingIncrementalCOMPCCommand compcCommand = new LivecodingIncrementalCOMPCCommand(arguments);
@@ -183,7 +195,9 @@ public class FCSHManager {
     return compcCommand.getCompileResult();
   }
 
-  public CompilationResult compc(List<String> commandArguments) throws FCSHException {
+  public CompilationResult compc(List<String> commandArguments) throws FCSHException, MaximumCompilationsCountReachedException {
+    incrementCompilationCount();
+    
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
@@ -199,9 +213,11 @@ public class FCSHManager {
     submitCommand(compcCommand);
 
     return compcCommand.getCompileResult();
-  }  
+  }
 
-  public CompilationResult mxmlc(List<String> commandArguments) throws FCSHException {
+  public CompilationResult mxmlc(List<String> commandArguments) throws FCSHException, MaximumCompilationsCountReachedException {
+    incrementCompilationCount();
+    
     assureFCSHIsActive();
 
     synchronized (compilerTargets) {
@@ -218,6 +234,15 @@ public class FCSHManager {
 
     return mxmlcCommand.getCompileResult();
   }
+  
+  private void incrementCompilationCount() throws MaximumCompilationsCountReachedException {
+    if (DemoHelper.get().maxCompilationsCountReached()) {
+      COLTRunningKey.setRunning(false);
+      throw new MaximumCompilationsCountReachedException(); 
+    }
+    
+    DemoHelper.get().incrementCompilationsCount();
+  }  
 
   public void deleteLivecodingCaches() throws FCSHException {
     assureFCSHIsActive();
