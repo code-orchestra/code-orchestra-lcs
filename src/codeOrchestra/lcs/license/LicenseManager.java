@@ -65,7 +65,7 @@ public class LicenseManager {
     }
     
     // Trial version with no serial
-    if ((expirationStrategy.allowTrial() && CodeOrchestraLicenseManager.noSerialNumberPresent()) || (expirationStrategy.isSubscriptionBased() && !CodeOrchestraLicenseManager.noSerialNumberPresent())) {
+    if ((expirationStrategy.allowTrial() && CodeOrchestraLicenseManager.noSerialNumberPresent()) || (!expirationStrategy.allowsDemo() && expirationStrategy.isSubscriptionBased() && !CodeOrchestraLicenseManager.noSerialNumberPresent())) {
       if (UsagePeriods.getInstance().isCurrentTimePresentInUsagePeriods()) {
         String title = expirationStrategy.isSubscriptionBased() ? "COLT Subscription" : "Evaluation License";
         MessageDialog.openError(Display.getDefault().getActiveShell(), title, "Something is wrong with the system clock\nCOLT was launched already on the currently set time.");        

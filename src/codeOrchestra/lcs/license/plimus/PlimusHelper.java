@@ -13,9 +13,11 @@ public final class PlimusHelper {
 
   private static final int TIMEOUT = 1000;
 
-  private static final String VALIDATION_URL = "https://www.plimus.com/jsp/validateKey.jsp";
-  
+  private static final String VALIDATION_URL = "https://www.plimus.com/jsp/validateKey.jsp";  
   private static final String PRODUCT_ID = "902584";
+  
+//  private static final String VALIDATION_URL = "https://sandbox.plimus.com/jsp/validateKey.jsp"; // sandbox
+//  private static final String PRODUCT_ID = "294006"; // sandbox
   
   private static HttpClient httpClient = new HttpClient();
 
