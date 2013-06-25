@@ -27,6 +27,9 @@ public final class DemoHelper {
   }
   
   public boolean maxCompilationsCountReached() {
+    if (!isInDemoMode()) {
+      return false;
+    }
     return compilationsCount >= MAX_COMPILATIONS_COUNT;
   }
   
