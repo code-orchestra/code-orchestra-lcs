@@ -53,6 +53,8 @@ public class FCSHManager {
     if (DemoHelper.get().maxCompilationsCountReached()) {
       COLTRunningKey.setRunning(false);
       throw new MaximumCompilationsCountReachedException(); 
+    } else {
+      COLTRunningKey.setRunning(true);
     }
     
     destroyProcess();
@@ -239,6 +241,8 @@ public class FCSHManager {
     if (DemoHelper.get().maxCompilationsCountReached()) {
       COLTRunningKey.setRunning(false);
       throw new MaximumCompilationsCountReachedException(); 
+    } else {
+      COLTRunningKey.setRunning(true);
     }
     
     DemoHelper.get().incrementCompilationsCount();
