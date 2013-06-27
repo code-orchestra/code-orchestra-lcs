@@ -9,6 +9,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
+import codeOrchestra.lcs.errorhandling.ErrorHandler;
 import codeOrchestra.lcs.license.plimus.PlimusHelper;
 import codeOrchestra.lcs.license.plimus.PlimusResponse;
 import codeOrchestra.lcs.license.plimus.PlimusResponseStatus;
@@ -54,6 +55,7 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
         keyRegistrationResponse = PlimusHelper.registerKey(serialNumber);
       } catch (IOException e) {
         MessageDialog.openError(Display.getDefault().getActiveShell(), "Serial number", "Can't reach the validation server. Make sure your internet connection is active.");
+        ErrorHandler.handle(e);
         return showSerialNumberDialog();
       }      
       
@@ -175,10 +177,15 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
 
   @Override
   public boolean hasExpired() {
+    if (CodeOrchestraLicenseManager.noSerialNumberPresent()) {
+      return true;
+    }
+    
     try {
       PlimusResponse validationResponse = PlimusHelper.validateKey(CodeOrchestraLicenseManager.getSerialNumber());
       return handleValidationResponse(validationResponse);
     } catch (IOException e) {
+      ErrorHandler.handle(e);
       return checkIfExpiredLocally();
     }
   }

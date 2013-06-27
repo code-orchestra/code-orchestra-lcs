@@ -14,6 +14,11 @@ import codeOrchestra.lcs.Activator;
 
 public class ErrorHandler {
 
+  public static void handle(final Throwable t) {
+    IStatus status = new Status(IStatus.ERROR, "code-orchestra-lcs", 0, null, t);
+    Platform.getLog(Activator.getDefault().getBundle()).log(status);
+  }
+  
   public static void handle(final Throwable t, final String message) {
     Display.getDefault().asyncExec(new Runnable() {      
       @Override
