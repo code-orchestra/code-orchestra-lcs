@@ -39,6 +39,9 @@ public class Application implements IApplication {
     try {
       timeStarted = System.currentTimeMillis();
       
+      // COLT-287
+      System.setProperty ("jsse.enableSNIExtension", "false");
+      
       display.addListener(SWT.OpenDocument, new OpenDocumentEventProcessor());
       
       Object licenseReturnCode = LicenseManager.getInstance().interceptStart();
