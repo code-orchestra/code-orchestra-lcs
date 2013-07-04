@@ -5,7 +5,7 @@
 #define MyAppVersion "1.1"
 #define MyAppPublisher "Code Orchestra"
 #define MyAppURL "http://www.codeorchestra.com/"
-#define MyAppExeName "COLT.exe"
+#define MyAppExeName "COLT-native.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -37,7 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Type: filesandordirs; Name: "{app}" 
 
 [Files]
-Source: "C:\programs\COLT\COLT.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\programs\COLT\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\programs\COLT\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -51,8 +51,8 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 [Registry]
 Root: HKCR; Subkey: ".colt"; ValueType: string; ValueName: ""; ValueData: "COLTProject"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: "COLTProject"; ValueType: string; ValueName: ""; ValueData: "COLT Project File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "COLTProject\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\COLT.EXE,0"
-Root: HKCR; Subkey: "COLTProject\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\COLT.EXE"" ""--launcher.openFile"" ""%1"" ""-name"" ""Code Orchestra Livecoding Tool"""
+Root: HKCR; Subkey: "COLTProject\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKCR; Subkey: "COLTProject\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""--launcher.openFile"" ""%1"" ""-name"" ""Code Orchestra Livecoding Tool"""
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
@@ -63,7 +63,8 @@ var
   ResultCode: Integer;
 begin
   if CurStep = ssPostInstall then begin
-    SaveStringToFile(ExpandConstant('{app}\flex_sdk\bin\placement.txt'), 'Root="' + ExpandConstant('{app}\flex_sdk\bin') + '"', False);
+    SaveStringToFile(ExpandConstant('{app}\flex_sdk\bin\placement.txt'), 'Root1="' + ExpandConstant('{app}\flex_sdk\bin') + '"' + #13#10, False);
+    SaveStringToFile(ExpandConstant('{app}\flex_sdk\bin\placement.txt'), 'Root2="' + ExpandConstant('{app}') + '"', True);
 
     if Exec(ExpandConstant('{app}\flex_sdk\bin\xbind.exe'), 'xbind.script placement.txt', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
       begin
