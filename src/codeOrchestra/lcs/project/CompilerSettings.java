@@ -16,6 +16,14 @@ public class CompilerSettings extends ProjectSettingsPart {
     super(preferenceStore);
   }
 
+  public boolean allowComression() {
+    return getPreferenceStore().getBoolean("compression");
+  }
+
+  public boolean allowOptimization() {
+    return getPreferenceStore().getBoolean("optimization");
+  }
+  
   public boolean excludeUnusedCode() {
     return getPreferenceStore().getBoolean("excludeUnusedCode");
   }

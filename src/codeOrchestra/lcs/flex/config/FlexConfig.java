@@ -81,6 +81,9 @@ public class FlexConfig {
   private boolean warnings = true;
   private boolean verifyDigests = false;
   private boolean incremental = true;
+  
+  private boolean allowCompression = false;
+  private boolean allowOptimization = false;  
 
   private boolean includeInheritanceDependenciesOnly;
 
@@ -109,6 +112,14 @@ public class FlexConfig {
     } catch (TransformerException e) {
       throw new LCSException("Can't transform flex config XML document");
     }
+  }
+  
+  public void setAllowCompression(boolean allowCompression) {
+    this.allowCompression = allowCompression;
+  }
+
+  public void setAllowOptimization(boolean allowOptimization) {
+    this.allowOptimization = allowOptimization;
   }
 
   public void addClass(String classFQName) {
@@ -261,7 +272,15 @@ public class FlexConfig {
         Element incrementalElement = (Element) compilerElement.appendChild(document.createElement(INCREMENTAL_ELEMENT));
         incrementalElement.setTextContent(Boolean.valueOf(incremental).toString());
       }
+      
+      // 'compression' flag
+      Element compressionElement = (Element) compilerElement.appendChild(document.createElement("compress"));
+      compressionElement.setTextContent(Boolean.valueOf(allowCompression).toString());        
 
+      // 'compression' flag
+      Element optimizeElement = (Element) compilerElement.appendChild(document.createElement("optimize"));
+      optimizeElement.setTextContent(Boolean.valueOf(allowOptimization).toString());
+      
       // 'Omit trace statements' flag
       Element omitTraceStatementsElement = (Element) compilerElement.appendChild(document.createElement(OMIT_TRACE_STATEMENTS));
       omitTraceStatementsElement.setTextContent(Boolean.valueOf(omitTraceStatements).toString());

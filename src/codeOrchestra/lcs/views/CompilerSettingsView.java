@@ -58,6 +58,8 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
   private StringFieldEditor compilerOptionsEditor;
   private BooleanFieldEditor compilationTimeoutEditor;
   private StringFieldEditor compilationTimeoutValueEditor;
+  private BooleanFieldEditor compressionEditor;
+  private BooleanFieldEditor optimizationEditor;
 
   // Containers
 
@@ -262,6 +264,27 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     compilationTimeoutValueEditor.setPreferenceStore(getPreferenceStore());
     compilationTimeoutComposite.setLayout(new GridLayout(compilationTimeoutValueEditor.getNumberOfControls() + 1, false));
 
+    // Production
+    
+    Group productionSettinsGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+    productionSettinsGroup.setText("Production build settings");
+    GridLayout productionSettinsGroupLayout = new GridLayout();
+    productionSettinsGroupLayout.marginHeight = 10;
+    productionSettinsGroupLayout.marginWidth = 5;
+    productionSettinsGroup.setLayout(generalCompilerSettingsLayout);
+    productionSettinsGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+    
+    Composite compressionEditorComposite = new Composite(productionSettinsGroup, SWT.NONE);
+    GridData compressionEditorGridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+    compressionEditorGridData.horizontalIndent = 10;
+    compressionEditorComposite.setLayoutData(compressionEditorGridData);
+
+    compressionEditor = new BooleanFieldEditor("compression", "SWF compression", compressionEditorComposite);
+    compressionEditor.setPreferenceStore(getPreferenceStore());
+    
+    optimizationEditor = new BooleanFieldEditor("optimization", "Compiling optimization", compressionEditorComposite);
+    optimizationEditor.setPreferenceStore(getPreferenceStore());
+    
     Composite compilerOptionsEditorComposite = new Composite(parent, SWT.NONE);
     compilerOptionsEditorComposite.setLayout(new GridLayout());
     compilerOptionsEditorComposite.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
@@ -353,6 +376,9 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     compilerOptionsEditor.load();
     compilationTimeoutValueEditor.load();
     excludeUnusedCodeEditor.load();
+    
+    compressionEditor.load();
+    optimizationEditor.load();
   }
 
   @Override
@@ -384,6 +410,9 @@ public class CompilerSettingsView extends LiveCodingProjectPartView<CompilerSett
     compilerOptionsEditor.store();
     compilationTimeoutValueEditor.store();
     excludeUnusedCodeEditor.store();
+    
+    compressionEditor.store();
+    optimizationEditor.store();
   }
 
   private void updateUI() {

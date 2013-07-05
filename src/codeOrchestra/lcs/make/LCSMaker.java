@@ -80,6 +80,13 @@ public class LCSMaker {
     } catch (LCSException e) {
       throw new MakeException("Can't build a flex config", e);
     }
+    
+    // Production-only options
+    if (productionMode) {
+      flexConfig.setAllowCompression(compilerSettings.allowComression());
+      flexConfig.setAllowOptimization(compilerSettings.allowOptimization());
+    }
+    
     try {
       flexConfigFile = flexConfig.saveToFile(currentProject.getFlexConfigPath(currentProject, compilerKind));
     } catch (LCSException e) {
