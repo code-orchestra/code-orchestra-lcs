@@ -196,6 +196,10 @@ public class FileUtils {
   
   public static void write(File file, String content) {
     try {
+      if (!file.exists()) {
+        file.createNewFile();
+      }
+      
       Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
       out.write(content);
       out.flush();

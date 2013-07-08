@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.digest;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,8 @@ import apparat.abc.AbcTypename;
 import apparat.swf.DoABC;
 import apparat.swf.SwfTag;
 import apparat.utils.TagContainer;
+import codeOrchestra.utils.FileUtils;
+import codeOrchestra.utils.MD5Checksum;
 import codeOrchestra.utils.NameUtil;
 import codeOrchestra.utils.StringUtils;
 import codeOrchestra.utils.XMLUtils;
@@ -59,10 +62,44 @@ public class SWCDigest {
 
   public void generate() {
     for (String swcPath : swcPaths) {
+      String swcName = new File(swcPath).getName();
+      String previousCRC = getCRC(swcName);
+      String newCRC = calculateCRC(new File(swcPath));
+      File crcFile = getCRCFile(swcName);
+      if (previousCRC != null) {        
+        if (StringUtils.equals(previousCRC, newCRC)) {
+          continue;
+        }
+        FileUtils.write(crcFile, newCRC);
+      } else {
+        FileUtils.write(crcFile, newCRC);
+      }
+      
+      
       digestsMap.clear();
       init(swcPath);
-      save(new File(swcPath).getName());
+      save(swcName);
     }
+  }
+
+  private String getCRC(String swcPath) {
+    File crcFile = getCRCFile(swcPath);
+    if (crcFile.exists()) {
+      return FileUtils.read(crcFile).trim();
+    }
+    return null;
+  }
+  
+  private String calculateCRC(File file) {
+    try {
+      return MD5Checksum.getMD5Checksum(file);
+    } catch (IOException e) {
+      throw new RuntimeException("Can't calculate the checksum of " + file.getPath(), e);
+    }
+  }
+  
+  private File getCRCFile(String swcName) {
+    return new File(outputPath, swcName + File.separator + ".crc");
   }
 
   private void save(String swcName) {
