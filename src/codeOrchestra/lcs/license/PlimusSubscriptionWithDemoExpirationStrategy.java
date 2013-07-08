@@ -136,7 +136,7 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
 
   @Override
   public boolean showLicenseExpiredDialog() {
-    if (haventValidatedOnServerForTooLong()) {
+    if (haventValidatedOnServerForTooLong() && !CodeOrchestraLicenseManager.noSerialNumberPresent()) {
       String expireMessage = "Key validation requires an active internet connection. COLT will be launched in Demo mode";
 
       MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT License", null,
