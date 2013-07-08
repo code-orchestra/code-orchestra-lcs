@@ -128,7 +128,7 @@ public class LCSMaker {
 
     // Base/incremental compilation first phase
     FCSHFlexSDKRunner flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
-    CompilationResult compilationResult = doCompile(flexSDKRunner);
+    CompilationResult compilationResult = doCompile(flexSDKRunner, compilerKind != FSCHCompilerKind.BASE_MXMLC);
     if (!compilationResult.isOk()) {
       return compilationResult;
     }
@@ -151,7 +151,7 @@ public class LCSMaker {
       }
 
       flexSDKRunner = getFlexSDKRunner(flexConfigFile, compilerKind);
-      compilationResult = doCompile(flexSDKRunner);
+      compilationResult = doCompile(flexSDKRunner, true);
       if (!compilationResult.isOk()) {
         return compilationResult;
       }
@@ -160,7 +160,7 @@ public class LCSMaker {
     return compilationResult;
   }
 
-  private CompilationResult doCompile(FCSHFlexSDKRunner flexSDKRunner) throws MakeException, MaximumCompilationsCountReachedException {
+  private CompilationResult doCompile(FCSHFlexSDKRunner flexSDKRunner, boolean reportSuccess) throws MakeException, MaximumCompilationsCountReachedException {
     CompilationResult compilationResult = flexSDKRunner.run();
 
     if (compilationResult == null) {
@@ -177,7 +177,9 @@ public class LCSMaker {
       return compilationResult;
     }
 
-    LOG.info("Compilation is completed successfully");
+    if (reportSuccess) {
+      LOG.info("Compilation is completed successfully");
+    }
     return compilationResult;
   }
 

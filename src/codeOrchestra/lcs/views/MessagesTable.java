@@ -34,6 +34,8 @@ import codeOrchestra.lcs.logging.Level;
  */
 public class MessagesTable {
 
+  private static final int MAX_ENTRIES_COUNT = 50;
+
   private Table table;
 
   private Button sourceButton;
@@ -196,6 +198,17 @@ public class MessagesTable {
           return;
         }
 
+        // Limit the number of entries
+        if (messages.size() > MAX_ENTRIES_COUNT) {
+          Message firstMessage = messages.keySet().iterator().next();
+          Object object = messages.get(firstMessage);
+          
+          messages.remove(firstMessage);
+          if (object instanceof TableItem) {
+            table.remove(0);
+          }
+        }
+        
         Message newMessage = new Message(source, level, message, timestamp, stackTrace);
         if (mustHideMessage(newMessage)) {
           messages.put(newMessage, new Object());

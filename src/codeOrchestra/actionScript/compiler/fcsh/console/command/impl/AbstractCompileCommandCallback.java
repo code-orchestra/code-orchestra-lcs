@@ -68,7 +68,7 @@ public abstract class AbstractCompileCommandCallback extends AbstractCommandCall
 
     // Report compiler messages
     CompilerMessagesWrapper messagesWrapper = CompilerMessage.extract(errorOutput);
-    for (CompilerMessage compilerMessage : messagesWrapper.getMessages()) {
+    for (CompilerMessage compilerMessage : messagesWrapper.getMessagesSmart()) {
       String reportMessage = compilerMessage.getReportMessage();
       switch (compilerMessage.getType()) {
         case ERROR:

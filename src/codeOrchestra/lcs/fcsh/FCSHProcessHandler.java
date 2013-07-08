@@ -1,14 +1,18 @@
 package codeOrchestra.lcs.fcsh;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import codeOrchestra.actionScript.compiler.fcsh.console.command.AbstractCommandCallback;
 import codeOrchestra.lcs.logging.Logger;
 import codeOrchestra.lcs.views.FCSHConsoleView;
 import codeOrchestra.utils.ExceptionUtils;
-import com.intellij.execution.process.*;
+import codeOrchestra.utils.StringUtils;
 
-import codeOrchestra.actionScript.compiler.fcsh.console.command.AbstractCommandCallback;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.ProcessAdapter;
+import com.intellij.execution.process.ProcessEvent;
+import com.intellij.execution.process.ProcessOutputTypes;
 
 /**
  * @author Alexander Eliseyev
@@ -33,18 +37,18 @@ public class FCSHProcessHandler extends OSProcessHandler {
         append(text, k);
       }
     });
-    
-//    ProcessTerminatedListener.attach(this);
+  }
+
+  private synchronized void append(String s, String key) {
+    if (StringUtils.isNotEmpty(s)) {
+      FCSHConsoleView.get().write(s);
+    }
   }
 
   public boolean isInitialized() {
     return initialized;
   }
-
-  private void append(String s, String key) {
-    FCSHConsoleView.get().append(s, key);
-  }
-
+  
   public void input(String s) {
     try {
       getProcessInputWriter().append(s);

@@ -1,5 +1,7 @@
 package codeOrchestra.actionScript.modulemaker.messages;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -7,6 +9,8 @@ import java.util.List;
  */
 public class CompilerMessagesWrapper {
 
+  private static final int MAX_SMART_MESSAGES_COUNT = 10;
+  
   private List<CompilerMessage> messages;
   private int errorCount;
   private int warningsCount;
@@ -23,6 +27,28 @@ public class CompilerMessagesWrapper {
 
   public List<CompilerMessage> getMessages() {
     return messages;
+  }
+  
+  public List<CompilerMessage> getMessagesSmart() {
+    List<CompilerMessage> smartMessages = new ArrayList<CompilerMessage>();
+    
+    if (errorCount > 0) {
+      Iterator<CompilerMessage> messagesIterator = messages.iterator();
+      while (smartMessages.size() < MAX_SMART_MESSAGES_COUNT && messagesIterator.hasNext()) {
+        CompilerMessage message = messagesIterator.next();
+        if (message.getType() == MessageType.ERROR) {
+          smartMessages.add(message);
+        }
+      }
+    } else {
+      for (CompilerMessage compilerMessage : messages) {
+        if (smartMessages.size() < MAX_SMART_MESSAGES_COUNT) {
+          smartMessages.add(compilerMessage);
+        }
+      }
+    }
+    
+    return smartMessages;
   }
 
   public int getErrorCount() {
