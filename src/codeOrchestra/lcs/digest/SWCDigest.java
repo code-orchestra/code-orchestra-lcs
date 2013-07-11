@@ -62,7 +62,13 @@ public class SWCDigest {
 
   public void generate() {
     for (String swcPath : swcPaths) {
+      
       String swcName = new File(swcPath).getName();
+      File outputDir = new File(outputPath, swcName);
+      if (!outputDir.exists()) {
+        outputDir.mkdirs();
+      }      
+      
       String previousCRC = getCRC(swcName);
       String newCRC = calculateCRC(new File(swcPath));
       File crcFile = getCRCFile(swcName);
