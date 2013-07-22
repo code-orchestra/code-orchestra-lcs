@@ -364,4 +364,11 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
     void execute(COLTControllerCallbackEx<T> callback);
   }
 
+  @Override
+  public void checkAuth(String securityToken) throws InvalidAuthTokenException {
+    if (!COLTRemoteSecurityManager.getInstance().isValidToken(securityToken)) {
+      throw new InvalidAuthTokenException();
+    }
+  }
+
 }
