@@ -1,6 +1,7 @@
 package codeOrchestra.lcs.rpc.security;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,22 +14,22 @@ import codeOrchestra.utils.StringUtils;
 /**
  * @author Alexander Eliseyev
  */
-public class COLTRemoteSecuriryManager {
+public class COLTRemoteSecurityManager {
 
   private static final String TOKENS_KEY = "coltRPCAuthKeys";
   private static final int MAX_TOKENS_COUNT = 100;
   private static final int MAX_FAILED_ATTEMPTS = 3;  
   
-  private static COLTRemoteSecuriryManager instance;
+  private static COLTRemoteSecurityManager instance;
   
-  public synchronized static COLTRemoteSecuriryManager getInstance() {
+  public synchronized static COLTRemoteSecurityManager getInstance() {
     if (instance == null) {
-      instance = new COLTRemoteSecuriryManager();
+      instance = new COLTRemoteSecurityManager();
     }
     return instance;
   }
   
-  private final Preferences preferences = Preferences.userNodeForPackage(COLTRemoteSecuriryManager.class);
+  private final Preferences preferences = Preferences.userNodeForPackage(COLTRemoteSecurityManager.class);
   
   private List<COLTRemoteSecurityListener> listeners = new ArrayList<COLTRemoteSecurityListener>();
   
@@ -106,6 +107,15 @@ public class COLTRemoteSecuriryManager {
     return shortCode;
   }
   
+  public static void main(String[] args) {
+    COLTRemoteSecurityManager.getInstance().clearAuthData();
+  }
+  
+  @SuppressWarnings("unchecked")
+  public void clearAuthData() {
+    storeAuthTokens(Collections.EMPTY_LIST);
+  }
+
   public void addAuthToken(String token) {
     List<String> authTokens = new ArrayList<String>(getAuthTokens());
     if (!authTokens.contains(authTokens)) {

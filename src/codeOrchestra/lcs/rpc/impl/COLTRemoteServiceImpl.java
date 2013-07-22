@@ -25,7 +25,7 @@ import codeOrchestra.lcs.rpc.model.COLTCompilationResult;
 import codeOrchestra.lcs.rpc.model.COLTConnection;
 import codeOrchestra.lcs.rpc.model.COLTRemoteProject;
 import codeOrchestra.lcs.rpc.model.COLTState;
-import codeOrchestra.lcs.rpc.security.COLTRemoteSecuriryManager;
+import codeOrchestra.lcs.rpc.security.COLTRemoteSecurityManager;
 import codeOrchestra.lcs.rpc.security.InvalidAuthTokenException;
 import codeOrchestra.lcs.rpc.security.InvalidShortCodeException;
 import codeOrchestra.lcs.rpc.security.TooManyFailedCodeTypeAttemptsException;
@@ -286,7 +286,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
   private <T> T executeSecurily(String securityToken, final RemoteCommand<T> command)
       throws COLTRemoteTransferableException {
-    if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
+    if (!COLTRemoteSecurityManager.getInstance().isValidToken(securityToken)) {
       throw new InvalidAuthTokenException();
     }
 
@@ -306,7 +306,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
   private <T> T executeSecurilyInUI(String securityToken, final RemoteCommand<T> command)
       throws COLTRemoteTransferableException {
-    if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
+    if (!COLTRemoteSecurityManager.getInstance().isValidToken(securityToken)) {
       throw new InvalidAuthTokenException();
     }
 
@@ -315,7 +315,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
   private <T> T executeSecurilyAsyncInUI(String securityToken, final RemoteAsyncCommand<T> command)
       throws COLTRemoteTransferableException {
-    if (!COLTRemoteSecuriryManager.getInstance().isValidToken(securityToken)) {
+    if (!COLTRemoteSecurityManager.getInstance().isValidToken(securityToken)) {
       throw new InvalidAuthTokenException();
     }
 
@@ -340,7 +340,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
       @Override
       public Void execute() throws COLTRemoteException {
-        COLTRemoteSecuriryManager.getInstance().createNewTokenAndGetShortCode(requestor);
+        COLTRemoteSecurityManager.getInstance().createNewTokenAndGetShortCode(requestor);
         return null;
       }
     });
@@ -349,7 +349,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
   @Override
   public String obtainAuthToken(String shortCode) throws TooManyFailedCodeTypeAttemptsException,
       InvalidShortCodeException {
-    return COLTRemoteSecuriryManager.getInstance().obtainAuthToken(shortCode);
+    return COLTRemoteSecurityManager.getInstance().obtainAuthToken(shortCode);
   }
 
   private static interface RemoteCommand<T> {

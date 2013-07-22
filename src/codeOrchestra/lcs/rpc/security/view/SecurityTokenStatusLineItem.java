@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolTip;
 
-import codeOrchestra.lcs.rpc.security.COLTRemoteSecuriryManager;
+import codeOrchestra.lcs.rpc.security.COLTRemoteSecurityManager;
 import codeOrchestra.lcs.rpc.security.COLTRemoteSecurityListener;
 import codeOrchestra.lcs.status.StatusLineContributionItemEx;
 
@@ -38,7 +38,7 @@ public class SecurityTokenStatusLineItem extends StatusLineContributionItemEx {
       }
     });
     
-    COLTRemoteSecuriryManager.getInstance().addListener(new COLTRemoteSecurityListener() {
+    COLTRemoteSecurityManager.getInstance().addListener(new COLTRemoteSecurityListener() {
       @Override
       public void onNewRequest(String requestor, String shortCode) {
         SecurityTokenStatusLineItem.this.lastRequestor = requestor;
