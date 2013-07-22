@@ -172,6 +172,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
         try {
           LiveCodingProjectViews.openProjectViews(window, newProject);
+          window.getShell().setActive();
           return null;
         } catch (PartInitException e) {
           throw new COLTRemoteException("Error while opening project file", e);
