@@ -37,7 +37,7 @@ public class StartSessionAction extends Action {
   public void run() {
     setEnabled(false);
     
-    COLTController.startBaseCompilationAndRun(window, new COLTControllerCallback<CompilationResult, CompilationResult>() {      
+    COLTController.startBaseCompilation(window, new COLTControllerCallback<CompilationResult, CompilationResult>() {      
       @Override
       public void onError(Throwable t, CompilationResult errorResult) {
         setEnabled(true);        
@@ -47,7 +47,7 @@ public class StartSessionAction extends Action {
       public void onComplete(CompilationResult successResult) {
         setEnabled(true);        
       }      
-    }, false);
+    }, true, false);
   }
 
 }
