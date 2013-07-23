@@ -12,6 +12,7 @@ public class COLTCompilerMessage {
   private int columnNumber;
   private String type;
   private String content;
+  private String fullMessage;
 
   public COLTCompilerMessage() {    
   }
@@ -22,6 +23,7 @@ public class COLTCompilerMessage {
     this.columnNumber = compilerMessage.getColumnNumber();
     this.type = compilerMessage.getType().getPresentation();
     this.content = compilerMessage.getContent();
+    this.fullMessage = compilerMessage.getReportMessage();
   }
 
   public String getSourcePath() {
@@ -63,7 +65,9 @@ public class COLTCompilerMessage {
   public void setContent(String content) {
     this.content = content;
   }
-  
-  
+
+  public String getFullMessage() {
+    return fullMessage;
+  }
   
 }

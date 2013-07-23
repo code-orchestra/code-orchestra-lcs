@@ -30,8 +30,6 @@ public class CompilerMessage implements Serializable {
   private MessageType type;
   private String content;
 
-  private transient Object hintObject;
-
   public CompilerMessage(MessageType type, String content) {
     this.type = type;
     this.content = content;
