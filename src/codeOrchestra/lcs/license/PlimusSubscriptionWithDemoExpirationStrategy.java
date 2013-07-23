@@ -162,12 +162,6 @@ public class PlimusSubscriptionWithDemoExpirationStrategy implements ExpirationS
 
   @Override
   public void showLicenseExpirationInProgressDialog() {
-    if (getSubscriptionDaysLeft() < 4) {
-      String expireMessage = String.format("You have %d days of paid subscription left.", getSubscriptionDaysLeft());
-      
-      MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), "COLT License", null, expireMessage, MessageDialog.INFORMATION, new String[] { "OK"}, 0);
-      dialog.open();                 
-    }   
   }
 
   @Override
