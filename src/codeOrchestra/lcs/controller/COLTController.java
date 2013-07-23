@@ -103,7 +103,7 @@ public class COLTController {
     }
   }
   
-  public static void startBaseCompilationAndRun(IWorkbenchWindow window, final COLTControllerCallback<CompilationResult, CompilationResult> callback, boolean sync) {
+  public static void startBaseCompilation(IWorkbenchWindow window, final COLTControllerCallback<CompilationResult, CompilationResult> callback, final boolean run, boolean sync) {
     try {
       // Save project
       final LCSProject currentProject = LCSProject.getCurrentProject();
@@ -167,25 +167,27 @@ public class COLTController {
           // Fetch the embed digest 
           report(monitor, "Reading embed digests");
           LiveCodingManager.instance().resetEmbeds(projectDigestHelper.getEmbedDigests());
-          monitor.worked(10);
+          monitor.worked(run ? 10 : 20);
         
-          // Start the compiled SWF
-          report(monitor, "Launching");
-          try {
-            ProcessHandlerWrapper processHandlerWrapper = new LiveLauncher().launch(LCSProject.getCurrentProject());
-            ProcessHandler processHandler = processHandlerWrapper.getProcessHandler();
-            processHandler.addProcessListener(new LoggingProcessListener("Launch"));
-            processHandler.startNotify();
-            
-            if (processHandlerWrapper.mustWaitForExecutionEnd()) {
-              processHandler.waitFor();
-            }
-            
-            monitor.worked(10);
-          } catch (ExecutionException e) {
-            ErrorHandler.handle(e, "Error while launching build artifact");
-            callback.onError(e, compilationResult);
-            return Status.CANCEL_STATUS;
+          if (run) {
+            // Start the compiled SWF
+            report(monitor, "Launching");
+            try {
+              ProcessHandlerWrapper processHandlerWrapper = new LiveLauncher().launch(LCSProject.getCurrentProject());
+              ProcessHandler processHandler = processHandlerWrapper.getProcessHandler();
+              processHandler.addProcessListener(new LoggingProcessListener("Launch"));
+              processHandler.startNotify();
+              
+              if (processHandlerWrapper.mustWaitForExecutionEnd()) {
+                processHandler.waitFor();
+              }
+              
+              monitor.worked(10);
+            } catch (ExecutionException e) {
+              ErrorHandler.handle(e, "Error while launching build artifact");
+              callback.onError(e, compilationResult);
+              return Status.CANCEL_STATUS;
+            }            
           }
         } else {
           callback.onError(null, compilationResult);

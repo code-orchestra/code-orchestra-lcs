@@ -91,7 +91,8 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
   }
 
   @Override
-  public COLTCompilationResult runBaseCompilation(String securityToken) throws COLTRemoteTransferableException {
+  public COLTCompilationResult runBaseCompilation(String securityToken, final boolean run)
+      throws COLTRemoteTransferableException {
     return executeSecurilyAsyncInUI(securityToken, new RemoteAsyncCommand<COLTCompilationResult>() {
       @Override
       public String getName() {
@@ -100,7 +101,7 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
 
       @Override
       public void execute(final COLTControllerCallbackEx<COLTCompilationResult> callback) {
-        COLTController.startBaseCompilationAndRun(window, new COLTControllerCallbackEx<CompilationResult>() {
+        COLTController.startBaseCompilation(window, new COLTControllerCallbackEx<CompilationResult>() {
           @Override
           public void onComplete(CompilationResult successResult) {
             callback.onComplete(new COLTCompilationResult(successResult));
@@ -110,9 +111,14 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
           public void onError(Throwable t, CompilationResult errorResult) {
             callback.onError(t, errorResult != null ? new COLTCompilationResult(errorResult) : null);
           }
-        }, false);
+        }, run, false);
       }
     });
+  }
+  
+  @Override
+  public COLTCompilationResult runBaseCompilation(String securityToken) throws COLTRemoteTransferableException {
+    return runBaseCompilation(securityToken, true);
   }
 
   @Override
@@ -370,5 +376,6 @@ public class COLTRemoteServiceImpl implements COLTRemoteService {
       throw new InvalidAuthTokenException();
     }
   }
+
 
 }
