@@ -93,7 +93,7 @@ public class FCSHFlexSDKRunner extends AbstractFlexSDKRunner {
       throw new RuntimeException("Config file doesn't exist: " + configPath);
     }
 
-    File configFileTarget = new File(tempConfigDir, configFile.getName());
+    File configFileTarget = new File(tempConfigDir, configFile.getName().replace(" ", "_"));
 
     try {
       FileUtils.copyFileChecked(configFile, configFileTarget, true);

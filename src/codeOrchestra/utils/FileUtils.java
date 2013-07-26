@@ -284,4 +284,11 @@ public class FileUtils {
     }
   }
   
+  public static String protectPath(String result) {
+    if (result.contains(" ")) {
+        return "\"" + result + "\"";
+    }
+    return result;
+}
+  
 }
